@@ -1,0 +1,29 @@
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="用本体论统一业务对象、关系和约束，为跨系统协同和智能问答建立共同语义。" />
+    <meta name="keywords" content="本体论,语义建模,知识图谱,数据治理,知识工程" />
+    <title>本体论建模：为业务对象建立共同语言</title>
+    <link rel="stylesheet" href="../../../assets/document.css" />
+  </head>
+  <body>
+    <main>
+      <a class="back-link" href="../../../index.html">← 返回知识文档库</a>
+      <p class="eyebrow">数据资产 / 知识工程</p>
+      <h1>本体论建模：为业务对象建立共同语言</h1>
+      <p class="lead">当不同团队对同一个业务词有不同理解时，问题往往不在数据格式，而在缺少共享的语义模型。</p>
+      <p class="meta">整理日期：2026 年 9 月 1 日</p>
+      <h2>本体论解决什么</h2>
+      <p>本体论以明确的方式描述领域中的实体、属性、关系和约束。例如，“客户”是否包含潜在客户？“订单”何时才算完成？这些定义一旦被共享，就能减少跨系统对接和指标讨论中的歧义。</p>
+      <h2>从业务问题开始</h2>
+      <p>建模不应从罗列所有名词开始，而应从高价值问题倒推。比如“哪些服务组合最容易带来续约”，会自然引出客户、合同、产品、使用行为和时间窗口等关键对象及其关系。</p>
+      <table><thead><tr><th>建模元素</th><th>示例</th><th>需要明确的内容</th></tr></thead><tbody><tr><td>类</td><td>客户、产品、合同</td><td>定义与边界</td></tr><tr><td>属性</td><td>合同开始日期、客户等级</td><td>数据类型、来源、更新频率</td></tr><tr><td>关系</td><td>客户签署合同</td><td>方向、基数、有效期</td></tr><tr><td>约束</td><td>合同必须关联客户</td><td>必填条件、校验规则</td></tr></tbody></table>
+      <h2>保持可演进</h2>
+      <p>好的本体论并非一次性追求完整，而是允许伴随业务迭代。核心概念保持稳定，边缘概念按需扩展；每次调整都记录变更原因和影响范围。</p>
+      <aside class="note"><strong>实践提醒：</strong>把术语表、指标口径和数据模型连接起来。本体论只有进入数据产品、流程和问答系统，才会真正成为组织的共同语言。</aside>
+    </main>
+  </body>
+</html>
