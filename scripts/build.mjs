@@ -64,12 +64,13 @@ async function main() {
   await cp(siteDir, outputDir, { recursive: true });
   await cp(contentDir, path.join(outputDir, "docs"), { recursive: true });
   const catalog = { generatedAt: new Date().toISOString(), categories: await buildCatalog() };
-  await writeFile(path.join(outputDir, "catalog.json"), `${JSON.stringify(catalog, null, 2)}\n`);
+  await writeFile(path.join(outputDir, "catalog.json"), JSON.stringify(catalog, null, 2) + "\n");
   const documentCount = catalog.categories.reduce((total, category) => total + category.subcategories.reduce((subtotal, subcategory) => subtotal + subcategory.documents.length, 0), 0);
-  console.log(`Built ${documentCount} documents across ${catalog.categories.length} categories.`);
+  console.log("Built " + documentCount + " documents across " + catalog.categories.length + " categories.");
 }
 
 main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
+```
