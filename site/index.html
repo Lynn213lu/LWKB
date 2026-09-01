@@ -1,0 +1,30 @@
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Lynn 的人工智能与数据知识文档集合。" />
+    <title>Lynn's Work Knowledge Space</title>
+    <link rel="preconnect" href="https://images.unsplash.com" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="返回知识空间首页"><span class="brand-mark" aria-hidden="true">LW</span><span class="brand-copy"><strong>Lynn's Work</strong><small>Knowledge Space</small></span></a>
+      <nav class="header-nav" aria-label="页面导航"><a href="#library">文档库</a></nav>
+    </header>
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-quote">
+        <div class="hero-visual"><img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1800&q=88" alt="群山与湖泊相映的自然风景" /><div class="hero-quote"><p id="hero-quote">山海有期，万物有序。</p><span>在持续积累中，看见更远的方向。</span></div></div>
+      </section>
+      <section class="library-section" id="library" aria-labelledby="library-title">
+        <div class="section-heading"><div><p class="eyebrow">DOCUMENT LIBRARY</p><h2 id="library-title">知识文档库</h2></div><p class="library-count" id="library-count" aria-live="polite">正在读取目录...</p></div>
+        <label class="search-field" for="search-input"><span class="search-symbol" aria-hidden="true">&#9906;</span><span class="sr-only">搜索文档</span><input id="search-input" type="search" placeholder="搜索标题、分类或关键词" autocomplete="off" /></label>
+        <div class="catalog-layout"><aside class="catalog-nav" aria-label="文档分类"><p class="catalog-nav-title">分类导航</p><div id="category-nav" class="category-nav"></div></aside><div id="catalog" class="catalog" aria-live="polite"></div></div>
+      </section>
+    </main>
+    <footer class="site-footer"><span>© <span id="year"></span> Lynn's Work Knowledge Space</span><span id="generated-at">文档集合持续更新中</span></footer>
+    <script src="app.js"></script>
+  </body>
+</html>
