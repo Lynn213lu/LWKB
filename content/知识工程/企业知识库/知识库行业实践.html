@@ -1,0 +1,1058 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="外部行业实践调研：知识如何生产、管理、调用与评测">
+<title>企业知识库建设调研｜知识管理怎么做</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  :root {
+    --accent: #0b57d0;
+    --accent-soft: #e8f0fe;
+    --ink: #1f2430;
+    --muted: #5c6472;
+    --dim: #8a93a3;
+    --line: #dfe4ec;
+    --line-strong: #c6cfdb;
+    --bg: #ffffff;
+    --bg-soft: #f5f7fb;
+    --green: #1a7f37;
+    --green-soft: #e6f4ea;
+    --amber: #9a5b00;
+    --amber-soft: #fef3e0;
+    --red: #b3261e;
+    --red-soft: #fce9e7;
+    --violet: #5e35b1;
+    --violet-soft: #f1eafc;
+    --mono: "SFMono-Regular", "Cascadia Code", Consolas, "Roboto Mono", monospace;
+    --font: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    --radius: 12px;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 400 15px/1.75 var(--font);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 1160px; margin: 0 auto; padding: 0 28px; }
+  .mono { font-family: var(--mono); }
+
+  /* ===== Header ===== */
+  header.hero { background: linear-gradient(180deg, #eef3fb 0%, #ffffff 100%); border-bottom: 1px solid var(--line); }
+  .hero-inner { padding: 46px 0 34px; }
+  .kicker { color: var(--accent); font: 700 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; margin: 0 0 14px; }
+  h1 { margin: 0; font-size: 32px; line-height: 1.2; letter-spacing: -.01em; }
+  h1 .sub { display: block; margin-top: 6px; color: var(--muted); font-size: 19px; font-weight: 500; }
+  .lead { margin: 18px 0 0; max-width: 860px; font-size: 16px; color: #333a47; background: var(--bg); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 10px; padding: 14px 18px; }
+  .lead strong { color: var(--accent); }
+  .doc-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .doc-meta span { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--bg); color: var(--muted); font-size: 12.5px; white-space: nowrap; }
+  .pillars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 22px; }
+  .pillars li { list-style: none; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; }
+  .pillars .num { color: var(--accent); font: 700 11px/1 var(--mono); display: block; }
+  .pillars .name { display: block; margin-top: 5px; font-weight: 700; font-size: 14px; }
+  .pillars small { display: block; margin-top: 2px; color: var(--muted); font-size: 12px; }
+
+  /* ===== TOC ===== */
+  nav.toc { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.94); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); }
+  .toc-inner { display: flex; align-items: center; gap: 6px; overflow-x: auto; padding: 8px 28px; }
+  .toc-label { flex: 0 0 auto; color: var(--dim); font: 700 12px/1 var(--mono); letter-spacing: .08em; margin-right: 6px; }
+  .toc-inner a { flex: 0 0 auto; font-size: 13px; color: var(--muted); padding: 5px 10px; border-radius: 999px; }
+  .toc-inner a:hover { background: var(--accent-soft); color: var(--accent); text-decoration: none; }
+  .toc-inner a b { color: var(--accent); font-family: var(--mono); margin-right: 3px; }
+
+  /* ===== Sections ===== */
+  main { padding-bottom: 90px; }
+  section { margin: 56px 0 0; scroll-margin-top: 64px; }
+  .sec-head { display: flex; align-items: baseline; gap: 14px; margin: 0 0 6px; }
+  .sec-no { color: var(--accent); font: 800 30px/1 var(--mono); letter-spacing: -.03em; }
+  section > h2 { margin: 0; font-size: 24px; line-height: 1.3; letter-spacing: -.01em; }
+  .sec-lead { color: var(--muted); max-width: 900px; margin: 6px 0 18px; }
+
+  .callout, .warnbox, .riskbox, .okbox { border-radius: 10px; padding: 13px 16px; font-size: 14px; margin: 14px 0; }
+  .callout { background: var(--accent-soft); border-left: 4px solid var(--accent); }
+  .callout.green { background: var(--green-soft); border-left-color: var(--green); }
+  .okbox { background: var(--green-soft); border-left: 4px solid var(--green); }
+  .warnbox { background: var(--amber-soft); border-left: 4px solid var(--amber); }
+  .riskbox { background: var(--red-soft); border-left: 4px solid var(--red); }
+  .callout b, .warnbox b, .riskbox b, .okbox b { font-weight: 700; }
+  .callout .tt, .warnbox .tt, .riskbox .tt, .okbox .tt { font: 800 11px/1 var(--mono); letter-spacing: .08em; display: block; margin-bottom: 4px; color: var(--accent); }
+  .warnbox .tt { color: var(--amber); }
+  .riskbox .tt { color: var(--red); }
+  .okbox .tt { color: var(--green); }
+
+  h3.sec3 { margin: 26px 0 10px; font-size: 18px; }
+  h4 { margin: 14px 0 6px; font-size: 14.5px; }
+  p { margin: 8px 0; }
+  ul.clean { margin: 8px 0; padding: 0; list-style: none; display: grid; gap: 7px; }
+  ul.clean li { padding-left: 18px; position: relative; }
+  ul.clean li::before { content: ""; position: absolute; left: 2px; top: .68em; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); opacity: .75; }
+  ul.dash { margin: 8px 0; padding: 0; list-style: none; display: grid; gap: 7px; }
+  ul.dash li { padding-left: 16px; position: relative; color: #3a4250; }
+  ul.dash li::before { content: "—"; position: absolute; left: 0; color: var(--accent); }
+  ol.steps { margin: 8px 0; padding: 0; list-style: none; display: grid; gap: 7px; }
+  ol.steps li { padding-left: 34px; position: relative; }
+  ol.steps li::before { content: attr(data-n); position: absolute; left: 0; top: 0; width: 24px; height: 24px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); border-radius: 8px; font: 800 12px/1 var(--mono); }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { display: inline-flex; align-items: center; padding: 3px 10px; background: var(--bg-soft); border: 1px solid var(--line); border-radius: 999px; color: #46505f; font-family: var(--mono); font-size: 12px; }
+
+  /* Cards / grids */
+  .grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .card { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 15px 16px; }
+  .card h4 { margin: 0 0 6px; font-size: 14.5px; }
+  .card p { margin: 0; color: var(--muted); font-size: 13.5px; }
+  .card .chip-label { color: var(--accent); font: 800 10.5px/1 var(--mono); letter-spacing: .07em; display: block; margin-bottom: 5px; }
+
+  /* lifecycle flow */
+  .flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px; margin: 14px 0; }
+  .flow .step { flex: 1 1 150px; min-width: 0; background: var(--bg); border: 1px solid var(--line); border-top: 3px solid var(--accent); border-radius: 10px; padding: 11px 12px; position: relative; }
+  .flow .step b { display: block; font-size: 13.5px; line-height: 1.4; }
+  .flow .step small { display: block; margin-top: 3px; color: var(--dim); font-family: var(--mono); font-size: 10.5px; letter-spacing: .04em; }
+  .flow .step + .step::before { content: "→"; position: absolute; left: -10px; top: 50%; transform: translateY(-50%); color: var(--accent); font-family: var(--mono); font-weight: 800; background: #fff; z-index: 2; }
+
+  /* tables */
+  .tbl-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); margin: 14px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; background: var(--bg); }
+  th, td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  th { background: var(--bg-soft); color: #37404f; font-weight: 700; font-size: 12.5px; white-space: nowrap; }
+  td .dim-h { color: var(--muted); font-size: 12px; }
+  .col-company { font-weight: 700; white-space: nowrap; }
+  .num-hl { font-family: var(--mono); font-weight: 800; color: var(--green); white-space: nowrap; }
+  .gap-mk { color: var(--amber); }
+  .risk-mk { color: var(--red); font-weight: 600; }
+  .ok-mk { color: var(--green); font-weight: 600; }
+
+  /* code snippets */
+  pre.code { margin: 8px 0; padding: 10px 12px; background: #f0f4f9; border: 1px solid var(--line); border-radius: 8px; font: 500 12px/1.7 var(--mono); color: #22405e; white-space: pre-wrap; word-break: break-word; overflow-x: auto; }
+  .code .k { color: var(--accent); }
+  .code .v { color: var(--green); }
+
+  /* company cases */
+  .case { margin: 26px 0; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--bg); }
+  .case-head { padding: 16px 20px 12px; background: linear-gradient(180deg, #f4f7fb, #fff); border-bottom: 1px solid var(--line); }
+  .case-head .who { color: var(--accent); font: 800 11.5px/1 var(--mono); letter-spacing: .09em; }
+  .case-head h3 { margin: 6px 0 4px; font-size: 19px; }
+  .case-head .form { margin: 0; color: var(--muted); font-size: 13.5px; max-width: 900px; }
+  .case-body { padding: 14px 20px 4px; }
+  .case-dims { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .dim { border: 1px solid var(--line); border-top: 2px solid var(--accent); border-radius: 10px; padding: 12px 13px; }
+  .dim .d-id { color: var(--accent); font: 800 10.5px/1 var(--mono); letter-spacing: .06em; display: block; margin-bottom: 6px; }
+  .dim h4 { margin: 0 0 6px; font-size: 14px; line-height: 1.4; }
+  .dim p { margin: 0 0 6px; color: #3a4250; font-size: 13px; }
+  .dim ul { margin: 0; padding-left: 16px; display: grid; gap: 4px; color: var(--muted); font-size: 12.5px; }
+  .dim .gap { display: block; margin-top: 7px; padding-top: 6px; border-top: 1px dashed var(--line-strong); color: var(--amber); font-size: 12px; }
+  .dim .full { display: block; margin-top: 7px; padding-top: 6px; border-top: 1px dashed var(--line-strong); color: var(--green); font-size: 12px; font-weight: 600; }
+  .case-out { display: flex; flex-wrap: wrap; gap: 8px; padding: 6px 20px 14px; }
+  .metric { border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; background: var(--bg); min-width: 170px; }
+  .metric b { display: block; font: 800 16px/1.2 var(--mono); color: var(--green); }
+  .metric span { display: block; margin-top: 3px; color: var(--muted); font-size: 12px; line-height: 1.4; }
+  .case-bound { margin: 0 20px 16px; }
+
+  /* conclusion / standards */
+  .rail { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin: 14px 0; }
+  .rail .node { border: 1px solid var(--line); border-radius: 10px; padding: 10px; position: relative; background: var(--bg); }
+  .rail .node b { font-size: 13px; display: block; line-height: 1.4; }
+  .rail .node small { color: var(--dim); font-family: var(--mono); font-size: 10px; }
+  .rail .node + .node::before { content: "→"; position: absolute; left: -8px; top: 50%; transform: translateY(-50%); color: var(--accent); font: 800 12px/1 var(--mono); z-index: 2; background: var(--bg); }
+  .phases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 12px 0; }
+  .phase { border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 10px; padding: 12px 14px; background: var(--bg); }
+  .phase:nth-child(2) { border-left-color: var(--green); }
+  .phase:nth-child(3) { border-left-color: var(--violet); }
+  .phase .ph { color: var(--accent); font: 800 10.5px/1 var(--mono); letter-spacing: .07em; display: block; margin-bottom: 5px; }
+  .phase:nth-child(2) .ph { color: var(--green); }
+  .phase:nth-child(3) .ph { color: var(--violet); }
+  .phase b { display: block; font-size: 14.5px; margin-bottom: 4px; }
+  .phase p { margin: 0; color: var(--muted); font-size: 13px; }
+  .divider { display: flex; align-items: center; gap: 12px; margin: 34px 0 6px; }
+  .divider::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .divider b { font: 800 13px/1 var(--mono); color: var(--accent); letter-spacing: .1em; }
+
+  .role-strip { display: grid; grid-template-columns: auto 1fr auto 1fr; gap: 6px 18px; align-items: start; border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 10px; padding: 12px 16px; background: var(--bg-soft); font-size: 13px; margin: 14px 0; }
+  .role-strip b { font-family: var(--mono); font-size: 11.5px; letter-spacing: .06em; color: var(--accent); white-space: nowrap; padding-top: 2px; }
+  .role-strip span { color: var(--muted); }
+  .role-strip .b { color: var(--violet); }
+
+  .src-group { margin: 8px 0 0; }
+  .src-group h4 { margin: 16px 0 6px; color: #37404f; }
+  .src-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .src-list a { display: block; border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px; color: var(--ink); font-size: 12.5px; line-height: 1.45; background: var(--bg); }
+  .src-list a:hover { border-color: var(--accent); background: var(--accent-soft); text-decoration: none; }
+  .src-list b { display: block; color: var(--accent); font-family: var(--mono); font-size: 12px; }
+  .src-list p { margin: 3px 0 0; color: var(--muted); }
+  .src-list .go { float: right; color: var(--dim); }
+
+  footer { border-top: 1px solid var(--line); background: var(--bg-soft); padding: 26px 0 40px; margin-top: 70px; color: var(--muted); font-size: 12.5px; }
+  .to-top { position: fixed; right: 22px; bottom: 22px; width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 800; box-shadow: 0 4px 14px rgba(11,87,208,.28); z-index: 60; }
+  .to-top:hover { text-decoration: none; opacity: .9; }
+
+  @media (max-width: 1100px) {
+    .pillars, .grid3, .grid4 { grid-template-columns: repeat(2, 1fr); }
+    .rail { grid-template-columns: repeat(3, 1fr); }
+    .rail .node:nth-child(3)::before { display: none; }
+    .rail .node:nth-child(n+4)::before { display: none; }
+    .src-list { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 820px) {
+    .case-dims { grid-template-columns: 1fr; }
+    .phases { grid-template-columns: 1fr; }
+    .role-strip { grid-template-columns: auto 1fr; }
+    h1 { font-size: 26px; }
+    section > h2 { font-size: 21px; }
+  }
+  @media (max-width: 620px) {
+    .pillars, .grid2, .grid3, .grid4 { grid-template-columns: 1fr; }
+    .rail { grid-template-columns: repeat(2, 1fr); }
+    .src-list { grid-template-columns: 1fr; }
+    .wrap { padding: 0 18px; }
+    .sec-no { font-size: 24px; }
+  }
+  @media print {
+    nav.toc, .to-top { display: none; }
+    .wrap { max-width: 100%; }
+    .case { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap hero-inner">
+    <p class="kicker">External Industry Practice Research · Knowledge Governance</p>
+    <h1>企业知识库建设调研<span class="sub">知识怎么生产、管理、调用与评测 —— 外部实践与跨序列知识治理规范</span></h1>
+    <p class="lead"><strong>核心判断：</strong>不是先建万能知识库，而是围绕真实任务，让知识<strong>来源清楚、业务可用、效果可检验</strong>，并能持续更新。知识是资产，但只有进入业务闭环、带治理、带评测，才会越用越好。</p>
+    <div class="doc-meta">
+      <span>资料口径：官方产品文档 / 工程博客 / 企业参与论文</span>
+      <span>截至：2026-07 可访问的公开资料</span>
+      <span>文档定位：分享材料 · 治理思路 · 落地建议</span>
+      <span>补充来源：文末附录可点击直达原文</span>
+    </div>
+    <ul class="pillars" style="padding-left:0;">
+      <li><span class="num">01</span><span class="name">元数据<small>身份、来源与状态</small></span></li>
+      <li><span class="num">02</span><span class="name">业务 Schema<small>结构与复用</small></span></li>
+      <li><span class="num">03</span><span class="name">知识飞轮<small>调用、留痕与改进</small></span></li>
+      <li><span class="num">04</span><span class="name">评测<small>验收与回归</small></span></li>
+    </ul>
+  </div>
+</header>
+
+<nav class="toc" aria-label="章节导航">
+  <div class="wrap toc-inner">
+    <span class="toc-label">导读</span>
+    <a href="#s0"><b>00</b>结论速览</a>
+    <a href="#s1"><b>01</b>运行框架</a>
+    <a href="#s2"><b>02</b>生产加工</a>
+    <a href="#s3"><b>03</b>元数据</a>
+    <a href="#s4"><b>04</b>业务 Schema</a>
+    <a href="#s5"><b>05</b>调用与飞轮</a>
+    <a href="#s6"><b>06</b>评测</a>
+    <a href="#s7"><b>07</b>深拆案例</a>
+    <a href="#s8"><b>08</b>价值信号</a>
+    <a href="#s9"><b>09</b>落地建议</a>
+    <a href="#sA"><b>A</b>附录与来源</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ============ 00 结论速览 ============ -->
+<section id="s0">
+  <div class="sec-head"><span class="sec-no">00</span><h2>结论速览</h2></div>
+  <p class="sec-lead">先给结论：业界反复出现的共性做法只有四条主线，落地上用「一个业务闭环」而非「一个大平台」起步。</p>
+  <div class="grid2">
+    <div class="callout">
+      <span class="tt">一条主线：正式知识 = 内容 + Schema 映射 + 元数据</span>
+      知识不是"先写完正文、再补元数据、最后才想 Schema"。正确做法是：围绕业务任务先定义<strong>最小元数据规范 + 最小业务 Schema</strong>，加工时同步产出内容、Schema 映射与逐条元数据，经<strong>业务确认</strong>后形成同一版本的正式知识。
+    </div>
+    <div class="callout green">
+      <span class="tt">一条铁律：使用结果不能自动改写正式知识</span>
+      一次纠错可能只是个人偏好、例外或误反馈。真实链路是：<strong>使用记录 → 问题归因 → 业务负责人确认 → 提交待验证版本 → 评测决定上线或回退</strong>。原始来源、确认区、确认理由、复测结果和可回退版本都必须保留。
+    </div>
+    <div class="callout">
+      <span class="tt">两条边界：别把概念混在一起</span>
+      ①「知识生产」是基础流程，不是第五项治理——元数据贯穿全程，Schema 约束加工与解释，飞轮产生改进建议，评测决定版本是否生效。<br>
+      ② 元数据的 Schema ≠ 业务的 Schema：LinkedIn / Uber 文档里的 Schema 是「元数据模型」，而业务 Schema 由业务定义对象、指标与规则。
+    </div>
+    <div class="callout green">
+      <span class="tt">一个提醒：公开数字要区分口径</span>
+      案例结果分属不同类型：工程效率自报测试（Meta）、上线前离线质量（Microsoft）、部署后变化（阿里 OpenBG）、采用规模（LinkedIn）、整体项目结果（Jacobs × Palantir）、仅机制公开（Snowflake）。<strong>不横向排名，不把个案数字当行业承诺。</strong>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 01 运行框架 ============ -->
+<section id="s1">
+  <div class="sec-head"><span class="sec-no">01</span><h2>知识运行框架：四项治理如何连成完整链路</h2></div>
+  <p class="sec-lead">上面一条是知识生命周期，下面四个是治理能力。生命周期回答"知识怎么流转"，治理回答"每一段由谁管、管什么"——两者不是同一条顺序。</p>
+
+  <h3 class="sec3">知识生命周期（主链路）</h3>
+  <div class="flow">
+    <div class="step"><b>业务场景与原始来源</b><small>TASK · SOURCE</small></div>
+    <div class="step"><b>最小元数据 / Schema 约束加工</b><small>CONTENT · SCHEMA · METADATA</small></div>
+    <div class="step"><b>业务确认 → 正式知识</b><small>CONFIRMED · VERSIONED</small></div>
+    <div class="step"><b>任务调用并留痕</b><small>RETRIEVE · USE · ACT</small></div>
+    <div class="step"><b>形成待验证改进</b><small>OBSERVE · REVIEW · SUBMIT</small></div>
+    <div class="step"><b>评测后更新或回退</b><small>TEST · RELEASE · ROLLBACK</small></div>
+  </div>
+
+  <h3 class="sec3">四项治理能力</h3>
+  <div class="tbl-scroll">
+    <table>
+      <thead><tr><th style="width:130px">治理</th><th>核心要回答的问题</th><th>关键动作</th><th>常见产物</th></tr></thead>
+      <tbody>
+        <tr><td class="col-company">01 元数据</td><td>每条知识是谁的、从哪来、谁负责、何时有效、现在能否用？</td><td>贯穿全生命周期：定义字段 → 同步采集 → 持续维护</td><td>知识档案 · 来源与派生链路 · 版本 / 状态</td></tr>
+        <tr><td class="col-company">02 业务 Schema</td><td>跨系统、跨团队怎样使用同一套业务定义？</td><td>约束加工与解释：对象 / 关系 → 指标 / 规则 → 数据映射</td><td>对象模型 · 指标定义 · 规则 / 例外</td></tr>
+        <tr><td class="col-company">03 知识飞轮</td><td>知识怎样被找到、调用，并从真实使用中发现问题？</td><td>产生改进建议：查找材料 → 回答 / 动作 → 待验证改进</td><td>模型材料包 · 调用记录 · 人工修改 / 结果</td></tr>
+        <tr><td class="col-company">04 评测</td><td>哪些改进可以进入正式版本？</td><td>控制版本生效：固定测试集 → 版本对照 → 更新 / 回退</td><td>期望结果 · 隔离测试集 · 影子对照</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout"><span class="tt">本次理解</span>真正的飞轮不是"越用越自动写库"，而是<strong>越用越能发现缺口、归因问题、形成经负责人确认的改进建议</strong>；评测是版本生效的闸门，决定更新、拒绝或回退。</div>
+</section>
+
+<!-- ============ 02 生产加工 ============ -->
+<section id="s2">
+  <div class="sec-head"><span class="sec-no">02</span><h2>知识生产怎么做：先有最小约束，再加工、确认和版本化</h2></div>
+  <p class="sec-lead">五种做法可以串成一条通用加工链；六类公开方法又分成「通用原则 / 开放载体 / 企业实现」三组，六张卡不是连续步骤，而是可选的加工范式。</p>
+
+  <h3 class="sec3">通用加工链（五步）</h3>
+  <div class="flow">
+    <div class="step"><b>业务场景与来源</b><small>明确任务，保留原文、数据和事件版本</small></div>
+    <div class="step"><b>加载最小约束</b><small>必填元数据字段 + 最小业务 Schema</small></div>
+    <div class="step"><b>加工并同步生成</b><small>整理内容，同时生成 Schema 映射与元数据</small></div>
+    <div class="step"><b>业务确认</b><small>确认主来源、业务含义、范围、例外与状态</small></div>
+    <div class="step"><b>形成正式知识</b><small>内容 + Schema 映射 + 元数据，统一版本</small></div>
+  </div>
+
+  <h3 class="sec3">通用原则与开放载体</h3>
+  <div class="grid3">
+    <div class="card"><span class="chip-label">通用原则 · SOURCE FIRST</span><h4>加工结果不能覆盖原始资料</h4><p>原始资料不一定天然正确，但必须保留版本和来源；摘要、标签、关系和规则都应能追溯到原文。</p><pre class="code">source snapshot + source_id + captured_at<br>→ derived content + reference + version<br>→ review / replace / rollback</pre><p style="margin-top:6px"><b style="color:var(--accent)">解决：</b>发现加工错误时可重新核对、修正与回退。</p></div>
+    <div class="card"><span class="chip-label">通用方法 · KARPATHY LLM WIKI</span><h4>定期整理，而不是每次问答临时重做</h4><p>保留 Raw Sources，由模型持续维护摘要、实体页、概念页、交叉引用与变更日志，用文件组织规则约束加工流程。</p><pre class="code">raw sources → LLM read / merge / revise<br>→ wiki/{summary, entity, concept, index, log}<br>processing contract = AGENTS.md / CLAUDE.md</pre><p style="margin-top:6px"><b style="color:var(--accent)">适合：</b>长期研究与团队知识积累；属个人公开生产方法，不是企业治理标准。</p></div>
+    <div class="card"><span class="chip-label">开放载体 · GOOGLE OKF</span><h4>用开放文件格式包装可交换知识</h4><p>一个概念一个 Markdown 文件，YAML Frontmatter 保存可查询字段，普通链接形成关联，index / log 支持渐进读取与变更追踪。</p><pre class="code">bundle/{index.md, log.md, concepts/*.md}<br>--- type · title · description · resource<br>tags · timestamp --- + Markdown body + links</pre><p style="margin-top:6px"><b style="color:var(--accent)">边界：</b>OKF 是知识包格式，可承载部分元数据，但不能替代企业元数据治理、业务 Schema 或检索运行时。</p></div>
+  </div>
+
+  <h3 class="sec3">三种企业实现</h3>
+  <div class="grid3">
+    <div class="card"><span class="chip-label" style="color:var(--violet)">企业实践 · META CONTEXT FILES</span><h4>按任务加工：把分散经验整理成 Agent 可读说明</h4><p>Meta 让多个 Agent 扫描代码、文档与隐性经验，生成固定结构的 Context Files，再由 Persona 查询与周期刷新检查可用性。</p><pre class="code">code + docs + tribal knowledge<br>→ structured context file<br>→ persona query / critic review / refresh</pre><p style="margin-top:6px"><b style="color:var(--violet)">特点：</b>不复制全部原文，而是围绕任务压缩出导航、约束与操作说明。</p></div>
+    <div class="card"><span class="chip-label" style="color:var(--violet)">企业实践 · ALIBABA OPENBG</span><h4>结构化加工：实体、属性和关系对齐成知识图谱</h4><p>先定义类目与关系，再从多源商品信息抽取实体、属性与关系，经对齐、消歧、质量检查后进入图谱和下游任务。</p><pre class="code">TBox / vocabulary → multi-source extraction<br>→ alignment / dedup / validation<br>→ ABox / graph → downstream tasks</pre><p style="margin-top:6px"><b style="color:var(--violet)">适合：</b>对象和关系稳定、需跨来源对齐和多任务复用的场景。</p></div>
+    <div class="card"><span class="chip-label" style="color:var(--violet)">企业实践 · SNOWFLAKE VERIFIED QUERY</span><h4>专家确认：把正确范例做成正式知识条目</h4><p>Verified Query 保存自然语言问题、业务确认过的正确 SQL、验证人与时间；真实使用只能生成建议，确认后才纳入正式语义模型。</p><pre class="code">question + expected SQL + verified_by / at<br>usage history → suggestion<br>→ accept / edit / dismiss → version</pre><p style="margin-top:6px"><b style="color:var(--violet)">特点：</b>把"正确示例"从聊天记录变成有负责人、有版本的可复用内容。</p></div>
+  </div>
+  <div class="callout"><span class="tt">一句话记住</span><strong>正式知识不是一段正文，而是「内容 + Schema 映射 + 元数据」三件套</strong>；最小 Schema 与元数据规范在加工前给出约束，逐条记录在加工时同步生成，而不是事后补登记。</div>
+</section>
+
+<!-- ============ 03 元数据 ============ -->
+<section id="s3">
+  <div class="sec-head"><span class="sec-no">03</span><h2>治理 01 · 元数据：让每条知识说明来源、负责人和有效范围</h2></div>
+  <p class="sec-lead">元数据与内容同步产生，但职责不同：内容回答"知识说了什么"，元数据回答"这份内容是谁、从哪来、谁负责、现在能否用"。</p>
+
+  <div class="callout"><span class="tt">主流思路 · KNOWLEDGE AS PRODUCT</span>元数据不是知识正文，而是知识的<strong>管理说明</strong>：知识 id / 类型、来源与原文、负责人（maintainer）、权限范围、有效时间、版本与状态、质量状态、派生来源链路。</div>
+  <div class="tag-row">
+    <span class="tag">knowledge_id / type</span><span class="tag">source / 原文</span><span class="tag">maintainer</span><span class="tag">ACL / scope</span><span class="tag">valid_time</span><span class="tag">version / status</span><span class="tag">quality_status / last_checked</span><span class="tag">derived_from / lineage</span>
+  </div>
+
+  <div class="grid2" style="margin-top:16px">
+    <div>
+      <h3 class="sec3">为什么元数据不能只登记一次？</h3>
+      <ul class="dash">
+        <li>知识变化比人工维护快，关键运行状态应尽可能从系统和使用记录中<strong>自动采集</strong>。</li>
+        <li>"有人写过"不等于"现在可用"——必须能找到负责人并判断是否仍然适用。</li>
+        <li>模型需要权限和来源信息，才能决定能否取用、怎样引用，以及资料不足时是否<strong>停止回答</strong>。</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="sec3">建议建设链：MODEL → CAPTURE → CONFIRM → OBSERVE</h3>
+      <ol class="steps">
+        <li data-n="1"><b>定义元数据模型</b> —— 确定知识类型、必填字段、状态枚举和来源关系。</li>
+        <li data-n="2"><b>加工时自动采集</b> —— 采集来源版本、时间、权限、派生链路与质量检查结果。</li>
+        <li data-n="3"><b>确认责任与状态</b> —— 确认主来源、负责人、适用范围、复核周期和生效状态。</li>
+        <li data-n="4"><b>事件驱动维护</b> —— 来源变更、到期或质量异常时更新状态并触发复核。</li>
+      </ol>
+      <div class="tag-row" style="margin-top:10px"><span class="tag" style="color:var(--accent);background:var(--accent-soft);border-color:#bcd0f0">交付物：元数据字段规范 · 知识档案卡 · 状态与质量规则</span></div>
+    </div>
+  </div>
+
+  <h3 class="sec3">案例速览：同一件事的两种公开做法</h3>
+  <div class="grid2">
+    <div class="card"><span class="chip-label">LINKEDIN · DATAHUB（2019 官方工程博客）</span><h4>用 Entity / Aspect / Relationship 统一元数据模型</h4><p>把数据集、指标、AI Feature 等资产与负责人、组织、状态和关系接入同一元数据图。</p><p><b style="color:var(--green)">当时公开规模：</b>100 万+ 数据集 · 2.5 万指标 · 1,500+ 周活员工。这是<strong>资产管理模型，不是业务对象定义</strong>。</p></div>
+    <div class="card"><span class="chip-label">UBER · DATABOOK（官方工程博客）</span><h4>领域团队维护元数据类型，中央团队审核兼容性</h4><p>Dragon 统一 Entity / Value Type 定义，工具生成兼容模型；负责人、描述、使用、质量、时效、资产关系和隐私信息进入统一页面。</p><p><b style="color:var(--amber)">注意：</b>这里的 Schema 是"元数据模型"，不是下一页的业务 Schema。</p></div>
+  </div>
+
+  <div class="role-strip"><b>业务要参与</b><span>确认主来源、负责人、适用范围、权限分类与复核周期</span><b class="b">技术负责</b><span>字段规范、自动采集、版本、状态与异常提醒</span></div>
+</section>
+
+<!-- ============ 04 业务 Schema ============ -->
+<section id="s4">
+  <div class="sec-head"><span class="sec-no">04</span><h2>治理 02 · 业务 Schema：让跨系统、跨团队使用同一套业务定义</h2></div>
+  <p class="sec-lead">业务 Schema 不是知识档案，而是一套共同业务定义：对象、属性、关系、指标、规则、约束和例外；需要操作时再定义 Action 契约。</p>
+  <div class="tag-row">
+    <span class="tag">对象 / 属性</span><span class="tag">关系</span><span class="tag">指标 / 规则</span><span class="tag">约束 / 例外</span><span class="tag">Action 契约（需要操作时）</span>
+  </div>
+
+  <div class="grid2" style="margin-top:16px">
+    <div>
+      <h3 class="sec3">本体、知识图谱、语义层分别解决什么？</h3>
+      <div class="tbl-scroll" style="margin-top:10px">
+        <table>
+          <tbody>
+            <tr><td class="col-company">本体</td><td>定义对象类型、属性、关系和约束；涉及操作时可增加 Action 参数、前置条件和影响对象。</td></tr>
+            <tr><td class="col-company">知识图谱</td><td>承载实体与关系，支持跨来源关联和多步查询，但不会自动获得执行权限。</td></tr>
+            <tr><td class="col-company">语义层</td><td>统一指标、维度和问数口径；小场景可先用术语表、指标表和规则表。</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <h3 class="sec3">建议建设链：SCENARIO → MINIMUM MODEL → MAPPING → VALIDATE</h3>
+      <ol class="steps">
+        <li data-n="1"><b>锁定业务任务</b> —— 明确要回答、判断或操作什么，以及错误代价。</li>
+        <li data-n="2"><b>定义最小 Schema</b> —— 从代表样本梳理对象、关系、指标、规则和例外。</li>
+        <li data-n="3"><b>映射真实来源</b> —— 把业务定义映射到表、列、文档、API 和工具。</li>
+        <li data-n="4"><b>任务验证并迭代</b> —— 用真实问题验证覆盖与歧义，版本化后逐步扩展。</li>
+      </ol>
+      <div class="tag-row" style="margin-top:10px"><span class="tag" style="color:var(--accent);background:var(--accent-soft);border-color:#bcd0f0">交付物：领域词表 / 对象模型 · 指标 / 规则 / 例外 · 数据与 Action 契约映射</span></div>
+    </div>
+  </div>
+
+  <h3 class="sec3">案例速览：同一件事的两种公开做法</h3>
+  <div class="grid2">
+    <div class="card"><span class="chip-label">PALANTIR · ONTOLOGY（官方文档）</span><h4>业务模型与运行时治理组合：从对象理解走到受控动作</h4><p>Ontology 定义对象、属性、关系与逻辑；Foundry 再把 Action、安全规则和运行记录组合进运营平台，供人员、应用和 Agent 共用。</p><p><b style="color:var(--amber)">边界：</b>Schema 定义动作契约；权限、审批、执行与审计属于运行时。</p></div>
+    <div class="card"><span class="chip-label">SNOWFLAKE · SEMANTIC VIEW（官方文档）</span><h4>指标问数更适合语义层：维度、Fact、Metric、关系与同义词</h4><p>Semantic View 用逻辑表、维度、事实、指标和关系覆盖并映射物理表；Verified Query 保存问题及业务确认过的正确 SQL。</p><p><b style="color:var(--green)">治理重点：</b>统一分析口径与自然语言问数。</p></div>
+  </div>
+
+  <div class="role-strip"><b>业务要参与</b><span>提供真实任务、代表样本、词义、指标口径、规则与例外</span><b class="b">技术负责</b><span>建模工具、来源映射、一致性校验、版本和兼容</span></div>
+</section>
+
+<!-- ============ 05 调用与飞轮 ============ -->
+<section id="s5">
+  <div class="sec-head"><span class="sec-no">05</span><h2>治理 03 · 知识飞轮：调用、留痕与改进</h2></div>
+  <p class="sec-lead">知识飞轮分上下两段：上半段回答"知识在一次任务里怎么被用"（先过滤 → 再查找 → 再组装）；下半段回答"使用结果怎样变成可信的改进建议"。它只产生建议，<strong>不决定上线</strong>。</p>
+
+  <h3 class="sec3">上半段 · 一次业务任务中的知识调用链</h3>
+  <div class="flow">
+    <div class="step"><b>业务任务</b><small>问题 / 对象 / 时间点</small></div>
+    <div class="step"><b>权限与时效过滤</b><small>租户 / 角色 / 状态 / 有效期</small></div>
+    <div class="step"><b>确定查询内容</b><small>对象 / 关系 / 指标 / 规则</small></div>
+    <div class="step"><b>选择查找方式</b><small>文件 / 混合 / 图 / SQL</small></div>
+    <div class="step"><b>形成模型材料包</b><small>资料 / 关联 / 引用 / 长度</small></div>
+    <div class="step"><b>回答或执行</b><small>回答 / 停止 / 操作 / 留痕</small></div>
+    <div class="step"><b>记录结果</b><small>调用 / 修改 / 结果 / 成本</small></div>
+  </div>
+
+  <h3 class="sec3">六种查找方式怎么选（查询路由）</h3>
+  <div class="tbl-scroll">
+    <table>
+      <thead><tr><th style="width:170px">方式</th><th>适用场景</th><th>做法</th><th>权衡 / 注意</th></tr></thead>
+      <tbody>
+        <tr><td class="col-company">A · 全量材料</td><td>材料很少，可以整体交给模型</td><td class="mono">whole corpus → permission filter → cache → model</td><td>是否整体放入取决于长度 / 成本 / 更新频率 / 权限，<strong>不存在统一数量门槛</strong>。</td></tr>
+        <tr><td class="col-company">B · 文件原生查找</td><td>文件不多、结构清楚、性能要求不高</td><td class="mono">index → Glob → Grep → Read neighbors → cite</td><td>透明、无需额外建向量索引；可复用文件权限，但仍须在检索与生成时强制执行。</td></tr>
+        <tr><td class="col-company">C · 混合检索<br>Contextual RAG</td><td>文本较多，既有精确术语也有同义表达</td><td class="mono">metadata / ACL → keyword + dense → fusion → rerank</td><td>覆盖面与成本的常见均衡起点；切块、上下文化和返回数量要用<strong>固定测试集</strong>调优。</td></tr>
+        <tr><td class="col-company">D · 图检索<br>GraphRAG</td><td>跨文档、多步关联或整体归纳</td><td class="mono">question type → local | global | drift | basic</td><td>建图和实体对齐有成本，只用于普通检索难以回答的问题；简单问题退回轻量检索。</td></tr>
+        <tr><td class="col-company">E · 时态关系检索</td><td>内容持续变化，须回答"某一时点是什么"</td><td class="mono">ACL + valid time → keyword + semantic + graph</td><td>适用组织关系、政策版本、客户状态、策略版本；需持续维护来源、失效和冲突。</td></tr>
+        <tr><td class="col-company">F · 结构化直接查询</td><td>指标和交易状态优先查询已确认口径的系统</td><td class="mono">schema / metric / verified query → execute → explain</td><td>不应先把表转成文本再做向量检索；执行操作按风险配置权限、条件和必要的人审。</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="warnbox"><span class="tt">本页只回答"怎么用"</span>元数据决定<strong>能不能取用</strong>　·　业务 Schema 决定<strong>查什么、怎样解释</strong>　·　召回与检索决定<strong>找到哪些材料</strong>　·　组装决定<strong>最终交给模型什么</strong>。</div>
+
+  <div class="divider"><b>知识飞轮 · 下半段</b></div>
+  <h3 class="sec3">回流闭环：使用记录 → 归因 → 负责人确认 → 待验证版本</h3>
+  <div class="flow">
+    <div class="step"><b>记录真实使用</b><small>问题、取用材料、回答 / 操作、人工修改和结果</small></div>
+    <div class="step"><b>归因问题</b><small>内容 / 时效 / Schema / 检索 / 规则 / 模型</small></div>
+    <div class="step"><b>业务负责人确认</b><small>接受、编辑或驳回，说明适用范围和原因</small></div>
+    <div class="step"><b>提交待验证版本</b><small>内容 / Schema / 检索或规则变更 + 补充测试样本</small></div>
+  </div>
+  <p>改进建议按性质分流处理：</p>
+  <div class="tag-row">
+    <span class="tag" style="color:var(--green);background:var(--green-soft);border-color:#bfe3c9">个案 → 保留为特殊处理</span>
+    <span class="tag" style="color:var(--accent);background:var(--accent-soft);border-color:#bcd0f0">共性 → 形成版本变更</span>
+    <span class="tag" style="color:var(--red);background:var(--red-soft);border-color:#f0c2be">错误 → 补充固定测试集</span>
+  </div>
+
+  <div class="grid2" style="margin-top:16px">
+    <div class="riskbox"><span class="tt">为什么不能"用户一改，知识就自动更新"？</span>
+      <ul class="dash" style="margin:4px 0 0">
+        <li>一次纠错可能只是个人偏好、特殊例外或错误反馈。</li>
+        <li>未经确认的修改会把错误带入后续检索、规则和模型。</li>
+        <li>必须保留原始来源、待确认区、确认理由、复测结果和可回退版本。</li>
+      </ul>
+    </div>
+    <div class="callout"><span class="tt">案例 · MICROSOFT CLOSED LOOP（官方产品博客）</span><h4 style="margin:6px 0">先记住具体纠错，再从多条经验归纳通用规则</h4><p style="margin:0 0 6px">新规则版本与当前版本在影子环境中同时运行；统计结果达标后，才替换当前版本。</p><p style="margin:0"><b style="color:var(--green)">上线前离线测试：</b>F1 +8.2pp；需人工修改字段 64% → 48%。</p></div>
+    <div class="callout"><span class="tt">案例 · META BUSINESS OWNER REVIEW（官方工程博客）</span><h4 style="margin:6px 0">把请求、调用过程、所用材料、输出和最终决定一起留下</h4><p style="margin:0 0 6px">业务负责人复核请求背景、所用材料和最终决定；真实历史请求进入评测，生产使用信号驱动每日复测。</p><p style="margin:0"><b style="color:var(--green)">共同点：</b>真实运行记录 · 人工确认 · 可追溯 · 持续复测。</p></div>
+  </div>
+
+  <div class="role-strip"><b>业务要参与</b><span>判断改进项是通用规则还是一次例外，接受 / 修改 / 驳回并说明适用范围与原因</span><b class="b">技术负责</b><span>完整留痕、问题归因、版本候选和测试样本生成</span></div>
+</section>
+
+<!-- ============ 06 评测 ============ -->
+<section id="s6">
+  <div class="sec-head"><span class="sec-no">06</span><h2>治理 04 · 评测：不是只看准确率，而是验收与持续复测机制</h2></div>
+  <p class="sec-lead">评测接住飞轮提交的待验证版本：业务负责人判断方向是否合理，但版本能否上线，要靠可重复的测试。</p>
+
+  <h3 class="sec3">真实评测六步流程</h3>
+  <div class="flow">
+    <div class="step"><b>接收待验证版本</b><small>变更范围、风险与错误代价</small></div>
+    <div class="step"><b>建设测试集</b><small>真实请求、边界、失败与权限样本</small></div>
+    <div class="step"><b>隔离数据</b><small>保留测试集、时间切分与防泄漏</small></div>
+    <div class="step"><b>分层打分</b><small>知识、检索、回答 / 操作、业务四层</small></div>
+    <div class="step"><b>版本对照</b><small>当前版本 vs 待验证版本，多次运行</small></div>
+    <div class="step"><b>决定上线</b><small>影子对照、小范围试运行、监控与回滚</small></div>
+  </div>
+
+  <div class="grid2" style="margin-top:18px">
+    <div class="card">
+      <h4>每条测试样本都能还原一次真实业务任务</h4>
+      <pre class="code"><span class="k">不只保存"问题—答案"，还应保存：</span>
+① 谁在什么时间、带什么权限发起什么任务
+② 应依据哪些资料或数据，给出什么回答或操作
+③ 哪些内容或操作禁止；资料不足时是否停止回答或转人工
+④ 谁标注、为什么这样判、错误会造成什么影响</pre>
+      <p style="margin-top:8px">样本切片覆盖四类：</p>
+      <div class="tag-row">
+        <span class="tag">正常主干：高频任务与核心口径</span>
+        <span class="tag">边界 / 反例：缺信息、歧义、越权、冲突</span>
+        <span class="tag">历史失败：每次事故固化为回归样本</span>
+        <span class="tag">时间 / 权限：旧版本、角色、租户隔离</span>
+      </div>
+    </div>
+    <div>
+      <h3 class="sec3">四层评测指标</h3>
+      <div class="tbl-scroll" style="margin-top:10px">
+        <table>
+          <thead><tr><th style="width:110px">层级</th><th>看什么</th><th>示例指标</th></tr></thead>
+          <tbody>
+            <tr><td class="col-company">知识本身</td><td>质量 + 硬约束</td><td>完整率、重复 / 冲突率、时效性、负责人是否明确；<span class="risk-mk">权限 / 来源 / 版本 / 有效期与失效状态是否正确</span></td></tr>
+            <tr><td class="col-company">检索 / 材料</td><td>找到多少 + 带入多少噪声</td><td>Recall@K、Claim Recall、Context Coverage；Context Precision、权限 / 时间正确、引用覆盖</td></tr>
+            <tr><td class="col-company">回答 / 操作</td><td>任务质量 + 风险</td><td>Exact / F1 / SQL 结果、任务成功、回答是否有来源支撑；<span class="risk-mk">编造、错误拒答、错误操作、敏感信息暴露</span></td></tr>
+            <tr><td class="col-company">运营 / 业务</td><td>效率 + 场景结果</td><td>p50 / p95 延迟、Token / 成本、人工修改率；采用率、解决率、耗时、CTR / GMV 等业务指标</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="sec3">企业官方公开的评测做法</h3>
+  <div class="grid3">
+    <div class="card"><span class="chip-label">PALANTIR · AIP EVALS</span><p>Suite = 测试样本 + 待测函数 + 评价函数；可设布尔 / 数值目标。<strong>LLM 任务建议至少运行 3 次，每轮指标都满足目标才算通过</strong>。</p></div>
+    <div class="card"><span class="chip-label">MICROSOFT · POWER APPS</span><p>100 张发票 × 10 次独立运行 × 4 配置，报告均值与 95% CI；待验证版本先影子对照，再用<strong>假设检验 + 功效分析</strong>决定是否替换。</p></div>
+    <div class="card"><span class="chip-label">SNOWFLAKE · EVALUATIONS</span><p>选中的 Verified Query 从临时语义视图<strong>移除以防泄漏</strong>；比较生成 SQL 的执行结果，记录 Accuracy、Regression 与 Latency。</p></div>
+  </div>
+
+  <div class="warnbox"><span class="tt">本次建议的上线条件</span>公开标准尚未给出跨任务、跨行业通用的 Recall 或 Groundedness 数值阈值。企业应在固定测试集中明确：<strong>不得出现越权访问或高风险错误操作</strong>；再按任务类别设质量、成本和延迟阈值。知识、Schema、检索或 Prompt 变更都应跑同一套回归。</div>
+</section>
+
+<!-- ============ 07 深拆案例 ============ -->
+<section id="s7">
+  <div class="sec-head"><span class="sec-no">07</span><h2>深拆案例：五家代表实践，按同一副框架核对</h2></div>
+  <p class="sec-lead">每家按「知识生产 + 元数据 / 业务 Schema / 使用与闭环 / 评测」四个维度拆解。公开到什么程度就写什么，<span class="gap-mk">未披露的缺口标黄</span>、不做推断。每案底部附「公开口径」边界。</p>
+
+  <!-- ===== Palantir ===== -->
+  <article class="case">
+    <div class="case-head">
+      <span class="who">COMPANY CASE 01 · PALANTIR ONTOLOGY</span>
+      <h3>Palantir：把企业知识建成"可执行的运营模型"</h3>
+      <p class="form">知识形态：业务对象 + 当前状态 + 逻辑 + 动作 + 权限。用于水厂、工厂、医院等跨系统运营决策；重点不是再造一张数据表，而是形成业务人员和系统共用的实时运营语义层。</p>
+    </div>
+    <div class="case-body">
+      <div class="case-dims">
+        <div class="dim">
+          <span class="d-id">01 · 知识生产 + 元数据</span>
+          <h4>Object Type 的公开结构</h4>
+          <pre class="code">Object Type · backing dataset · primary key
+Property {name, type, required, status}
+Link Type · Interface · Role</pre>
+          <ul><li><b>映射：</b>Dataset / Row / Column / Join → Object Type / Object / Property / Link。</li><li><b>治理：</b>校验主键唯一与必填；属性标记 experimental / active / deprecated，Branch 评审后发布。</li></ul>
+          <span class="gap">客户的实体消歧、来源优先级与质量阈值未统一披露</span>
+        </div>
+        <div class="dim">
+          <span class="d-id">02 · 业务 Schema</span>
+          <h4>Schema 同时装"名词、关系、逻辑、动作"</h4>
+          <pre class="code">Aircraft ─assignedTo→ Flight
+Property: status / capacity · Function: available?
+Action: reassignAircraft() · Security 贯穿各层</pre>
+          <ul><li><b>建模：</b>业务名词→Object；关系→Link；计算 / 模型→Function；业务动词→Action。</li><li><b>复用：</b>Shared Property 统一字段；Interface 统一跨对象能力；端到端 Branch 测试后合并。</li></ul>
+          <span class="full">它不是"表换名"，而是可执行的决策 / 运营本体</span>
+        </div>
+        <div class="dim">
+          <span class="d-id">03 · 供给 / 使用 / 闭环</span>
+          <h4>一次业务动作会留下可治理的决策记录</h4>
+          <pre class="code">Action {parameters, rules, submission criteria,
+permissions, notification / webhook, undo}
+Log {type+version, time, actor, objects, parameters}</pre>
+          <ul><li><b>执行：</b>应用 / Agent 读授权对象 → 调用 Action → 校验条件与权限 → 事务性修改对象 / 关系。</li><li><b>回流：</b>新状态进入 writeback dataset，Action Log 与对象关联，供监控、复盘与下一轮决策。</li></ul>
+          <span class="gap">日志会沉淀；是否自动升级规则或训练模型由客户实现</span>
+        </div>
+        <div class="dim">
+          <span class="d-id">04 · 评测</span>
+          <h4>评测工件是 Suite，而不是一张"准确率表"</h4>
+          <pre class="code">TestCase {input, expected output}
++ Target Function + Evaluator
+→ metric / pass-fail / cross-run variance</pre>
+          <ul><li><b>测试集：</b>人工边界案例或真实 Object Set；可用 exact、regex、数值、LLM judge 或自定义函数。</li><li><b>上线评审：</b>比较模型 / Prompt / 历史版本；Ontology 编辑先在模拟环境执行，再结合 Branch / Release 评审。</li></ul>
+          <span class="gap">能力公开；客户题集规模、业务阈值与自动阻断策略未披露</span>
+        </div>
+      </div>
+    </div>
+    <div class="case-out">
+      <div class="metric"><b>≈ −20%</b><span>Jacobs 某水厂全厂用电（原案例口径）</span></div>
+      <div class="metric"><b>+33%</b><span>Airbus A350 交付速度（原案例口径）</span></div>
+    </div>
+    <div class="riskbox case-bound"><span class="tt">公开口径</span>Jacobs 与 Airbus 数字来自官方合作材料，反映不同整体项目的自报结果；不是独立第三方评估，也不能单独归因于 Ontology 或 Actions。客户私有 Schema、测试集与阈值未公开。</div>
+  </article>
+
+  <!-- ===== Alibaba ===== -->
+  <article class="case">
+    <div class="case-head">
+      <span class="who" style="color:var(--violet)">COMPANY CASE 02 · ALIBABA OPENBG</span>
+      <h3>阿里 OpenBG：按知识类型组合建模十亿级电商知识</h3>
+      <p class="form">知识形态：RDF/OWL 本体 + SKOS 概念 + 属性图 + 规则。商品类目、消费概念、实体关系和商业规则不硬装进一种模型，而是按知识类型分别建模，再统一形成可训练、可查询的 TBox / ABox 资产。</p>
+    </div>
+    <div class="case-body">
+      <div class="case-dims">
+        <div class="dim" style="border-top-color:var(--violet)">
+          <span class="d-id" style="color:var(--violet)">01 · 知识生产 + 元数据</span>
+          <h4>公开工件：TBox + ABox + Benchmark</h4>
+          <pre class="code">TBox: Class / Concept / Relation + domain / range
+ABox: Product ─brandIs / relatedScene→ Entity
+字段：label · subClassOf / broader · type · comment · image</pre>
+          <ul><li><b>原料：</b>淘宝标题、详情、图片、评论、搜索词 + Wikidata / OpenKG / 品牌官网。</li><li><b>加工：</b>NER / 关系抽取 / 指代消解 / 人工标注 → 标准名与同义词对齐 → Jena 生成 TBox / ABox。</li></ul>
+          <span class="gap">支持 TTL / NT / JSON-LD / OWL；负责人、版本、有效期、权限字段未披露</span>
+        </div>
+        <div class="dim" style="border-top-color:var(--violet)">
+          <span class="d-id" style="color:var(--violet)">02 · 业务 Schema</span>
+          <h4>不同知识类型采用不同 Schema</h4>
+          <pre class="code">Category / 属性 → RDF / OWL Ontology
+Scene / Crowd / Theme / Time / Market → SKOS
+商品 / 品牌 / 地点关系 → Property Graph
+商业规则 → Rule Model</pre>
+          <ul><li><b>类目：</b>专家自上而下建树，以清晰、完整、互斥、热度、认可度每日审核。</li><li><b>概念：</b>从评论 / 搜索词用 BERT-CRF 抽取、自下而上归纳；品牌和地点做 Schema Mapping。</li></ul>
+          <span class="gap">Rule Model 仅披露 20 万+ 规则待发布，语法与样例未公开</span>
+        </div>
+        <div class="dim" style="border-top-color:var(--violet)">
+          <span class="d-id" style="color:var(--violet)">03 · 供给 / 使用 / 闭环</span>
+          <h4>知识被编译进模型和具体交易任务</h4>
+          <pre class="code">KG triples + 商品文本 / 图片
+→ KG-enhanced mPLUG 预训练 → 任务微调
+→ 商品对齐 / 导购 / AliMe QA / 新品属性填充</pre>
+          <ul><li><b>使用：</b>同一套知识分别进入类目预测、NER、摘要、评论 IE、显著性判断与线上业务。</li><li><b>维护：</b>每日新增数据 → 专家质检 → 修订类目 / 概念 / 三元组 → 持续调整 ontology。</li></ul>
+          <span class="gap">公开的是生产维护小循环；点击 / 纠错如何审批回写未披露</span>
+        </div>
+        <div class="dim" style="border-top-color:var(--violet)">
+          <span class="d-id" style="color:var(--violet)">04 · 评测</span>
+          <h4>从 Schema 质检一直测到线上 KPI</h4>
+          <pre class="code">Schema QC → KG Benchmark → 下游任务 → 线上业务
+Hits@K / MRR · Accuracy / P-R-F1 / ROUGE-L
+GMV · CPM · CTR · 上新时长</pre>
+          <ul><li><b>题集：</b>训练 / 验证 / 测试三元组；下游验证集排除在预训练数据外，避免标签泄漏。</li><li><b>业务：</b>部署后报告商品对齐 GMV、导购 CPM、推荐 CTR 与上新时长变化。</li></ul>
+          <span class="gap">生产准入阈值、线上分流、样本量与显著性未披露</span>
+        </div>
+      </div>
+    </div>
+    <div class="case-out">
+      <div class="metric"><b>2.6B / 88M+</b><span>三元组 / 实体（论文公开规模）</span></div>
+      <div class="metric"><b>≈ +11% / ≈ −30%</b><span>推荐 CTR / 新品发布时长（部署后自报）</span></div>
+    </div>
+    <div class="riskbox case-bound"><span class="tt">公开口径</span>论文强在构建、Schema、应用和部署后结果；未披露负责人、权限、生命周期、上线审批，以及业务指标的实验分流与显著性细节。</div>
+  </article>
+
+  <!-- ===== Meta ===== -->
+  <article class="case">
+    <div class="case-head">
+      <span class="who" style="color:var(--green)">COMPANY CASE 03 · META</span>
+      <h3>Meta：两套独立实践，分别拆工程上下文与访问决策知识</h3>
+      <p class="form">不是统一系统。前者把隐性工程经验做成 Context File；后者把资源层级、数据图、SOP 与请求上下文用于访问决策。页面并列看的是两者共同的工程模式。</p>
+    </div>
+    <div class="case-body">
+      <div class="case-dims">
+        <div class="dim" style="border-top-color:var(--green)">
+          <span class="d-id" style="color:var(--green)">01 · 知识生产 + 元数据</span>
+          <h4>一套做工程导航，一套做决策上下文</h4>
+          <pre class="code">A · Context File {Quick Commands, Key Files,
+Non-obvious Patterns, See Also}
+B · Resource {Table, Column, Dashboard,
+Policy, SOP} + summary / semantics</pre>
+          <ul><li><b>A 加工：</b>2 个探索 Agent → 11 个模块分析 → 2 个写作 → 10+ critic 三轮 → fixer → Router 优化。</li><li><b>B 加工：</b>资源层级、Wiki / 规则、用户 Profile / 近期活动、Query shape 被组合成可读上下文。</li></ul>
+          <span class="gap">A 未公开 Owner / 版本字段；B 未公开 Resource 完整字段表</span>
+        </div>
+        <div class="dim" style="border-top-color:var(--green)">
+          <span class="d-id" style="color:var(--green)">02 · 业务 Schema</span>
+          <h4>两个任务各有自己的轻量 Schema</h4>
+          <pre class="code">A · Module → files / commands / hidden
+constraints / depends-on / related modules
+B · Resource Graph + Role + SOP +
+Explicit / Implicit Intent + Context</pre>
+          <ul><li><b>A 约束：</b>每个模块固定 25–35 行、约 1,000 tokens，并补跨仓依赖索引与 Data Flow Map。</li><li><b>B 约束：</b>资产节点、生产 / 消费 / 访问边、资源层级与数据语义，再叠加角色和业务意图。</li></ul>
+          <span class="gap">都不是企业级 Ontology；正式版本与审批 Schema 未披露</span>
+        </div>
+        <div class="dim" style="border-top-color:var(--green)">
+          <span class="d-id" style="color:var(--green)">03 · 供给 / 使用 / 闭环</span>
+          <h4>留下的记录与回流方式也不相同</h4>
+          <pre class="code">A · Task → Router → Context File；路径 /
+覆盖 / critic 结果驱动周期刷新
+B · Query + trace + used context + output
++ decision / log → Data Owner review</pre>
+          <ul><li><b>A 闭环：</b>每隔数周验证路径、覆盖缺口和过期引用，重新运行 critic 后修复。</li><li><b>B 闭环：</b>User Agent 推断意图，Owner Agent 定位资源；规则护栏后保存决策，Owner 反馈进入评测。</li></ul>
+          <span class="gap">B 未说明反馈会自动改 SOP；A 是鲜度闭环，不是业务纠错闭环</span>
+        </div>
+        <div class="dim" style="border-top-color:var(--green)">
+          <span class="d-id" style="color:var(--green)">04 · 评测</span>
+          <h4>一个用 Persona 题集，一个用真实请求日回归</h4>
+          <pre class="code">A · 55+ questions × 5 personas → critic
+score / path validity / tool &amp; token use
+B · historical request + activity + profile
++ query run + final decision → acc / recall</pre>
+          <ul><li><b>A 结果：</b>三轮 critic：3.65 → 4.20 / 5；引用路径全验证；公开报告零路径幻觉。</li><li><b>B 上线条件：</b>从真实历史请求建集并每日回归；运行时另有查询权限、每日预算和规则型风险护栏。</li></ul>
+          <span class="gap">评分 rubric、题集规模 / 切分及统一发布阈值未公开</span>
+        </div>
+      </div>
+    </div>
+    <div class="case-out">
+      <div class="metric"><b>4,100+</b><span>工程上下文实践：覆盖文件</span></div>
+      <div class="metric"><b>≈ 2 天 → 30 分钟</b><span>理解复杂数据管道（案例自报）</span></div>
+      <div class="metric"><b>≈ −40%</b><span>6 项初测任务：工具调用与 Token</span></div>
+    </div>
+    <div class="riskbox case-bound"><span class="tt">公开口径</span>本页并列归纳两套独立实践："运行记录 + 数据负责人反馈 + 每日回归"只对应数据仓访问实践，不代表两套系统已经打通；6 个初测任务的结果不能代表全公司统一 ROI。</div>
+  </article>
+
+  <!-- ===== Microsoft ===== -->
+  <article class="case">
+    <div class="case-head">
+      <span class="who" style="color:#0b7fd0">COMPANY CASE 04 · MICROSOFT POWER APPS</span>
+      <h3>Microsoft：把每次业务纠错沉淀为可复用规则</h3>
+      <p class="form">知识形态：结构化纠错记忆 + 租户 / 流程内的业务规则。以发票数据录入为例：用户不只修正这一次结果，系统把纠错变成记忆，再把高频经验蒸馏为可验证、可升级的组织级规则。</p>
+    </div>
+    <div class="case-body">
+      <div class="case-dims">
+        <div class="dim" style="border-top-color:#0b7fd0">
+          <span class="d-id" style="color:#0b7fd0">01 · 知识生产 + 元数据</span>
+          <h4>原始文档、草稿与纠错怎样变成记忆</h4>
+          <pre class="code">Input: PDF / Excel / Email
+Target: Dataverse Table + Logical Columns
+Draft: Suggested Values
+Feedback: old → corrected
+Asset: Structured Memory</pre>
+          <ul><li><b>生成：</b>invoke_data_entry 接收原文、目标表和待预测列，抽取 Supplier / Address / Country / Total 等字段并生成草稿。</li><li><b>加工：</b>Agent Feed 左看原文、右看建议；业务用户修改并保存，每次差异持久化为可检索记忆。</li></ul>
+          <span class="gap">记忆真实字段、相似度键、Owner、保留期、访问控制与版本未披露</span>
+        </div>
+        <div class="dim" style="border-top-color:#0b7fd0">
+          <span class="d-id" style="color:#0b7fd0">02 · 业务 Schema</span>
+          <h4>知识分成"案例记忆 + 通用规则"两层</h4>
+          <pre class="code">Example Memory {business context, correction,
+reusable handling}
+Generalized Rule {condition → instruction}
+例：UK→United Kingdom · legal entity name · total incl. VAT</pre>
+          <ul><li><b>数据层：</b>Dataverse 用目标表 + Logical Column 约束结果结构；具体纠错先保留为流程范围内的示例。</li><li><b>知识层：</b>多条记忆经 Genetic-Pareto 蒸馏为规则，编译进 Candidate Prompt / Agent Instructions。</li></ul>
+          <span class="gap">这是流程级 Rule Schema；规则存储格式与 Prompt 版本对象未披露</span>
+        </div>
+        <div class="dim" style="border-top-color:#0b7fd0">
+          <span class="d-id" style="color:#0b7fd0">03 · 供给 / 使用 / 闭环</span>
+          <h4>人工纠正先复用，再被蒸馏为组织规则</h4>
+          <pre class="code">Draft Record → User Diff → Structured Memory
+→ Similar-memory Retrieval → Generalized Rule
+→ Candidate Prompt → Shadow Test → Baseline</pre>
+          <ul><li><b>运行：</b>Dataverse 记录在人工确认前不创建；下一次相似任务检索记忆并复用之前的处理方式。</li><li><b>升级：</b>周期性规则蒸馏，Candidate 与 Current Prompt 对同一输入并行评分，达标后自动晋升。</li></ul>
+          <span class="full">审核人就是处理数据录入的业务用户，纠错直接来自真实工作</span>
+        </div>
+        <div class="dim" style="border-top-color:#0b7fd0">
+          <span class="d-id" style="color:#0b7fd0">04 · 评测</span>
+          <h4>发布工件包含数据集、对照和统计门槛</h4>
+          <pre class="code">100 invoices × 10 independent runs × 4 configs
+4,277 field instances · mean + 95% CI
+F1 66.4→74.6% · fields needing edit 64→48%</pre>
+          <ul><li><b>质量：</b>除 F1 外，还看业务用户能否"零修改直接保存"；共减少 1,045 个需人工修改字段。</li><li><b>上线条件：</b>Current / Candidate 影子并跑 → hypothesis testing + power analysis → 达统计阈值后升级 Baseline。</li></ul>
+          <span class="gap">显著性水平、目标功效和每次升级最小样本量未披露</span>
+        </div>
+      </div>
+    </div>
+    <div class="case-out">
+      <div class="metric"><b>F1 +8.2pp</b><span>66.4% → 74.6%</span></div>
+      <div class="metric"><b>64% → 48%</b><span>需人工修改字段（上线前离线模拟）</span></div>
+    </div>
+    <div class="riskbox case-bound"><span class="tt">结果适用范围</span>结果来自 UK Electoral Commission 数据集上的上线前离线模拟；产品机制已公开，不能外推成所有业务场景的生产收益。</div>
+  </article>
+
+  <!-- ===== Snowflake ===== -->
+  <article class="case">
+    <div class="case-head">
+      <span class="who" style="color:var(--amber)">COMPANY CASE 05 · SNOWFLAKE CORTEX ANALYST</span>
+      <h3>Snowflake：把业务语义、验证问答与评测做成同一套资产</h3>
+      <p class="form">知识形态：业务语义模型 + 已验证问题 / SQL。面向自然语言数据分析，把指标、维度、关系、同义词和经过业务确认的问法统一管理；使用建议、人工审核和回归评测围绕同一对象运转。</p>
+    </div>
+    <div class="case-body">
+      <div class="case-dims">
+        <div class="dim" style="border-top-color:var(--amber)">
+          <span class="d-id" style="color:var(--amber)">01 · 知识生产 + 元数据</span>
+          <h4>Verified Query 本身就是可治理知识工件</h4>
+          <pre class="code">- name: California profit
+  question: What was the profit …?
+  sql: SELECT sum(profit) …
+  verified_by / verified_at /
+  use_as_onboarding_question</pre>
+          <ul><li><b>生产：</b>业务专家确认"自然语言问题—正确 SQL"，记录验证人 / 时间，加入 Semantic View / Model。</li><li><b>治理：</b>语义资产接 Snowflake RBAC、Tag；官方建议 YAML / DDL 进 Git 做评审、回滚与 CI/CD。</li></ul>
+          <span class="full">经确认的样例不是聊天记录，而是带验证信息的正式知识条目</span>
+        </div>
+        <div class="dim" style="border-top-color:var(--amber)">
+          <span class="d-id" style="color:var(--amber)">02 · 业务 Schema</span>
+          <h4>Semantic View 的字段与映射</h4>
+          <pre class="code">Logical Table sales_data → database.schema.table
+Dimension state {expr, type, description, synonyms}
+Measure profit {expr: amt-cst, default_agg: sum}
+Relationship orders.customer_id → customers.id</pre>
+          <ul><li><b>设计：</b>先定业务实体、关系、维度、Fact、Metric；建议从聚焦场景的 3–5 张表起步。</li><li><b>映射：</b>再映射物理表 / 列，补名称、描述、同义词、聚合与 Join Path，审核后 CREATE SEMANTIC VIEW。</li></ul>
+          <span class="full">规则型知识在 Semantic View；复杂范例型知识在 VQR</span>
+        </div>
+        <div class="dim" style="border-top-color:var(--amber)">
+          <span class="d-id" style="color:var(--amber)">03 · 供给 / 使用 / 闭环</span>
+          <h4>真实使用先产生建议，不能自动改写正式知识</h4>
+          <pre class="code">Suggestion {type: VQ | filter | metric |
+description | synonym,
+evidence: query history / Analyst questions /
+existing VQ,
+decision: Accept | Edit | Dismiss}</pre>
+          <ul><li><b>发现：</b>从近期 SQL 和 Analyst 使用中找"高频且新颖"的缺口；每类最多展示 10 条建议。</li><li><b>确认：</b>领域人员 Accept / Edit 后进入 VQR 或语义层；正确范例还可抽象成可复用 Filter / Metric。</li></ul>
+          <span class="full">闭环核心：使用信号 → 改进建议 → 人工确认 → 新版语义知识</span>
+        </div>
+        <div class="dim" style="border-top-color:var(--amber)">
+          <span class="d-id" style="color:var(--amber)">04 · 评测</span>
+          <h4>同一 VQ 既可服务运行，也可成为防泄漏题集</h4>
+          <pre class="code">Ground truth {question, expected SQL}
+metric = sql_correctness
+report = accuracy + regressions + latency
++ generated SQL</pre>
+          <ul><li><b>Holdout：</b>选择 VQ 作为评测集；系统从临时 Semantic View 移除被测 VQ，避免 Exact-Match 泄漏。</li><li><b>回归：</b>生成并执行 SQL，与 Expected SQL 结果比较；审核 Improve 建议后重跑，确认提升且无回归。</li></ul>
+          <span class="gap">截至 2026-07，内置评分 metric 仅 sql_correctness；未给统一自动发布阈值</span>
+        </div>
+      </div>
+    </div>
+    <div class="case-out">
+      <div class="metric"><b>机制链路公开</b><span>资产、建议、人审与评测均有官方产品文档</span></div>
+      <div class="metric"><b>未披露</b><span style="color:var(--amber)">公司内部或客户的可归因业务收益</span></div>
+    </div>
+    <div class="riskbox case-bound"><span class="tt">公开口径</span>文档覆盖 Semantic View、VQR、人工确认建议与 SQL correctness 回归；不等于覆盖多轮对话、权限安全或所有质量维度，也未提供可归因业务收益。</div>
+  </article>
+
+  <!-- 横向比较 -->
+  <h3 class="sec3">五案横向对照：公开机制比较</h3>
+  <div class="tbl-scroll">
+    <table>
+      <thead><tr><th>公司</th><th>知识生产 + 元数据</th><th>业务 Schema</th><th>使用与闭环</th><th>评测</th></tr></thead>
+      <tbody>
+        <tr><td class="col-company">Palantir</td><td>Object Type / Property / Role + Branch</td><td>对象 / 关系 / Function / Action / Security</td><td>受控 Action → 新状态 + Action Log</td><td>Eval Suite + 版本比较；客户阈值<span class="gap-mk">未披露</span></td></tr>
+        <tr><td class="col-company">阿里 OpenBG</td><td>TBox / ABox / Benchmark + 每日加工</td><td>RDF/OWL + SKOS + 属性图 + Rule</td><td>预训练 / 微调 + 专家维护；反馈回写<span class="gap-mk">未披露</span></td><td>Schema QC → KG → 任务 → 业务 KPI</td></tr>
+        <tr><td class="col-company">Meta</td><td>Context File / Resource + SOP / semantics</td><td>Module 契约 / Resource Graph + Intent</td><td>路径刷新 / Decision Log + 负责人复核</td><td>Persona 测试集 / 历史请求日回归</td></tr>
+        <tr><td class="col-company">Microsoft</td><td>Dataverse Draft / User Diff / Memory</td><td>Example Memory + Generalized Rule</td><td>纠错 → 检索 → 规则 → 影子对照 → 当前版本</td><td>4,277 字段 + F1 / 编辑率 + 统计条件</td></tr>
+        <tr><td class="col-company">Snowflake</td><td>VQ {question, SQL, verifier, time}</td><td>Semantic View + VQR</td><td>Query History → Suggestion → 人审</td><td>Holdout VQ + sql_correctness / regression</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="grid2" style="margin-top:12px">
+    <div class="callout"><span class="tt">公开案例反复出现的共同机制</span>
+      <ul class="dash" style="margin:4px 0 0">
+        <li>知识有负责人、来源、权限、版本与失效条件</li>
+        <li>Schema 承载业务对象、关系、指标、规则或动作</li>
+        <li>使用信号先形成改进建议，再由领域人员确认</li>
+        <li>新知识或规则通过真实任务回归后更新正式版本</li>
+      </ul>
+    </div>
+    <div class="callout"><span class="tt">业务需要交付的可验收内容</span>
+      <ul class="dash" style="margin:4px 0 0">
+        <li>语义：概念、口径、规则、动作与例外</li>
+        <li>治理：业务确认的主来源、负责人、权限与复核周期</li>
+        <li>反馈：改进建议的接受、驳回、修改及原因</li>
+        <li>验收：固定测试用例、错误代价、阈值与上线签字</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 08 价值信号 ============ -->
+<section id="s8">
+  <div class="sec-head"><span class="sec-no">08</span><h2>公开价值信号：业务结果、工程效率、质量提升与采用规模分开看</h2></div>
+  <p class="sec-lead">知识被嵌入真实任务后价值更易被度量，但这里不能把所有数字都叫"业务收益"——<strong>结果类型与适用范围必须分开讲</strong>。</p>
+  <div class="tbl-scroll">
+    <table>
+      <thead><tr><th>案例</th><th>价值类型</th><th>公开信号</th><th>作用链路 / 机制</th><th>适用范围说明</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="col-company">Meta · Context Files</td>
+          <td>研发理解 / 工程效率</td>
+          <td><span class="num-hl">约 2 天 → 30 分钟</span>；另披露 6 个初测任务约少 40% 工具调用与 Token</td>
+          <td>经验结构化 → 任务前自动加载 → 减少探索和工具调用</td>
+          <td><span class="gap-mk">官方工程博客自报测试；不能代表全公司统一 ROI</span></td>
+        </tr>
+        <tr>
+          <td class="col-company">Microsoft · Power Apps</td>
+          <td>离线任务质量（返工代理指标）</td>
+          <td><span class="num-hl">F1 +8.2pp</span>；需人工编辑字段 <span class="num-hl">64% → 48%</span></td>
+          <td>记录纠错 → 待验证与当前版本影子对照 → 统计达标后替换</td>
+          <td><span class="gap-mk">上线前离线模拟；不是生产流程收益</span></td>
+        </tr>
+        <tr>
+          <td class="col-company">阿里 OpenBG</td>
+          <td>电商推荐 / 业务指标（部署后）</td>
+          <td><span class="num-hl">CTR +11%</span>；商品发布时长约 <span class="num-hl">−30%</span></td>
+          <td>统一 TBox / ABox → 多模态对齐 → 预训练 → 下游任务</td>
+          <td><span class="gap-mk">企业参与论文自报；线上分流、样本量、显著性、长期归因未完整公开</span></td>
+        </tr>
+        <tr>
+          <td class="col-company">LinkedIn · DataHub</td>
+          <td>平台采用规模</td>
+          <td><span class="num-hl">1,500+ 周活员工</span>；覆盖 <span class="num-hl">100 万+ 数据集 / 2.5 万指标</span></td>
+          <td>统一知识身份 → 搜索发现 → 责任与变更协作</td>
+          <td><span class="gap-mk">2019 年公开的覆盖规模与采用度；不等于可归因财务收益</span></td>
+        </tr>
+        <tr>
+          <td class="col-company">Jacobs × Palantir</td>
+          <td>运营决策（整体项目结果）</td>
+          <td><span class="num-hl">约 20% 全厂节电</span>（Agua Nueva 项目）；另有 Airbus A350 交付 +33%</td>
+          <td>统一对象与状态 → 模型建议 → 结合现场流程执行</td>
+          <td><span class="gap-mk">官方合作项目材料；整体项目结果，不能单独归因于 Ontology，不能外推其他工厂</span></td>
+        </tr>
+        <tr>
+          <td class="col-company">Snowflake</td>
+          <td>产品机制（价值链路本身）</td>
+          <td><span class="num-hl">机制已公开</span>；可归因客户结果未披露</td>
+          <td>调研原则：产品能力、测试结果、客户业务结果分开陈述</td>
+          <td><span class="ok-mk">"没有公开数字"也是结论——避免为完整而编造统一 ROI</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="warnbox"><span class="tt">阅读方式</span>这些案例展示的是<strong>不同类型的价值信号</strong>；场景、基线、测试层级和公开材料性质不同——不做横向排名，也不把个案数字当成行业承诺。</div>
+</section>
+
+<!-- ============ 09 落地建议 ============ -->
+<section id="s9">
+  <div class="sec-head"><span class="sec-no">09</span><h2>落地建议：先跑通一个业务闭环，再固化成知识运行规范</h2></div>
+  <p class="sec-lead">与开头同一张图：上方是知识生命周期，下方只有四项治理能力。先围绕真实任务起步，复杂度由真实需求触发，不预建大平台。</p>
+
+  <h3 class="sec3">四项知识治理规范（统一运行标准）</h3>
+  <div class="grid2">
+    <div class="card"><span class="chip-label">01 · 知识档案 / 元数据</span><h4>最小元数据模型，加工时同步记录</h4><p><code class="mono" style="background:var(--bg-soft);padding:2px 6px;border-radius:5px">id / type / source / maintainer / ACL / scope / valid_time / version / status / lineage</code></p></div>
+    <div class="card"><span class="chip-label">02 · 业务 Schema</span><h4>共同业务定义，操作再补契约</h4><p>对象、属性、关系、指标、规则、约束与例外；涉及操作时补充 Action 参数、前置条件和影响对象。</p></div>
+    <div class="card"><span class="chip-label">03 · 调用与知识飞轮</span><h4>留痕 → 归因 → 确认 → 待验证版本</h4><p>权限与时间过滤 → 按任务检索和组装 → 回答 / 操作留痕 → 归因问题 → 负责人确认 → 提交待验证版本。</p></div>
+    <div class="card"><span class="chip-label">04 · 评测与版本更新</span><h4>固定测试集 + 分层指标 + 版本对照</h4><p>按风险采用影子或小范围试运行，决定更新、拒绝或回退。</p></div>
+  </div>
+
+  <h3 class="sec3">分阶段建设建议</h3>
+  <div class="phases">
+    <div class="phase"><span class="ph">PHASE 1 · PILOT</span><b>先做一个跨序列高价值场景</b><p>选代表来源，定义最小元数据与最小 Schema，加工出正式知识并建立固定测试集；小库优先文件或结构化查询。</p></div>
+    <div class="phase"><span class="ph">PHASE 2 · OPERATE</span><b>跑通调用、反馈与评测</b><p>建设使用留痕、负责人确认、待验证版本、回归测试、上线观测与回滚，形成可持续闭环。</p></div>
+    <div class="phase"><span class="ph">PHASE 3 · UPGRADE</span><b>按问题升级，不预建大平台</b><p>多跳全局问题再上 GraphRAG；高变化知识再上时态图；需要写回再上受控 Action。</p></div>
+  </div>
+
+  <h3 class="sec3">建议最小合同（把公开锚点落到可执行字段）</h3>
+  <div class="tbl-scroll">
+    <table>
+      <thead><tr><th style="width:150px">对象</th><th>最小合同字段</th><th>依据</th></tr></thead>
+      <tbody>
+        <tr><td class="col-company">元数据 / 知识档案</td><td><code class="mono">id · type · source · owner · version · status · effective_time · ACL · lineage · quality</code></td><td>DCAT 3 / PROV-O / ISO 25012 · LinkedIn / Uber</td></tr>
+        <tr><td class="col-company">业务 Schema</td><td><code class="mono">concept · object · property · relation · metric · rule · action · constraint · mapping</code></td><td>RDF / OWL / SKOS / SHACL · OpenBG / Snowflake / Palantir</td></tr>
+        <tr><td class="col-company">运行记录（飞轮）</td><td><code class="mono">query · context_ids · output / action · trace · feedback · reviewer · decision · next_version</code></td><td>W3C DUV / PROV-O · Snowflake / Microsoft / Meta</td></tr>
+        <tr><td class="col-company">评测包</td><td><code class="mono">dataset_version · baseline · candidate · metric · slice · threshold · run_count · CI · decision</code></td><td>ISO 25012 / W3C DQV / NIST AI 600-1 · Palantir / AWS / RAGChecker</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="warnbox"><span class="tt">重要边界</span>"建议最小合同"是把标准与企业实践映射到本次场景后的落地模板，<strong>不宣称它本身是国际标准</strong>；尤其 RAG / Agent 评测目前没有跨行业统一的数值阈值。</div>
+
+  <div class="role-strip" style="margin-top:18px">
+    <b>业务负责</b><span>选择场景、确认主来源与业务定义、维护例外、标注测试样本、决定风险阈值</span>
+    <b class="b">技术负责</b><span>加工与元数据采集、Schema 映射、检索运行时、版本留痕、自动复测与回滚</span>
+  </div>
+</section>
+
+<!-- ============ A 附录 ============ -->
+<section id="sA">
+  <div class="divider" style="margin-top:56px"><b>附录</b></div>
+  <div class="sec-head"><span class="sec-no">A</span><h2>附录：来源与补充材料（均可点击直达原文）</h2></div>
+
+  <div class="src-group">
+    <h4>① 深拆样本 · 核心公开来源</h4>
+    <div class="src-list">
+      <a href="https://www.palantir.com/docs/foundry/ontology/why-ontology" target="_blank" rel="noreferrer"><b>Palantir · Ontology</b><span class="go">↗</span><p>对象、关系、逻辑、动作与权限如何组成运营语义层。</p></a>
+      <a href="https://www.palantir.com/docs/foundry/action-types/overview" target="_blank" rel="noreferrer"><b>Palantir · Actions</b><span class="go">↗</span><p>规则、提交条件、权限、对象变更、回滚与外部写回。</p></a>
+      <a href="https://www.palantir.com/docs/foundry/aip-evals/overview" target="_blank" rel="noreferrer"><b>Palantir · AIP Evals</b><span class="go">↗</span><p>测试用例、评价函数、跨版本比较与多次运行方差。</p></a>
+      <a href="https://www.jacobs.com/sites/default/files/2023-01/Palantir-Jacobs-Brochure.pdf" target="_blank" rel="noreferrer"><b>Jacobs × Palantir</b><span class="go">↗</span><p>Jacobs 官方资料；Agua Nueva 项目约 20% 全厂节电。</p></a>
+      <a href="https://www.palantir.com/assets/xrfr7uokpv1b/7uEHPTEM0MkKtBFcx2zh63/9d75da5b76439717ac95135b5012479e/Palantir-Airbus-Partnership_Overview.pdf" target="_blank" rel="noreferrer"><b>Palantir · Airbus</b><span class="go">↗</span><p>官方合作概览；A350 交付速度等数字只对应原案例。</p></a>
+      <a href="https://arxiv.org/abs/2209.15214" target="_blank" rel="noreferrer"><b>阿里 · OpenBG</b><span class="go">↗</span><p>ICDE 企业参与论文；构建、Schema、下游任务与部署后指标。</p></a>
+      <a href="https://github.com/OpenBGBenchmark/OpenBG" target="_blank" rel="noreferrer"><b>OpenBG · 官方仓库</b><span class="go">↗</span><p>TBox / ABox、三元组、RDF / SKOS / 属性图数据结构与文件格式。</p></a>
+      <a href="https://engineering.fb.com/2026/04/06/developer-tools/how-meta-used-ai-to-map-tribal-knowledge-in-large-scale-data-pipelines/" target="_blank" rel="noreferrer"><b>Meta · Context Files</b><span class="go">↗</span><p>隐性经验映射、固定结构、周期刷新与 Persona 评测。</p></a>
+      <a href="https://engineering.fb.com/2025/08/13/data-infrastructure/agentic-solution-for-warehouse-data-access/" target="_blank" rel="noreferrer"><b>Meta · Warehouse Agent</b><span class="go">↗</span><p>真实请求建集、每日回归、完整运行记录与数据负责人复核。</p></a>
+      <a href="https://www.microsoft.com/en-us/power-platform/blog/power-apps/power-apps-mcp-server-introduces-closed-loop-learning-for-enterprise-agents/" target="_blank" rel="noreferrer"><b>Microsoft · Closed Loop</b><span class="go">↗</span><p>纠错记忆、规则蒸馏、影子实验和统计升级门槛。</p></a>
+      <a href="https://learn.microsoft.com/en-us/power-apps/maker/common/faq-power-apps-mcp-server-invoke-data-entry" target="_blank" rel="noreferrer"><b>Microsoft · Data Entry</b><span class="go">↗</span><p>invoke_data_entry 的输入、Dataverse 目标结构与人工确认行为。</p></a>
+      <a href="https://docs.snowflake.com/en/user-guide/views-semantic/overview" target="_blank" rel="noreferrer"><b>Snowflake · Semantic View</b><span class="go">↗</span><p>逻辑表、维度、Fact、Metric、关系与物理表映射。</p></a>
+      <a href="https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-analyst/verified-query-repository" target="_blank" rel="noreferrer"><b>Snowflake · VQR</b><span class="go">↗</span><p>Verified Query 的字段、逻辑名称与运行时使用。</p></a>
+      <a href="https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-analyst/verified-query-suggestions" target="_blank" rel="noreferrer"><b>Snowflake · Suggestions</b><span class="go">↗</span><p>从使用历史生成改进建议，领域人员接受、编辑或驳回。</p></a>
+      <a href="https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-analyst-evaluations" target="_blank" rel="noreferrer"><b>Snowflake · Evaluations</b><span class="go">↗</span><p>Holdout、期望 SQL 与 sql_correctness；截至 2026-07 不支持多轮评测。</p></a>
+    </div>
+  </div>
+
+  <div class="src-group">
+    <h4>② 补充案例 · 单一环节更强（不做完整主案例）</h4>
+    <div class="src-list">
+      <a href="https://www.linkedin.com/blog/engineering/archive/data-hub" target="_blank" rel="noreferrer"><b>LinkedIn · DataHub</b><span class="go">↗</span><p>元数据：Entity / Relationship / Aspect 与变更审计事件。</p></a>
+      <a href="https://www.uber.com/us/en/blog/metadata-insights-databook/" target="_blank" rel="noreferrer"><b>Uber · Databook</b><span class="go">↗</span><p>元数据：受控词表、Schema 审核、Event Log 与负责人确认。</p></a>
+      <a href="https://medium.com/airbnb-engineering/how-airbnb-achieved-metric-consistency-at-scale-f23cc53dea70" target="_blank" rel="noreferrer"><b>Airbnb · Minerva</b><span class="go">↗</span><p>业务 Schema：中央指标定义、Code Review、校验和统一服务。</p></a>
+      <a href="https://tech.meituan.com/2026/03/20/Busniness-Intelligence-practice-in-meituan.html" target="_blank" rel="noreferrer"><b>美团 · 指标平台</b><span class="go">↗</span><p>业务 Schema：指标口径结构化、公共 / 私有资产、DSL 查询语义与模型路由。</p></a>
+      <a href="https://cloud.google.com/blog/products/ai-machine-learning/how-google-cloud-improved-customer-support-with-contact-center-ai" target="_blank" rel="noreferrer"><b>Google Cloud · CCAI</b><span class="go">↗</span><p>Agent Assist 调用集中知识库；业务收益属于 CCAI 整体口径。</p></a>
+      <a href="https://www.amazon.science/publications/ragchecker-a-fine-grained-framework-for-diagnosing-retrieval-augmented-generation" target="_blank" rel="noreferrer"><b>Amazon · RAGChecker</b><span class="go">↗</span><p>评测：Claim 级拆分结果、检索与生成层错误。</p></a>
+      <a href="https://www.aboutamazon.com/news/retail/amazon-rufus-ai-assistant-personalized-shopping-features" target="_blank" rel="noreferrer"><b>Amazon · Rufus</b><span class="go">↗</span><p>业务使用：商品、评价、偏好与购物动作进入助手。</p></a>
+      <a href="https://arxiv.org/abs/1905.08487" target="_blank" rel="noreferrer"><b>腾讯 · ConcepT</b><span class="go">↗</span><p>知识应用：概念知识图谱进入内容推荐并做线上 A/B。</p></a>
+    </div>
+  </div>
+
+  <div class="src-group">
+    <h4>③ 前沿方法与检索路由 · 一手来源</h4>
+    <div class="src-list">
+      <a href="https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing" target="_blank" rel="noreferrer"><b>Google Cloud · OKF</b><span class="go">↗</span><p>Open Knowledge Format 的动机、Concept 结构、三项设计原则与参考实现。</p></a>
+      <a href="https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md" target="_blank" rel="noreferrer"><b>Google · OKF Spec</b><span class="go">↗</span><p>Bundle、Concept ID、YAML Frontmatter、index / log、链接与兼容规则。</p></a>
+      <a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f" target="_blank" rel="noreferrer"><b>Karpathy · LLM Wiki</b><span class="go">↗</span><p>Raw Sources 保留版本、LLM 持续整理 Wiki、加工契约与小库 index-only 思路。</p></a>
+      <a href="https://www.anthropic.com/engineering/contextual-retrieval" target="_blank" rel="noreferrer"><b>Anthropic · Contextual Retrieval</b><span class="go">↗</span><p>全量上下文、小库阈值示例、Contextual BM25 + Embedding、融合与重排。</p></a>
+      <a href="https://code.claude.com/docs/en/tools-reference" target="_blank" rel="noreferrer"><b>Claude Code · Tools</b><span class="go">↗</span><p>Glob、Grep（基于 ripgrep）与 Read 的官方工具定义和权限边界。</p></a>
+      <a href="https://microsoft.github.io/graphrag/" target="_blank" rel="noreferrer"><b>Microsoft · GraphRAG</b><span class="go">↗</span><p>TextUnit、实体关系、Leiden 社区摘要以及 Global / Local / DRIFT / Basic 查询。</p></a>
+      <a href="https://github.com/getzep/graphiti" target="_blank" rel="noreferrer"><b>Zep · Graphiti</b><span class="go">↗</span><p>Episode 来源、Fact 有效窗口、增量更新和语义 + 关键词 + 图 + 时间检索。</p></a>
+    </div>
+  </div>
+
+  <div class="src-group">
+    <h4>④ 标准、评测与补充企业实践 · 一手来源</h4>
+    <div class="src-list">
+      <a href="https://www.iso.org/standard/68683.html" target="_blank" rel="noreferrer"><b>ISO 30401</b><span class="go">↗</span><p>知识管理体系的建立、实施、维护、评审与持续改进要求。</p></a>
+      <a href="https://www.iso.org/standard/35736.html" target="_blank" rel="noreferrer"><b>ISO/IEC 25012</b><span class="go">↗</span><p>结构化数据的 15 项质量特征；可用于质量要求、测量与评估。</p></a>
+      <a href="https://www.w3.org/TR/vocab-dcat-3/" target="_blank" rel="noreferrer"><b>W3C · DCAT 3</b><span class="go">↗</span><p>Dataset / Data Service、版本、目录互操作与质量 / 来源指引。</p></a>
+      <a href="https://www.w3.org/TR/prov-o/" target="_blank" rel="noreferrer"><b>W3C · PROV-O</b><span class="go">↗</span><p>用 Entity、Activity、Agent 与派生关系表达来源和责任。</p></a>
+      <a href="https://www.w3.org/TR/shacl/" target="_blank" rel="noreferrer"><b>W3C · SHACL</b><span class="go">↗</span><p>用 Shape 与 Constraint 验证 RDF 图中的节点、属性与基数。</p></a>
+      <a href="https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence" target="_blank" rel="noreferrer"><b>NIST AI 600-1</b><span class="go">↗</span><p>生成式 AI 风险的 Govern / Map / Measure / Manage 与 TEVV 锚点。</p></a>
+      <a href="https://www.palantir.com/docs/foundry/aip-evals/create-suite" target="_blank" rel="noreferrer"><b>Palantir · Evals</b><span class="go">↗</span><p>Case、Object Set、Evaluator、Objective、Threshold 与 Pass 逻辑。</p></a>
+      <a href="https://www.palantir.com/docs/foundry/aip-evals/run-suite" target="_blank" rel="noreferrer"><b>Palantir · Runs</b><span class="go">↗</span><p>LLM 至少三次迭代建议、Run Metadata、版本比较与方差。</p></a>
+      <a href="https://aws.amazon.com/bedrock/evaluations/" target="_blank" rel="noreferrer"><b>AWS · RAG Evals</b><span class="go">↗</span><p>Retrieval 与 End-to-End 分层；Coverage、Faithfulness、Citation 等指标。</p></a>
+      <a href="https://www.amazon.science/publications/ragchecker-a-fine-grained-framework-for-diagnosing-retrieval-augmented-generation" target="_blank" rel="noreferrer"><b>Amazon · RAGChecker</b><span class="go">↗</span><p>Claim 级拆分检索召回、上下文利用、噪声与幻觉。</p></a>
+      <a href="https://docs.databricks.com/aws/en/mlflow3/genai/eval-monitor" target="_blank" rel="noreferrer"><b>Databricks · MLflow 3</b><span class="go">↗</span><p>离线评测、Trace、生产抽样监控、同一 Scorer 与多轮评测。</p></a>
+      <a href="https://www.linkedin.com/blog/engineering/data-management/shifting-left-on-governance-datahub-and-schema-annotations" target="_blank" rel="noreferrer"><b>LinkedIn · Governance</b><span class="go">↗</span><p>受控词表、Schema Annotation、Ownership 与政策映射。</p></a>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:18px"><span class="tt">来源类型与适用范围</span>官方产品文档说明厂商公开的机制；合作方材料与企业参与论文报告特定项目或测试中的结果。<strong>它们不是独立第三方审计</strong>：数字不跨场景比较，也不把整体项目结果归因到单一知识模块。页面按 2026-07-15 可访问的官方资料整理，产品功能与文档会持续变化，正式落地前应再次核对版本、可用区域与 Preview / GA 状态。</div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><b style="color:var(--ink)">文档信息</b>　企业知识库建设调研（商务整理版） · 素材源文件：<span class="mono">企业知识库调研素材.txt</span> · 整理日期：2026-09-07</p>
+    <p>本页由原始演示版（全屏幻灯片式）重排而来：内容与来源链接完整保留，讲稿提示（Presenter Notes）未收录；「未披露」一律以黄字标注，不做推断。</p>
+  </div>
+</footer>
+
+<a class="to-top" href="#top" aria-label="回到顶部">↑</a>
+
+</body>
+</html>
