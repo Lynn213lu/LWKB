@@ -1,0 +1,1382 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="具身智能（Embodied AI）发展脉络全景笔记：从笛卡尔身心二元论、控制论与灰·沃尔特的电子乌龟，到 Brooks 行为主义革命、深度学习与强化学习融合，再到 RT-1/RT-2/OpenVLA/π0/GR00T 的 VLA 范式，直至世界模型与'人类学习'范式的 2026 年最新进展；含中美产业路径、中国政策谱系、数据金字塔、评测基准与治理挑战。">
+<title>具身智能（Embodied AI）发展脉络全景笔记 · 精装版</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  :root {
+    --accent: #0b57d0;
+    --accent-deep: #08419e;
+    --accent-soft: #e8f0fe;
+    --ink: #1c2230;
+    --muted: #596274;
+    --dim: #8a93a3;
+    --line: #e2e7f0;
+    --line-strong: #c6cfdb;
+    --bg: #ffffff;
+    --bg-soft: #f5f7fb;
+    --green: #137a34; --green-soft: #e6f4ea;
+    --amber: #96590a; --amber-soft: #fdf3e3;
+    --red: #b3261e;   --red-soft: #fceae8;
+    --violet: #5835b8; --violet-soft: #f0ebfb;
+    --teal: #0a7c75;  --teal-soft: #e0f4f2;
+    --mono: "SFMono-Regular", "Cascadia Code", Consolas, "Roboto Mono", monospace;
+    --font: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    --radius: 14px;
+    --sidebar-w: 188px;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 400 15px/1.78 var(--font);
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .mono { font-family: var(--mono); }
+  sup.fn { font-family: var(--mono); font-size: 10.5px; }
+  sup.fn a { color: var(--accent); padding: 0 1px; }
+
+  /* ===== 进度条 ===== */
+  #progress { position: fixed; top: 0; left: 0; height: 3px; width: 0;
+    background: linear-gradient(90deg, var(--accent), #6aa4ff); z-index: 200; transition: width .1s linear; }
+
+  /* ===== Hero ===== */
+  header.hero {
+    position: relative; overflow: hidden; color: #fff;
+    background:
+      radial-gradient(1200px 500px at 85% -10%, rgba(255,255,255,.16), transparent 60%),
+      radial-gradient(900px 420px at -5% 110%, rgba(110,168,255,.28), transparent 55%),
+      linear-gradient(135deg, #0a3f9c 0%, #0b57d0 55%, #2f6fe0 100%);
+  }
+  header.hero::before {
+    content: ""; position: absolute; inset: 0; opacity: .5; pointer-events: none;
+    background-image: radial-gradient(rgba(255,255,255,.14) 1px, transparent 1px);
+    background-size: 26px 26px;
+  }
+  .hero-inner { position: relative; max-width: 1240px; margin: 0 auto; padding: 56px 28px 44px; }
+  .kicker { font: 700 12px/1 var(--mono); letter-spacing: .22em; text-transform: uppercase;
+    color: #bfd6ff; margin: 0 0 16px; }
+  h1 { margin: 0; font-size: 40px; line-height: 1.18; letter-spacing: -.015em; color: #fff; }
+  h1 .sub { display: block; margin-top: 10px; color: #d3e2ff; font-size: 18.5px; font-weight: 500; line-height: 1.55; }
+  .lead { margin: 22px 0 0; max-width: 960px; font-size: 15.5px; color: #e8f0ff;
+    background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.22);
+    border-left: 4px solid #9fc3ff; border-radius: 12px; padding: 15px 18px; backdrop-filter: blur(3px); }
+  .lead strong { color: #fff; }
+  .doc-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .doc-meta span { display: inline-flex; align-items: center; gap: 6px; padding: 5px 13px;
+    border: 1px solid rgba(255,255,255,.3); border-radius: 999px; background: rgba(255,255,255,.1);
+    color: #e4eeff; font-size: 12.5px; white-space: nowrap; }
+
+  /* 结论区 */
+  .conclusions-wrap { max-width: 1240px; margin: -26px auto 0; padding: 0 28px; position: relative; }
+  .conclusions { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: 0 12px 34px rgba(10,40,90,.12); padding: 20px 22px; }
+  .conclusions .ttl { color: var(--accent); font: 800 12px/1 var(--mono); letter-spacing: .14em; margin: 0 0 12px; }
+  .conclusions ol { margin: 0; padding-left: 22px; color: #2a3140; counter-reset: cc; list-style: none; display: grid; gap: 9px; }
+  .conclusions ol li { position: relative; font-size: 14.5px; }
+  .conclusions ol li::before { counter-increment: cc; content: counter(cc, decimal-leading-zero);
+    font: 800 11px/1 var(--mono); color: var(--accent); background: var(--accent-soft);
+    border-radius: 6px; padding: 3px 6px; margin-right: 8px; vertical-align: 1px; }
+  .conclusions ol li b { color: var(--accent-deep); }
+
+  /* ===== 布局 ===== */
+  .layout { max-width: 1240px; margin: 34px auto 0; padding: 0 28px; display: grid;
+    grid-template-columns: var(--sidebar-w) minmax(0, 1fr); gap: 30px; }
+  aside.toc { position: sticky; top: 18px; align-self: start; max-height: calc(100vh - 36px);
+    overflow-y: auto; padding: 4px 0 20px; }
+  aside.toc .toc-title { font: 800 11px/1 var(--mono); letter-spacing: .16em; color: var(--dim); margin: 6px 0 10px; padding-left: 10px; }
+  aside.toc nav { display: grid; gap: 2px; border-left: 2px solid var(--line); }
+  aside.toc nav a { display: block; padding: 6px 10px 6px 14px; margin-left: -2px;
+    border-left: 2px solid transparent; color: var(--muted); font-size: 13px; line-height: 1.45; }
+  aside.toc nav a b { display: block; font: 700 10.5px/1.4 var(--mono); color: var(--dim); letter-spacing: .05em; }
+  aside.toc nav a:hover { color: var(--accent); text-decoration: none; }
+  aside.toc nav a.active { border-left-color: var(--accent); color: var(--accent); font-weight: 600; background: linear-gradient(90deg, var(--accent-soft), transparent 80%); }
+  aside.toc nav a.active b { color: var(--accent); }
+
+  main { min-width: 0; padding-bottom: 96px; }
+  section { margin: 58px 0 0; scroll-margin-top: 24px; }
+  section:first-child { margin-top: 8px; }
+  .sec-head { display: flex; align-items: baseline; gap: 14px; margin: 0 0 8px; }
+  .sec-no { color: var(--accent); font: 800 32px/1 var(--mono); letter-spacing: -.03em; opacity: .9; }
+  section > h2 { margin: 0; font-size: 24.5px; line-height: 1.3; letter-spacing: -.012em; }
+  .sec-lead { color: var(--muted); max-width: 940px; margin: 8px 0 18px; font-size: 14.5px; }
+
+  .callout, .warnbox, .riskbox, .okbox, .violetbox, .tealbox, .quotebox {
+    border-radius: 12px; padding: 14px 17px; font-size: 14px; margin: 16px 0; }
+  .callout { background: var(--accent-soft); border-left: 4px solid var(--accent); }
+  .okbox { background: var(--green-soft); border-left: 4px solid var(--green); }
+  .warnbox { background: var(--amber-soft); border-left: 4px solid var(--amber); }
+  .riskbox { background: var(--red-soft); border-left: 4px solid var(--red); }
+  .violetbox { background: var(--violet-soft); border-left: 4px solid var(--violet); }
+  .tealbox { background: var(--teal-soft); border-left: 4px solid var(--teal); }
+  .quotebox { background: var(--bg-soft); border: 1px solid var(--line); border-left: 4px solid var(--accent); font-size: 14.5px; }
+  .quotebox .src { display: block; margin-top: 6px; color: var(--dim); font: 500 12px/1.5 var(--mono); }
+  .callout .tt, .warnbox .tt, .riskbox .tt, .okbox .tt, .violetbox .tt, .tealbox .tt {
+    font: 800 11px/1 var(--mono); letter-spacing: .1em; display: block; margin-bottom: 5px; color: var(--accent); }
+  .warnbox .tt { color: var(--amber); } .riskbox .tt { color: var(--red); }
+  .okbox .tt { color: var(--green); } .violetbox .tt { color: var(--violet); } .tealbox .tt { color: var(--teal); }
+
+  h3 { margin: 28px 0 12px; font-size: 18.5px; letter-spacing: -.006em; }
+  h3 .h3no { color: var(--accent); font: 800 13px/1 var(--mono); margin-right: 8px; vertical-align: 2px; }
+  h4 { margin: 16px 0 7px; font-size: 14.5px; }
+  p { margin: 9px 0; }
+  ul.clean { margin: 8px 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+  ul.clean li { padding-left: 18px; position: relative; }
+  ul.clean li::before { content: ""; position: absolute; left: 2px; top: .68em; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); opacity: .7; }
+  ul.dash { margin: 8px 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+  ul.dash li { padding-left: 17px; position: relative; color: #39414f; }
+  ul.dash li::before { content: "—"; position: absolute; left: 0; color: var(--accent); }
+  ol.steps { margin: 10px 0; padding: 0; list-style: none; display: grid; gap: 9px; }
+  ol.steps li { padding-left: 36px; position: relative; }
+  ol.steps li::before { content: attr(data-n); position: absolute; left: 0; top: 2px; width: 25px; height: 25px;
+    display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); border-radius: 8px; font: 800 12px/1 var(--mono); }
+
+  .grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .card { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 16px 17px; transition: box-shadow .18s ease, transform .18s ease, border-color .18s ease; }
+  .card:hover { box-shadow: 0 8px 26px rgba(15,45,100,.09); border-color: var(--line-strong); transform: translateY(-2px); }
+  .card h4 { margin: 0 0 7px; font-size: 14.5px; }
+  .card p { margin: 0; color: var(--muted); font-size: 13.5px; }
+  .card .chip-label { color: var(--accent); font: 800 10.5px/1 var(--mono); letter-spacing: .09em; display: block; margin-bottom: 6px; }
+  .card.t-green .chip-label { color: var(--green); } .card.t-violet .chip-label { color: var(--violet); }
+  .card.t-teal .chip-label { color: var(--teal); } .card.t-amber .chip-label { color: var(--amber); }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { display: inline-flex; align-items: center; padding: 3px 10px; background: var(--bg-soft);
+    border: 1px solid var(--line); border-radius: 999px; color: #46505f; font-family: var(--mono); font-size: 12px; }
+
+  .tbl-wrap { overflow-x: auto; margin: 14px 0; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); }
+  table.t { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  table.t th, table.t td { padding: 10px 13px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.t th { background: var(--bg-soft); color: #28303e; font-weight: 700; font-size: 12.5px; white-space: nowrap; }
+  table.t tr:last-child td { border-bottom: none; }
+  table.t tbody tr:hover td { background: #fafbfe; }
+  table.t td .chip { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11.5px; font-family: var(--mono); background: var(--accent-soft); color: var(--accent); white-space: nowrap; }
+  table.t td .chip.vio { background: var(--violet-soft); color: var(--violet); }
+  table.t td .chip.amb { background: var(--amber-soft); color: var(--amber); }
+  table.t td .chip.grn { background: var(--green-soft); color: var(--green); }
+  table.t td .chip.red { background: var(--red-soft); color: var(--red); }
+
+  .timeline { position: relative; margin: 20px 0 16px; padding-left: 24px; border-left: 2px solid var(--line-strong); }
+  .timeline .node { position: relative; padding: 0 0 18px 18px; }
+  .timeline .node::before { content: ""; position: absolute; left: -31px; top: 6px; width: 12px; height: 12px;
+    border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px #fff, 0 0 0 4.5px var(--accent-soft); }
+  .timeline .node .year { color: var(--accent); font: 800 12px/1 var(--mono); letter-spacing: .06em; }
+  .timeline .node .title { display: block; margin: 4px 0 5px; font-weight: 700; font-size: 14.5px; }
+  .timeline .node p { margin: 0; color: var(--muted); font-size: 13.5px; }
+  .timeline .node.n-green::before { background: var(--green); box-shadow: 0 0 0 3px #fff, 0 0 0 4.5px var(--green-soft); }
+  .timeline .node.n-violet::before { background: var(--violet); box-shadow: 0 0 0 3px #fff, 0 0 0 4.5px var(--violet-soft); }
+  .timeline .node.n-amber::before { background: var(--amber); box-shadow: 0 0 0 3px #fff, 0 0 0 4.5px var(--amber-soft); }
+  .timeline .node.n-teal::before { background: var(--teal); box-shadow: 0 0 0 3px #fff, 0 0 0 4.5px var(--teal-soft); }
+  .timeline .node.n-green .year { color: var(--green); }
+  .timeline .node.n-violet .year { color: var(--violet); }
+  .timeline .node.n-amber .year { color: var(--amber); }
+  .timeline .node.n-teal .year { color: var(--teal); }
+
+  .flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 10px; margin: 16px 0; }
+  .flow .step { flex: 1 1 150px; min-width: 0; background: var(--bg); border: 1px solid var(--line);
+    border-top: 3px solid var(--accent); border-radius: 11px; padding: 12px 13px; position: relative; }
+  .flow .step b { display: block; font-size: 13.5px; line-height: 1.45; }
+  .flow .step small { display: block; margin-top: 4px; color: var(--dim); font-family: var(--mono); font-size: 10.5px; letter-spacing: .04em; }
+  .flow .step + .step::before { content: "→"; position: absolute; left: -11px; top: 50%; transform: translateY(-50%);
+    color: var(--accent); font-family: var(--mono); font-weight: 800; background: #fff; z-index: 2; }
+
+  .stack { display: grid; gap: 0; margin: 18px 0; }
+  .stack .layer { border: 1px solid var(--line); border-bottom: none; padding: 13px 18px;
+    display: grid; grid-template-columns: 190px 1fr auto; gap: 14px; align-items: center; background: var(--bg); }
+  .stack .layer:first-child { border-radius: 12px 12px 0 0; }
+  .stack .layer:last-child { border-bottom: 1px solid var(--line); border-radius: 0 0 12px 12px; }
+  .stack .layer .lname { font-weight: 700; font-size: 14px; }
+  .stack .layer .ldesc { color: var(--muted); font-size: 13px; }
+  .stack .layer .lmetric { font: 800 11.5px/1.5 var(--mono); color: var(--red); white-space: nowrap; text-align: right; }
+  .stack .layer.hl { background: linear-gradient(90deg, var(--accent-soft), #fff 65%); }
+  .stack .layer.hl .lmetric { color: var(--green); }
+  .stack .arrow-up { text-align: center; color: var(--accent); font: 800 12px/1 var(--mono); padding: 7px 0; background: var(--bg-soft); border-left: 1px solid var(--line); border-right: 1px solid var(--line); letter-spacing: .1em; }
+
+  pre.code { margin: 12px 0; padding: 13px 15px; background: #f7f9fc; border: 1px solid var(--line);
+    border-radius: 11px; font: 400 12.5px/1.65 var(--mono); color: #2a3140; overflow-x: auto; }
+  pre.code b { color: var(--accent); }
+  pre.code .cm { color: var(--dim); }
+
+  details.app { border: 1px solid var(--line); border-radius: 11px; background: var(--bg); padding: 11px 15px; margin: 9px 0; }
+  details.app[open] { background: var(--bg-soft); }
+  details.app > summary { cursor: pointer; font-weight: 700; font-size: 14px; color: var(--accent); }
+  details.app > summary:hover { text-decoration: underline; }
+  details.app ol, details.app ul { margin: 9px 0 4px; padding-left: 20px; color: #2a3140; font-size: 13.5px; }
+  details.app ol li, details.app ul li { margin: 5px 0; }
+
+  footer.foot { border-top: 1px solid var(--line); background: var(--bg-soft); padding: 30px 0 40px; color: var(--muted); font-size: 13px; }
+  footer.foot .wrap { max-width: 1240px; margin: 0 auto; padding: 0 28px; display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; align-items: center; }
+
+  #backtop { position: fixed; right: 22px; bottom: 26px; width: 40px; height: 40px; border-radius: 12px;
+    border: 1px solid var(--line-strong); background: #fff; color: var(--accent); font-size: 17px;
+    display: grid; place-items: center; cursor: pointer; box-shadow: 0 6px 20px rgba(15,45,100,.14);
+    opacity: 0; pointer-events: none; transition: opacity .2s ease; z-index: 90; }
+  #backtop.show { opacity: 1; pointer-events: auto; }
+
+  @media (max-width: 960px) {
+    .layout { grid-template-columns: 1fr; }
+    aside.toc { position: static; max-height: none; border-bottom: 1px solid var(--line); padding-bottom: 14px; }
+    aside.toc nav { grid-template-columns: repeat(2, 1fr); border-left: none; display: grid; }
+    aside.toc nav a { border-left: none; }
+    .grid2, .grid3, .grid4 { grid-template-columns: 1fr; }
+    h1 { font-size: 28px; }
+    .stack .layer { grid-template-columns: 1fr; }
+    .stack .layer .lmetric { text-align: left; }
+  }
+  @media print {
+    #progress, aside.toc, #backtop { display: none !important; }
+    .layout { display: block; }
+    header.hero { background: #0b57d0 !important; -webkit-print-color-adjust: exact; }
+    .card:hover { transform: none; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<!-- ======================= HERO ======================= -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">Research Note · Embodied AI · 2026-09</div>
+    <h1>具身智能发展脉络全景笔记
+      <span class="sub">从笛卡尔身心二元论到控制论 · 从 Shakey 到 Brooks 的行为主义革命 · 从 RT-1 到 π0 / GR00T 的 VLA 范式 · 从数据金字塔到世界模型 · 中美两条产业路径与中国政策谱系</span>
+    </h1>
+    <p class="lead">
+      具身智能（Embodied AI）是"<strong>能感知、能行动、能在物理世界中学习</strong>"的智能体——它是人工智能从"读世界"走向"动世界"的分水岭。
+      本笔记沿三条线并行梳理：<strong>思想线</strong>（具身认知、符号接地、莫拉维克悖论）、<strong>技术线</strong>（控制论 → 符号主义 → 行为主义 → 深度学习 + 强化学习 → VLA → 世界模型）、
+      <strong>产业线</strong>（美日早期人形 → 中国量产竞赛 → 2026 年全球格局）。全部关键论断标注公开权威出处，文末编号参考文献。
+    </p>
+    <div class="doc-meta">
+      <span>📚 笔记 / 介绍材料两用</span>
+      <span>🧭 结构 · 结论先行 → 思想源流 → 技术演进 → 产业格局 → 底座与挑战</span>
+      <span>🔗 关键论断 36 组公开来源溯源</span>
+      <span>🔖 v1.0 精装版 · 2026-09-11</span>
+    </div>
+  </div>
+</header>
+
+<div class="conclusions-wrap">
+  <div class="conclusions">
+    <div class="ttl">// 结论先行 · 8 条核心判断</div>
+    <ol>
+      <li><b>具身智能不是"AI + 机器人"，而是对 AI 本体论的一次修正。</b>它主张智能无法脱离身体与环境而独立存在——身体形态、传感-运动回路、物理约束本身就是认知的组成部分。1945 年梅洛-庞蒂的"具身性"、1991 年瓦雷拉的《具身心智》、1991 年 Brooks 的"没有表示的智能"，是这条思想线的三个里程碑。<sup class="fn"><a href="#ref1">[1]</a><a href="#ref4">[4]</a></sup></li>
+      <li><b>70 年历史只解决了一个问题：智能到底该"表示"还是该"行动"。</b>符号主义选择世界模型 + 推理（Shakey、深蓝），行为主义选择感知-动作耦合、拒绝内部表示（Brooks 的包含架构、Genghis），连接主义选择从数据中学习（感知机 → 深度学习）。<b>2022 年后的 VLA 与 2025 年后的世界模型，本质是三条路线的首次真正融合</b>：大模型提供表示，强化学习提供行动，真实数据提供接地。</li>
+      <li><b>莫拉维克悖论是这门学科的地形图。</b>"对计算机而言困难的是下棋，容易的是感知与移动"——这个 1980 年代的判断至今仍然成立。它解释了为什么 LLM 五年做到的事，机器人抓取杯子用了五十年还没完全解决，也解释了为什么具身智能的瓶颈从来不是"智力"而是<b>数据与硬件</b>。<sup class="fn"><a href="#ref3">[3]</a></sup></li>
+      <li><b>VLA（视觉-语言-动作模型）是当前最主流的技术范式，且已经历三代。</b>RT-1（2022，13 万条轨迹）证伪了"数据不够"；RT-2（2023）首次把互联网知识迁移到机器人动作，泛化能力从 32% 跳到 62%；OpenVLA（2024）把 7B 开源模型推上舞台；π0/π0.5 用 flow-matching 解决高频连续控制。2025 年起，<b>"双系统"（System 1 快反射 + System 2 慢推理）成为事实标准</b>。<sup class="fn"><a href="#ref9">[9]</a><a href="#ref10">[10]</a><a href="#ref12">[12]</a></sup></li>
+      <li><b>数据是具身智能唯一真正的护城河，且已形成"金字塔"共识。</b>真机遥操作数据在塔尖（最贵、最少）、UMI 式无本体数据与第一人称 Ego 视频在中层、仿真与互联网视频在塔基。NVIDIA GR00T-Dreams 用单张图像合成轨迹、GR00T-Mimic 用 11 小时 GPU 替代约 6500 小时人工采集；国内腾讯、京东、极佳视界、大晓各自提出四层到五层的数据金字塔。<b>谁能以更低边际成本生产高质量真实动作数据，谁就赢。</b><sup class="fn"><a href="#ref16">[16]</a><a href="#ref17">[17]</a><a href="#ref18">[18]</a></sup></li>
+      <li><b>2025–2026 的技术风向标已从 VLA 转向世界模型（World Model）。</b>NVIDIA 在 GR00T N1.7 中提出 <b>EgoScale</b>——用约 2 万小时人类第一人称视频训练，首次在机器人灵巧操作上验证出"缩放律"，性能约 2 倍提升；Jim Fan 公开提出"VLA 已死，WAM（World-Action Model）当立"。行业正在从"模仿动作"走向"理解物理世界的因果与后果"。<sup class="fn"><a href="#ref14">[14]</a><a href="#ref19">[19]</a></sup></li>
+      <li><b>中美走的是两条结构性不同的路径，2026 年的格局是"美国定标准、中国定产量"。</b>美国以"大脑先行"为主：Figure、1X、Apptronik、Tesla、Boston Dynamics 押注通用智能与高端本体；中国以"身体先行"为主：2025 年全球人形机器人出货约 1.44 万台，<b>中国企业占约 84.7%，出货前六名全部为中国企业</b>；工业级全尺寸整机均价从 2023 年约 59 万元降至 2025 年约 16.76 万元（降幅约 72%）。<sup class="fn"><a href="#ref21">[21]</a><a href="#ref22">[22]</a><a href="#ref23">[23]</a></sup></li>
+      <li><b>中国已把具身智能从"科研项目"升格为"国家产业议程"。</b>具身智能连续两年写入《政府工作报告》（2025 年首次、2026 年再提），纳入"十五五"规划前瞻布局；《人形机器人创新发展指导意见》（2023）与《人形机器人与具身智能标准体系（2026 版）》构成政策与标准双轨。<b>这是全球唯一一个把该产业写进国家级顶层规划的经济体。</b><sup class="fn"><a href="#ref24">[24]</a><a href="#ref25">[25]</a></sup></li>
+    </ol>
+  </div>
+</div>
+
+<div class="layout">
+
+<!-- ======================= 侧栏目录 ======================= -->
+<aside class="toc">
+  <div class="toc-title">目录</div>
+  <nav id="tocnav">
+    <a href="#sec1"><b>01</b>是什么：定义与流派</a>
+    <a href="#sec2"><b>02</b>思想源流（1641–1948）</a>
+    <a href="#sec3"><b>03</b>控制论与早期机器人</a>
+    <a href="#sec4"><b>04</b>符号主义时代（1966–1990）</a>
+    <a href="#sec5"><b>05</b>行为主义革命（1986–2000）</a>
+    <a href="#sec6"><b>06</b>深度学习融合（2000–2021）</a>
+    <a href="#sec7"><b>07</b>VLA 范式确立（2022–2024）</a>
+    <a href="#sec8"><b>08</b>世界模型与人类学习（2025–2026）</a>
+    <a href="#sec9"><b>09</b>中国脉络：政策与产业</a>
+    <a href="#sec10"><b>10</b>全球产业格局对比</a>
+    <a href="#sec11"><b>11</b>底座：数据·算力·评测</a>
+    <a href="#sec12"><b>12</b>挑战、治理与文献</a>
+  </nav>
+</aside>
+
+<!-- ======================= 正文 ======================= -->
+<main>
+
+<!-- ============ 01 是什么 ============ -->
+<section id="sec1">
+  <div class="sec-head"><div class="sec-no">01</div><h2>具身智能是什么：定义、三位一体与三大流派</h2></div>
+  <p class="sec-lead">
+    具身智能最容易被误读为"给大模型装上机械臂"。它真正的命题要激进得多：<b>身体不是智能的容器，而是智能的构成要件</b>。本章先给定义，再拆架构，最后把 70 年技术史压缩成三条流派路线的竞争与融合。
+  </p>
+
+  <h3><span class="h3no">1.1</span>定义：三个层次递进的表述</h3>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>层次</th><th>表述</th><th>关键约束</th><th>典型落点</th></tr></thead>
+    <tbody>
+      <tr><td><span class="chip">工程定义</span></td><td>具身智能是<b>拥有物理身体、能通过传感器感知环境、通过执行器作用于环境、并在与环境的交互中自主学习与进化的智能系统</b></td><td>必须有物理实体 + 闭环交互</td><td>人形机器人、四足机器人、灵巧手</td></tr>
+      <tr><td><span class="chip vio">认知定义</span></td><td>智能的产生依赖于<b>身体形态、感觉-运动系统与环境的耦合</b>；认知不是对世界的内部表征，而是身体与世界交互的涌现结果</td><td>身体形态即计算（Morphological Computation）</td><td>具身认知理论、形态计算、软体机器人</td></tr>
+      <tr><td><span class="chip grn">技术定义（当前主流）</span></td><td>以<b>多模态大模型为"大脑"</b>、以机器人本体为"身体"，通过 VLA / 世界模型把感知、语言、动作统一到一个可学习框架中，最终指向<b>物理世界的通用智能（Physical AGI）</b></td><td>泛化能力 + 跨本体迁移 + 数据规模化</td><td>RT-2、π0、GR00T、Gemini Robotics</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout"><span class="tt">// 一句话判别</span>
+    判断一个系统是不是具身智能，看它是否同时满足三条：① <b>有身体</b>——存在物理形态与执行器；② <b>有回路</b>——感知→决策→动作→环境改变→新感知，闭环真实存在于物理世界；③ <b>有学习</b>——能力随交互经验或数据积累而提升，而非仅执行预编程轨迹。<b>缺任一条，它只是自动化设备、仿真智能体或纯软件模型。</b>
+  </div>
+
+  <h3><span class="h3no">1.2</span>三位一体架构：大脑 / 身体 / 环境</h3>
+  <p>当代具身智能的技术共识可以概括为"三位一体"：<b>大脑（Brain）负责认知与决策，身体（Body）负责感知与执行，环境（Environment）提供任务与反馈</b>。三者的耦合质量，而非任一单点的先进性，决定了系统能力上限。<sup class="fn"><a href="#ref2">[2]</a></sup></p>
+  <div class="grid3">
+    <div class="card"><span class="chip-label">BRAIN · 大脑（认知层）</span><p>
+      <b>核心任务：</b>理解指令、分解任务、规划动作序列、处理未见场景。<br>
+      <b>技术载体：</b>多模态大模型（VLM）+ 动作生成头（Action Head）+ 世界模型。<br>
+      <b>关键指标：</b>泛化率、长程任务成功率、指令跟随准确度。<br>
+      <b>难点：</b>"想得对"与"做得到"之间存在巨大的语义-物理鸿沟。</p></div>
+    <div class="card t-violet"><span class="chip-label">BODY · 身体（本体层）</span><p>
+      <b>核心任务：</b>稳定移动、精细操作、力控与人机安全。<br>
+      <b>技术载体：</b>关节模组（谐波/行星减速器 + 无框力矩电机）、灵巧手、六维力/触觉传感、全身控制（WBC）。<br>
+      <b>关键指标：</b>自由度、负载自重比、续航、成本、可靠性（MTBF）。<br>
+      <b>难点：</b>硬件迭代周期远慢于算法，且成本下降依赖供应链规模。</p></div>
+    <div class="card t-teal"><span class="chip-label">ENVIRONMENT · 环境（任务层）</span><p>
+      <b>核心任务：</b>提供真实任务分布、物理约束与反馈信号。<br>
+      <b>技术载体：</b>真实产线/家庭/商业场景、物理仿真器（Isaac Sim、MuJoCo、Genesis）、数字孪生。<br>
+      <b>关键指标：</b>场景覆盖率、sim2real 迁移成功率、数据采集吞吐。<br>
+      <b>难点：</b>真实环境采集成本高，仿真环境与现实的"域间隙"难消。</p></div>
+  </div>
+
+  <h4>形态即计算：为什么"先有好身体"是认真的主张</h4>
+  <p>具身认知的一个核心洞见是：<b>身体的结构本身承担了一部分计算</b>。人类的手指有肌腱与弹性组织，抓握时不需要精确的力控算法，物理结构自动完成顺应；被动行走机器人（Passive Dynamic Walker）仅靠重力与腿部几何就能下坡行走，几乎不需要控制。国内人形产业的"身体先行"路线，在工程上正建立在这一逻辑之上——先让本体足够耐用、足够便宜、足够安全，再让算法在其上迭代。<sup class="fn"><a href="#ref22">[22]</a></sup></p>
+
+  <h3><span class="h3no">1.3</span>三大流派：符号主义 / 连接主义 / 行为主义</h3>
+  <p>AI 三大流派在具身智能这一命题上的分歧最为尖锐——因为它们必须回答"智能到底存在于哪里"。<sup class="fn"><a href="#ref5">[5]</a><a href="#ref6">[6]</a></sup></p>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>流派</th><th>核心主张</th><th>智能在哪里</th><th>具身代表作</th><th>致命短板</th></tr></thead>
+    <tbody>
+      <tr><td><b>符号主义</b><br><span class="chip vio">Symbolism</span></td><td>智能 = 对符号的形式化操作；世界可用符号系统完整表征，推理即符号演算</td><td>在<b>知识库与推理机</b>里</td><td>Shakey（1966，STRIPS 规划）、深蓝（1997）、Cyc 常识库</td><td><b>符号接地问题</b>（Harnad, 1990）：符号与真实世界无内在联系，需人工逐条编码常识，无法应对开放环境</td></tr>
+      <tr><td><b>连接主义</b><br><span class="chip">Connectionism</span></td><td>智能 = 神经网络从数据中习得的分布式表示；知识存在于权重而非规则</td><td>在<b>参数与表示</b>里</td><td>感知机（1958）→ BP 网络（1986）→ AlexNet（2012）→ VLA 模型</td><td>纯"静态数据学习"，缺少与环境交互；需要海量标注；<b>不会通过行动改变世界以获取信息</b></td></tr>
+      <tr><td><b>行为主义</b><br><span class="chip grn">Behaviorism</span></td><td>智能 = 感知-动作耦合的行为涌现，<b>无需内部世界模型</b>；"世界是最好的模型"</td><td>在<b>身体与环境的耦合</b>里</td><td>灰·沃尔特电子乌龟（1950）、Brooks 包含架构（1986）、Genghis（1991）、强化学习智能体</td><td>缺少高层规划与长程推理；难以处理需要抽象与语言的任务；<b>无法复用</b>已学技能</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="violetbox"><span class="tt">// 融合才是主线</span>
+    ChatGPT 的本质被广泛解读为<b>三大流派的第一次成功融合</b>：连接主义提供神经主体（Transformer 参数），符号主义提供思维链式的符号推理痕迹（Chain-of-Thought），行为主义提供 RLHF 的奖励驱动调校。而<b>具身智能，是这场融合试验中最难、最终极的考场</b>——因为它的裁判不是人类评分员，而是物理世界本身。<sup class="fn"><a href="#ref6">[6]</a></sup>
+  </div>
+
+  <h3><span class="h3no">1.4</span>概念辨析：四个容易混淆的词</h3>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>概念</th><th>回答的问题</th><th>与具身智能的关系</th></tr></thead>
+    <tbody>
+      <tr><td><b>机器人（Robotics）</b></td><td>如何造出并控制一台能完成特定任务的机器</td><td>是具身智能的<b>物理载体与硬件基础</b>，但传统工业机器人是"预编程自动化"，不具学习与泛化能力，<b>两者不等价</b></td></tr>
+      <tr><td><b>具身认知（Embodied Cognition）</b></td><td>认知在哲学/心理学上如何产生</td><td>是具身智能的<b>理论来源与世界观</b>，属于认知科学范畴，不含工程实现</td></tr>
+      <tr><td><b>VLA（Vision-Language-Action）</b></td><td>如何把视觉、语言、动作统一进一个可训练模型</td><td>是当前具身智能<b>大脑部分的主流技术范式</b>，属于实现路径而非领域本身</td></tr>
+      <tr><td><b>世界模型（World Model）</b></td><td>如何让智能体预测"我这样做会发生什么"</td><td>是具身智能<b>下一阶段的核心能力组件</b>，解决 VLA 缺乏物理因果理解的问题</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="tealbox"><span class="tt">// 记住这个类比</span>
+    如果把人形机器人看作一台电脑：<b>本体（身体）是硬件</b>，<b>VLA / 世界模型是操作系统</b>，<b>具体任务技能是应用软件</b>，<b>数据金字塔是它的"训练语料"</b>。当前行业的竞争焦点，正从"谁能攒出硬件"转向"谁能写出通用操作系统 + 拿到独占语料"。
+  </div>
+</section>
+
+<!-- ============ 02 思想源流 ============ -->
+<section id="sec2">
+  <div class="sec-head"><div class="sec-no">02</div><h2>思想源流：从身心二元论到"具身性"（1641–1948）</h2></div>
+  <p class="sec-lead">
+    具身智能的问题意识，比计算机的历史长三百年。它最初是一个哲学问题：<b>心智与身体是什么关系？</b>只有先看清这条线，才能理解为什么"给机器人一个大模型"在哲学上并不足以服人。
+  </p>
+
+  <div class="timeline">
+    <div class="node">
+      <span class="year">公元前 4 世纪</span>
+      <span class="title">亚里士多德：灵魂是身体的形式</span>
+      <p>在《论灵魂》中，亚里士多德反对灵魂与身体可分离的立场，主张灵魂是"具有器官的自然身体的第一现实性"——<b>感知与运动是灵魂的功能，而非脱离身体的抽象运算</b>。这是"具身"思想最早的哲学胚芽：认知主体必定是一个有身体、能感知、能移动的存在。<sup class="fn"><a href="#ref1">[1]</a></sup></p>
+    </div>
+    <div class="node n-amber">
+      <span class="year">1641</span>
+      <span class="title">笛卡尔《第一哲学沉思集》：身心二元论的分水岭</span>
+      <p>笛卡尔把世界切成两半：<b>思维实体（Res Cogitans）</b>与<b>广延实体（Res Extensa）</b>。心灵是纯粹思考之物、无广延；身体是机械之物、有广延。这一划分造就了此后三百年的心智研究范式：<b>认知被安置在"脱离身体的思维"中，身体被降格为执行机构</b>。当代 AI 的"大脑中心主义"（把智能等同于算法、把身体等同于外设）正是这一遗产——而具身智能的核心主张，正是一百八十度地反对它。<sup class="fn"><a href="#ref1">[1]</a></sup></p>
+    </div>
+    <div class="node n-violet">
+      <span class="year">1945</span>
+      <span class="title">梅洛-庞蒂《知觉现象学》："具身性"（Embodiment）登场</span>
+      <p>法国现象学家梅洛-庞蒂提出，知觉的主体不是"我思"，而是<b>"身体主体"（le corps propre）</b>。身体不是被认识的客体，而是我们与世界打交道的中介；意义产生于身体与世界的互动，而非先验的思考。他提出"<b>身体图式</b>"（schéma corporel）概念——身体对自身与空间的前反思性把握。这是"具身性"（Embodiment）一词的哲学源头，也是 1991 年瓦雷拉《具身心智》的直接理论前身。<sup class="fn"><a href="#ref1">[1]</a><a href="#ref4">[4]</a></sup></p>
+    </div>
+    <div class="node">
+      <span class="year">1948</span>
+      <span class="title">维纳《控制论》：为"机器中的目的"提供数学</span>
+      <p>诺伯特·维纳把"反馈"确立为一切目的性行为的统一原理：<b>系统通过测量偏差、调整输出，实现在环境中的目标导向</b>——无论生物还是机器。控制论第一次让"机器可以像生物一样与环境互动"成为可工程化的命题，直接催生了下一章的电子乌龟与自平衡机器。<sup class="fn"><a href="#ref3">[3]</a></sup></p>
+    </div>
+  </div>
+
+  <h3><span class="h3no">2.1</span>两个必须记住的思想坐标</h3>
+  <div class="grid2">
+    <div class="card t-amber"><span class="chip-label">符号接地问题 · SYMBOL GROUNDING PROBLEM</span>
+      <p>1990 年认知科学家 Stevan Harnad 系统提出：形式符号系统内部的操作（无论多复杂）<b>无法自行为符号赋予意义</b>——"猫"这个 token 与真实世界会喵喵叫、会掉毛的那只动物之间没有内在联系，除非有人工指认。这是对符号主义 AI 最深刻的批评，也是具身智能最有力的理论动机：<b>接地只能来自与世界的感官-运动交互</b>。它解释了为什么纯文本训练的大模型"知道"一切词汇却"不理解"任何事物。</p></div>
+    <div class="card t-teal"><span class="chip-label">莫拉维克悖论 · MORAVEC'S PARADOX</span>
+      <p>1980 年代 Hans Moravec 等观察到一个反直觉现象：<b>对人类而言困难的高阶推理（下棋、证明定理），对计算机反而容易；人类毫不费力的感知与运动（看路、抓杯子、上下楼梯），对计算机却极其困难。</b>原因是：推理是近期演化出的薄层能力，而感知-运动是数十亿年演化沉淀的深厚机制，其"计算密度"远超想象。这条悖论至今是具身智能的地形图——它解释了为什么机器人"会做题"却"不会叠衣服"。</p></div>
+  </div>
+
+  <h3><span class="h3no">2.2</span>图灵的分岔：1950 年埋下的两条路</h3>
+  <p>1950 年图灵发表《计算机器与智能》，提出那个著名的问题"机器能思考吗"，并给出"模仿游戏"（图灵测试）作为可操作判据。但常被忽略的是，图灵在文中其实暗示了<b>两条通往智能的路径</b><sup class="fn"><a href="#ref3">[3]</a></sup>：</p>
+  <ul class="dash">
+    <li><b>路径一：抽象智能。</b>像孩子学字母一样，给机器装上最好的传感器，让它接受教育、与世界互动（图灵明确写道："我们不该指望造一台在婴儿期就具备成人智力的机器"）。<b>这条路径就是今天的具身智能。</b></li>
+    <li><b>路径二：符号智能。</b>把认知任务简化为抽象符号操作，把感知与运动直接跳过。</li>
+  </ul>
+  <div class="warnbox"><span class="tt">// 历史的赌注押错了</span>
+    此后近四十年，主流 AI 选择了路径二，并取得了符号主义时代的所有辉煌（专家系统、深蓝）。<b>具身智能的现代复兴，本质上是路径一的回归</b>——而把它推回正轨的，是强化学习、深度学习与大模型三次技术供给的叠加。这也是本笔记第 04 / 05 章要讲的核心冲突。
+  </div>
+</section>
+
+<!-- ============ 03 控制论与早期机器人 ============ -->
+<section id="sec3">
+  <div class="sec-head"><div class="sec-no">03</div><h2>控制论与早期机器人：第一次"身体实验"（1948–1973）</h2></div>
+  <p class="sec-lead">
+    在 AI 这个词诞生之前，已经有一批人真的把机器放到地上跑了起来。他们无意中做了具身智能的第一次实验，也第一次撞上了"智能该由谁产生"的问题——答案是分裂的：一条走向反射耦合，一条走向预编程执行，一条走向符号推理。
+  </p>
+
+  <div class="timeline">
+    <div class="node n-green">
+      <span class="year">1950 · 布里斯托尔</span>
+      <span class="title">灰·沃尔特与电子乌龟：世界上第一台自主机器人</span>
+      <p>神经生理学家 Grey Walter 造出 <b>Machina speculatrix</b>（昵称 Elmer 与 Elsie）——一台只有两个真空管、一个光敏电池、一个触觉开关和两个轮子的"龟"。它没有地图、没有规划、没有内部世界模型，却表现出令人惊讶的"生命感"：趋光而行、遇障转向、电量低时自主寻找充电站（因趋光特性被引导到灯下充电）。沃尔特称其为"<b>synthetic animals</b>"。<sup class="fn"><a href="#ref3">[3]</a></sup></p>
+      <p style="margin-top:6px"><b>它为什么是具身智能的史前里程碑：</b>它证明了<b>复杂、自适应的行为可以完全由感知-动作的简单回路涌现出来</b>，不需要任何符号表示。这条思路四十余年后被 Brooks 系统化为"包含架构"（Subsumption Architecture），成为行为主义路线的起点。</p>
+    </div>
+    <div class="node n-amber">
+      <span class="year">1954–1961 · 美国</span>
+      <span class="title">Unimate：工业机器人诞生，"无感知的执行器"范式</span>
+      <p>1954 年 George Devol 申请了第一台可编程机械臂专利；1961 年 Joseph Engelberger 的 Unimation 把 <b>Unimate</b> 装进通用汽车新泽西工厂，执行压铸件搬运与焊接——<b>世界第一台工业机器人</b>。它靠示教-再现（teach-and-replay）工作：人牵着它走一遍轨迹，它原样重复。<sup class="fn"><a href="#ref3">[3]</a></sup></p>
+      <p style="margin-top:6px"><b>它定义了此后四十年的产业范式：</b>结构化环境 + 固定轨迹 + 零感知。这个范式极其成功（至今全球仍有数百万台在产线上），但它也把机器人学引向了一条与"具身智能"几乎正交的路径——<b>把不确定性从环境里消灭掉，而不是让机器学会应对不确定性</b>。当代人形机器人的一个核心任务，正是把这个范式重新打开。</p>
+    </div>
+    <div class="node n-violet">
+      <span class="year">1966–1972 · SRI</span>
+      <span class="title">Shakey：第一个能"为自己的行动找理由"的机器人</span>
+      <p>SRI 的 <b>Shakey</b> 是第一个集成了移动、感知、规划与执行的机器人：它用电视摄像头与测距仪建图，用 STRIPS（Stanford Research Institute Problem Solver，1971）规划器把目标拆解为动作序列，再逐一执行。它是<b>符号主义在具身场景的第一次完整尝试</b>——"感知 → 建模 → 规划 → 执行"（Sense-Plan-Act）三段式由此确立。<sup class="fn"><a href="#ref3">[3]</a><a href="#ref7">[7]</a></sup></p>
+      <p style="margin-top:6px"><b>它暴露的问题也是划时代的：</b>Shakey 需要在稳定光照、几何规整的房间里才能工作；环境稍作变动，世界模型就失效；规划耗时以分钟计，而物理世界以毫秒变化。<b>"建模"与"实时行动"之间的根本张力，从此成为具身智能的母题。</b></p>
+    </div>
+    <div class="node n-teal">
+      <span class="year">1973 · 东京</span>
+      <span class="title">WABOT-1：世界第一台全尺寸人形机器人</span>
+      <p>早稻田大学加藤一郎实验室完成 <b>WABOT-1</b>——世界第一台全尺寸人形智能机器人：双足行走（每步约 45 秒）、用触觉手抓取物品、通过视觉与听觉与人做简单日语对话。<sup class="fn"><a href="#ref3">[3]</a></sup>它的意义不在于性能（行走极慢），而在于<b>确立了"人形"这一形态纲领</b>：如果环境是为人设计的，那么最省事的适应方式就是把身体做成人形。这个论证至今仍是人形机器人产业最有力的商业理由。</p>
+    </div>
+  </div>
+
+  <h3><span class="h3no">3.1</span>三条早期路线的分岔</h3>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>路线</th><th>代表</th><th>智能来源</th><th>如何应对未知</th><th>遗产</th></tr></thead>
+    <tbody>
+      <tr><td><b>反射耦合</b></td><td>电子乌龟（1950）</td><td>感知-动作回路的涌现</td><td>不需要知道——碰到就转</td><td><span class="chip grn">行为主义 / 强化学习</span></td></tr>
+      <tr><td><b>预编程执行</b></td><td>Unimate（1961）</td><td>人类示教的固定轨迹</td><td>把环境固定住，规避未知</td><td><span class="chip amb">工业自动化 / 本体供应链</span></td></tr>
+      <tr><td><b>符号推理</b></td><td>Shakey（1966）/ WABOT-1（1973）</td><td>内部世界模型 + 规划器</td><td>建模 + 搜索解空间</td><td><span class="chip vio">VLA 的任务规划层 / 世界模型</span></td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout"><span class="tt">// 关键观察</span>
+    2026 年的人形机器人系统里，<b>这三条路线同时存在且必须协同</b>：本体与伺服控制继承第二条（可靠、可制造），全身控制与反射层继承第一条（毫秒级响应、安全），任务规划与语义理解继承第三条（长程推理）。<b>具身智能的"智能"不是某一条路线胜出，而是三条路线的分层协作。</b>
+  </div>
+</section>
+
+<!-- ============ 04 符号主义时代 ============ -->
+<section id="sec4">
+  <div class="sec-head"><div class="sec-no">04</div><h2>符号主义时代：世界模型的第一次尝试与失败（1966–1997）</h2></div>
+  <p class="sec-lead">
+    从 Shakey 到深蓝，符号主义统治了 AI 三十年。它在具身场景的失败，不是因为算法不够聪明，而是因为<b>它假设世界可以被完整地写成符号</b>——这个假设在棋盘上成立，在厨房里不成立。
+  </p>
+
+  <h3><span class="h3no">4.1</span>经典范式：Sense–Plan–Act 三段式</h3>
+  <div class="flow">
+    <div class="step"><b>① 感知 Sense</b><small>PERCEPTION</small><span style="font-size:13px;color:var(--muted)">摄像头 / 测距 → 抽取几何与物体符号</span></div>
+    <div class="step"><b>② 建模 World Model</b><small>REPRESENTATION</small><span style="font-size:13px;color:var(--muted)">把世界写成谓词集合：At(A, Room1)、Connected(Room1, Room2)</span></div>
+    <div class="step"><b>③ 规划 Plan</b><small>SEARCH / STRIPS</small><span style="font-size:13px;color:var(--muted)">在符号空间搜索动作序列，满足目标谓词</span></div>
+    <div class="step"><b>④ 执行 Act</b><small>EXECUTION</small><span style="font-size:13px;color:var(--muted)">逐条执行动作，若失败则重新规划</span></div>
+  </div>
+  <p style="font-size:13.5px;color:var(--muted)">这个架构的优雅之处在于：只要世界模型准确，行为就具有<b>可解释性与可验证性</b>——每一步动作都能追溯到一条推理链。它至今仍是任务规划层的骨架（当代 VLA 系统中的"System 2"高层规划模块本质上是它的现代化身）。</p>
+
+  <h3><span class="h3no">4.2</span>三个无法绕过的理论难题</h3>
+  <div class="grid3">
+    <div class="card t-amber"><span class="chip-label">符号接地问题</span><p>符号系统内部无法自行为符号赋予意义。机器人内部有"杯子"这个符号，但它与真实杯子的关系完全依赖人写死的映射——<b>一旦遇到训练时未定义的物体（一个形状奇怪的容器），系统不会"猜"，只会报错</b>。</p></div>
+    <div class="card t-amber"><span class="chip-label">框架问题 · FRAME PROBLEM</span><p>行动会改变世界，但一次动作究竟改变了哪些事实？理论上需要穷举影响。人类默认"拿起杯子不会改变房间颜色"，但机器必须把这类"无关性"全部显式写出来，否则推理无法收敛——<b>这是组合爆炸的深渊</b>。</p></div>
+    <div class="card t-amber"><span class="chip-label">常识不可枚举</span><p>真实世界需要的常识条目数量在千万级以上，且大量是默会的（"开水会烫""杯子掉地上会碎"）。人工编码的成本与覆盖度呈指数级恶化，<b>Cyc 项目用尽了四十年也没能突破</b>。</p></div>
+  </div>
+
+  <h4>Cyc 的四十年：一次昂贵的可行性证明</h4>
+  <p>1984 年，Douglas Lenat 启动 <b>Cyc</b> 项目，目标是把人类常识逐条编码为形式化断言，让机器拥有"推理所需的背景知识"。项目投入数十年、数百人年，最终积累超过 250 万条断言。它的结论是双重的：<b>一方面证明了大规模知识工程的可行性</b>（断言之间的一致性与推理链是可以维护的）；<b>另一方面证明了纯人工编码的成本天花板不可逾越</b>。<sup class="fn"><a href="#ref7">[7]</a></sup>这个教训在 2023 年以后被反复引用：<b>大模型的价值恰恰在于用统计学习替代了人工编码常识</b>，而在具身场景里，这个"替代"完成得远比语言场景艰难——因为动作常识无法从文本中读取。</p>
+
+  <h3><span class="h3no">4.3</span>深蓝（1997）：符号主义的巅峰与它的边界</h3>
+  <p>1997 年 5 月，IBM 深蓝以 3.5:2.5 战胜国际象棋世界冠军卡斯帕罗夫。这是符号主义 + 暴力搜索的巅峰。但它的能力边界同样清晰：<b>深蓝不"看"棋盘，它接收的是人工录入的符号化棋局；它不"移动"棋子，它输出坐标给人执行。</b>它在感知与行动两端都被人类外包了<sup class="fn"><a href="#ref6">[6]</a></sup>。</p>
+  <div class="warnbox"><span class="tt">// 关键区分：智能 vs 符号智能</span>
+    深蓝的胜利被广泛误读为"AI 超越了人类"。更准确的解读是：<b>它证明了在"状态空间可完整符号化"的问题上，机器可以远超人类；而在"状态空间无法完整符号化"的问题上（即具身智能的战场），符号主义几乎无法启动。</b>这条分界线，正是莫拉维克悖论的另一种表述。
+  </div>
+
+  <h3><span class="h3no">4.4</span>1980s–1990s 的另一条暗线：硬件本体从未停止进化</h3>
+  <p>在符号主义主导 AI 学界的同期，机器人硬件本体在工业界与实验室里持续累积，构成了今天人形机器人产业的技术存量：</p>
+  <div class="timeline">
+    <div class="node n-amber">
+      <span class="year">1986–1997 · 本田 E 系列 → P 系列</span>
+      <span class="title">本田的秘密人形计划：从 E0 到 P3</span>
+      <p>本田从 1986 年起秘密研发双足行走，E 系列（E0–E6）逐步实现动态平衡；1993 年 P1 首次实现人形上半身 + 双足；1996 年 P2 成为世界第一台实现自主动态双足行走的类人机器人；1997 年 P3。这些积累直接通向 2000 年公开的 <b>ASIMO</b>——第一台被大众广泛认知的人形机器人。<sup class="fn"><a href="#ref3">[3]</a></sup></p>
+    </div>
+    <div class="node n-amber">
+      <span class="year">1992 · 波士顿</span>
+      <span class="title">Boston Dynamics 成立：MIT 腿式实验室的产业化</span>
+      <p>Marc Raibert 离开 MIT Leg Lab 创办 Boston Dynamics，把"动态平衡优于静态稳定"这一腿式机器人核心洞见带入工业研发。此后三十年的产品谱系（<b>BigDog 2005 → Cheetah 2012 → 液压 Atlas 2013 → 电动 Atlas 2024 → 量产版 Atlas 2026</b>）几乎定义了"高动态机器人"这一品类。<sup class="fn"><a href="#ref13">[13]</a></sup></p>
+    </div>
+    <div class="node n-teal">
+      <span class="year">1999 · 索尼</span>
+      <span class="title">AIBO：消费级机器人宠物的第一次尝试</span>
+      <p>索尼发布 AIBO 机器狗，用行为库 + 强化学习雏形实现"性格养成"，售出逾 15 万台。它的历史意义在于：<b>第一次证明"有身体、会学习"的机器人可以进入消费市场</b>，也第一次让"机器人的人格从交互中涌现"成为大众可感知的产品体验。<sup class="fn"><a href="#ref3">[3]</a></sup></p>
+    </div>
+  </div>
+
+  <div class="quotebox">
+    "The world is its own best model."（世界本身就是它最好的模型。）
+    <span class="src">— Rodney Brooks 对这一立场的经典概括：与其在机器内部重建世界的符号副本，不如让机器直接使用世界本身作为参照。<sup class="fn"><a href="#ref4">[4]</a></sup></span>
+  </div>
+</section>
+
+<!-- ============ 05 行为主义革命 ============ -->
+<section id="sec5">
+  <div class="sec-head"><div class="sec-no">05</div><h2>行为主义革命：Brooks 与"没有表示的智能"（1986–2000）</h2></div>
+  <p class="sec-lead">
+    1980 年代末，MIT 的 Rodney Brooks 公开向整个符号主义阵营宣战。他的主张在当时近乎异端：<b>智能不需要世界模型，不需要中央表示，不需要推理——只需要一层层简单行为之间的耦合。</b>这场革命重塑了机器人学，也为三十年后的具身智能留下了最朴素也最难反驳的洞见。
+  </p>
+
+  <h3><span class="h3no">5.1</span>核心文献：三次宣言式攻击</h3>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>年份</th><th>文献</th><th>核心主张</th></tr></thead>
+    <tbody>
+      <tr><td>1986</td><td>《Achieving Artificial Intelligence through Building Robots》<br>（与 Jonathan Connell）</td><td>AI 应该通过<b>造机器人</b>而非写程序来推进；智能应"从底层生长出来"，而非自上而下分解</td></tr>
+      <tr><td>1991</td><td>《Intelligence without Representation》<br>（没有表示的智能）</td><td>用行为的<b>分层组合</b>替代世界模型；感知与动作直接耦合，中间不经过符号表示层</td></tr>
+      <tr><td>1991</td><td>《Intelligence without Reason》<br>（没有推理的智能）</td><td>"当研究智能时，对智能的研究本身就是错误。"主张放弃对抽象推理的建模，转向真实身体在真实环境中的行为</td></tr>
+    </tbody>
+  </table></div>
+  <p style="font-size:13.5px;color:var(--muted)">Brooks 后来用《大象不下棋》（Elephants Don't Play Chess, 1990）作为更通俗的标题概括这一立场：<b>真正需要智能的场景是像大象在丛林中生存，而不是在棋盘上博弈。</b><sup class="fn"><a href="#ref4">[4]</a></sup></p>
+
+  <h3><span class="h3no">5.2</span>包含架构：把智能做成"层叠的反射"</h3>
+  <p>Brooks 提出的工程实现叫 <b>包含架构（Subsumption Architecture）</b>。它的结构与符号主义完全相反：</p>
+  <div class="stack">
+    <div class="layer hl"><div class="lname">层 N：探索（Explore）</div><div class="ldesc">有目标地漫游、寻找特定区域——只有在更低层不再接管时才生效</div><div class="lmetric">最晚加入<br>优先级最低</div></div>
+    <div class="layer"><div class="lname">层 3：避障（Avoid）</div><div class="ldesc">检测到障碍物即转向，可抑制下层的前进指令</div><div class="lmetric">抑制 ↓</div></div>
+    <div class="layer"><div class="lname">层 2：漫游（Wander）</div><div class="ldesc">随机游走，实现环境覆盖</div><div class="lmetric">抑制 ↓</div></div>
+    <div class="layer"><div class="lname">层 1：前进（Feelforce / Move）</div><div class="ldesc">无脑前进，遇阻即停</div><div class="lmetric">最底层<br>优先级最高</div></div>
+  </div>
+  <p style="font-size:13.5px;color:var(--muted)">关键机制：<b>层与层之间没有中央协调器</b>，每一层是一个独立的有限状态机，只通过"抑制"（inhibit）与"取代"（suppress）信号影响下层。整体行为从各层的相互覆盖中涌现，<b>系统内部没有任何地方存在"世界的模型"</b>。</p>
+  <div class="okbox"><span class="tt">// 这套惊人之处的三点</span>
+    ① <b>可增量调试</b>——新能力作为新层加上去，不破坏已有层（工程上极其友好）；② <b>反应速度快</b>——没有建模与规划环节，从感知到动作只需毫秒；③ <b>鲁棒性高</b>——某层失效时，下层仍在运行，系统只会"变笨"而不会"死机"。这三条至今是现代人形机器人全身控制（Whole-Body Control）与安全反射层的设计原则。<sup class="fn"><a href="#ref31">[31]</a></sup>
+  </div>
+
+  <h4>Genghis（1991）：六条腿的证明</h4>
+  <p>Brooks 与同事用 Genghis 六足机器人验证了包含架构：12 个电机（每腿 2 个）、无内部地图、无步态规划器，只靠"每腿独立应对地面高度差"的局部规则，就能稳定爬过崎岖地形。<b>这是对符号主义最有力的经验反击：不建模，也能走路。</b><sup class="fn"><a href="#ref4">[4]</a></sup></p>
+
+  <h3><span class="h3no">5.3</span>思想同盟：具身认知与生成论</h3>
+  <div class="grid2">
+    <div class="card t-violet"><span class="chip-label">1991 · 瓦雷拉《具身心智》</span><p>Francisco Varela、Evan Thompson、Eleanor Rosch 合著的《The Embodied Mind》提出<b>生成论（Enaction）</b>：认知不是对外部世界的内部表征复原，而是<b>有机体通过自身结构与世界交互、从而"生成"（enact）出一个世界的过程</b>。知觉与行动在根本上不可分离——"认知即行动"。这本书把梅洛-庞蒂的现象学、佛教心理学与认知科学连成一线，成为具身认知理论的奠基之作，也被具身智能研究反复引用。<sup class="fn"><a href="#ref1">[1]</a><a href="#ref4">[4]</a></sup></p></div>
+    <div class="card t-violet"><span class="chip-label">1987 · 莱考夫《女人、火与危险事物》</span><p>George Lakoff 提出<b>认知语义学</b>：人类的范畴与概念结构并非形式逻辑的产物，而是由<b>身体经验</b>塑造——"上/下""里/外""前/后"这些基本意象图式（image schema）来自身体在重力场中的运动经验。语言意义的根基是身体隐喻。这一主张从语言学一侧削弱了"符号系统可以无身体地理解意义"的假设，为符号接地问题提供了认知科学证据。<sup class="fn"><a href="#ref1">[1]</a></sup></p></div>
+  </div>
+
+  <h3><span class="h3no">5.4</span>行为主义的实践遗产与它的天花板</h3>
+  <div class="grid2">
+    <div class="card t-green"><span class="chip-label">遗产 · 落地最深的机器人公司</span><p>Brooks 与 Colin Angle、Helen Greiner 于 1990 年创办 <b>iRobot</b>；2002 年推出 <b>Roomba</b>——用简单的行为分层（随机游走 + 沿墙 + 污垢检测）实现扫地功能，累计销量超过 4000 万台，是<b>行为主义路线商业化最成功的案例</b>。<sup class="fn"><a href="#ref3">[3]</a><a href="#ref4">[4]</a></sup><br>同时，强化学习（RL）继承了行为主义的基因：<b>不建模世界，直接从"动作-奖励"反馈中学习策略</b>——AlphaGo、DQN、以及今天 VLA 的训练流程，都是它的后代。</p></div>
+    <div class="card t-amber"><span class="chip-label">天花板 · 为什么它无法通向通用智能</span><p>① <b>无法复用</b>——每条行为都是手工设计的专用回路，学到的技能无法组合迁移；② <b>无法处理长程任务</b>——"把厨房收拾干净"需要目标分解与抽象推理，反射层无法胜任；③ <b>无法理解语言</b>——"拿那个大的红色的"需要符号化与常识，行为主义没有接口；④ <b>规模化不成立</b>——增加能力靠加层，工程复杂度线性上升，而人类需要的能力是无限多的。<sup class="fn"><a href="#ref5">[5]</a></sup><br><b>结论：行为主义解决了"怎么动"，但没有解决"动什么"和"为什么动"。</b></p></div>
+  </div>
+
+  <div class="callout"><span class="tt">// 三十年后的回望</span>
+    2026 年的机器人系统里，Brooks 的思想无处不在但从不独大：<b>底层毫秒级反射（安全停机、力矩限制、跌倒保护）是纯行为主义；中层技能（抓取、行走、装配）是强化学习 + 模仿学习；高层任务规划与语言理解则是符号层与大模型。</b>这场三十年战争没有赢家——只有分层协作的妥协，而这恰恰是具身智能架构的最终形态。<sup class="fn"><a href="#ref5">[5]</a><a href="#ref6">[6]</a></sup>
+  </div>
+</section>
+
+<!-- ============ 06 深度学习融合 ============ -->
+<section id="sec6">
+  <div class="sec-head"><div class="sec-no">06</div><h2>深度学习融合：从仿真到真机（2000–2021）</h2></div>
+  <p class="sec-lead">
+    进入 21 世纪，三条技术供给依次成熟：<b>强化学习解决了"如何从试错中学习策略"，深度学习解决了"如何从原始感知中提取特征"，仿真与大规模数据解决了"在哪里安全地试错"</b>。三者叠加，让具身智能第一次具备了"可规模化"的技术形态。
+  </p>
+
+  <div class="timeline">
+    <div class="node">
+      <span class="year">2000 · 本田</span>
+      <span class="title">ASIMO 公开：人形机器人首次成为大众符号</span>
+      <p>本田发布 ASIMO，能跑步、上下楼梯、单脚跳、识别面部与手势。它把"人形机器人"从小众实验室推向大众认知，也确立了一个行业信念：<b>双足动态平衡是可以工程解决的</b>。此后二十年，"ASIMO 式预编程动作库"成为人形机器人的主流范式，直到大模型到来才被打破。<sup class="fn"><a href="#ref3">[3]</a></sup></p>
+    </div>
+    <div class="node n-green">
+      <span class="year">2013–2017 · DeepMind</span>
+      <span class="title">深度强化学习的三连击：DQN → AlphaGo → AlphaGo Zero</span>
+      <p><b>DQN</b>（2013/2015）用深度网络直接从像素学习 Atari 游戏策略，打通"感知 + 决策"的端到端训练；<b>AlphaGo</b>（2016）以 4:1 击败李世石，展示了神经网络估值 + 蒙特卡洛树搜索的威力；<b>AlphaGo Zero</b>（2017）彻底去掉人类棋谱，<b>仅靠自我博弈从零超越所有版本</b>。<sup class="fn"><a href="#ref6">[6]</a><a href="#ref26">[26]</a></sup></p>
+      <p style="margin-top:6px"><b>对具身智能的启示：</b>AlphaGo Zero 证明"不依赖人类示范的数据自举"是可行的——但前提是<b>存在一个可无限试错、可自动判定胜负的环境</b>。机器人没有这样的环境，这正是具身智能必须依赖仿真与真机数据混合的原因。</p>
+    </div>
+    <div class="node n-violet">
+      <span class="year">2017 · OpenAI / 多机构</span>
+      <span class="title">域随机化（Domain Randomization）：sim2real 的破局方法</span>
+      <p>论文《Domain Randomization for Transferring Deep Neural Networks from Simulation to the Real World》提出：与其让仿真环境尽可能逼真，<b>不如在训练时随机化物理参数（摩擦系数、质量、光照、材质、延迟）</b>，迫使策略学会对"世界参数的分布"而非某个特定参数集稳健。仅用仿真训练的模型因此可以直接迁移到真机。<sup class="fn"><a href="#ref8">[8]</a></sup></p>
+      <p style="margin-top:6px"><b>这是具身智能数据问题上的第一次方法论突破</b>——它把"仿真不够真"这个死结，转化为"仿真可以更杂"。当代所有仿真数据管线（Isaac Sim、Genesis、GR00T-Dreams）都建立在它之上。</p>
+    </div>
+    <div class="node n-teal">
+      <span class="year">2018 · Google</span>
+      <span class="title">QT-Opt 与机械臂农场：13 台机器人、80 万次抓取</span>
+      <p>Google 用 7 台（后续扩至 13 台）机械臂组成"机械臂农场"（Arm Farm），持续数月自主采集抓取数据，累计超过 80 万次真实抓取尝试；<b>QT-Opt</b> 用 off-policy 强化学习在这些数据上训练，抓取成功率提升至约 96%，且对未见物体具备泛化能力。<sup class="fn"><a href="#ref8">[8]</a></sup></p>
+      <p style="margin-top:6px"><b>它确立了"数据规模决定能力上限"这一产业判断：</b>自动化、连续、无人值守的真实数据采集，比算法创新更能提升性能。这条结论直接通向 2022 年后的数据金字塔竞赛。</p>
+    </div>
+    <div class="node n-amber">
+      <span class="year">2019 · OpenAI</span>
+      <span class="title">灵巧手解魔方：域随机化 + 强化学习攻克精细操作</span>
+      <p>OpenAI 用 Shadow 灵巧手（24 自由度）完成单手解开魔方：全部在仿真中用强化学习训练（训练量约等于 13,000 年的人类练习时间），配合自动域随机化（ADR）逐步收紧随机化范围，最终零微调迁移到真机。<sup class="fn"><a href="#ref8">[8]</a></sup>它是"仿真训练 + 灵巧操作"路线的标杆，也第一次让业界看到：<b>莫拉维克悖论是可以被算力与随机化硬啃下来的</b>——但代价极高。</p>
+    </div>
+    <div class="node">
+      <span class="year">2019–2021</span>
+      <span class="title">仿真与工具链成熟：MuJoCo 开源 / Isaac Sim 崛起</span>
+      <p>MuJoCo（2012 起、2021 年 10 月 DeepMind 收购并免费开源）成为接触动力学仿真的学术标准；NVIDIA 推出 <b>Isaac Sim / Isaac Gym</b>，用 GPU 并行把仿真吞吐量提升数百倍，让"百万级并行环境训练一个策略"成为可能。<b>仿真的经济性首次超过真机</b>——这是 2025 年后"合成数据替代真机数据"叙事的技术前提。<sup class="fn"><a href="#ref8">[8]</a><a href="#ref14">[14]</a></sup></p>
+    </div>
+    <div class="node">
+      <span class="year">2020–2021</span>
+      <span class="title">多模态大模型出现：CLIP 与 GPT-3 埋下 VLA 的伏笔</span>
+      <p><b>CLIP</b>（2021）用 4 亿图文对学出可跨模态对齐的视觉-语言表示；<b>GPT-3</b>（2020）证明大模型的少样本泛化能力。这两项成果合起来提供了一件此前的机器人系统从未拥有的东西：<b>开放词汇的语义理解能力</b>——机器人第一次有可能"听懂没见过的指令，并识别没见过的物体"。VLA 范式所需的所有组件至此齐备。<sup class="fn"><a href="#ref9">[9]</a></sup></p>
+    </div>
+  </div>
+
+  <h3><span class="h3no">6.1</span>这一阶段的四笔技术遗产</h3>
+  <div class="grid4">
+    <div class="card"><span class="chip-label">01 · 端到端可微</span><p>从像素直接到动作的端到端训练成为可能，中间的手工特征工程被神经网络替代。</p></div>
+    <div class="card t-violet"><span class="chip-label">02 · 仿真即基础设施</span><p>仿真不再是"调试工具"，而是主要训练场地；数据成本从"人力"转为"算力"。</p></div>
+    <div class="card t-teal"><span class="chip-label">03 · 试错可规模化</span><p>RL + 并行仿真让试错次数从万级跃升到亿级，突破了真机无法承受的试错成本。</p></div>
+    <div class="card t-amber"><span class="chip-label">04 · 泛化仍是硬的</span><p>每个任务仍需要单独训练策略，技能无法复用，模型无法跨本体迁移——<b>还没有基础模型</b>。</p></div>
+  </div>
+
+  <div class="riskbox"><span class="tt">// 阶段小结：为什么深度学习还不够</span>
+    到 2021 年，机器人在<b>单一任务上</b>已经能超过人类（抓取成功率 96%、魔方单手解），但一个从未见过的新任务仍然需要数月数据采集与重新训练。根本原因是：<b>此前的模型学的是"策略"，而不是"世界"</b>——它不知道杯子是干什么用的、不知道"把杯子放到水槽里"意味着什么，它只是把像素映射成关节角。要跨过这一步，需要的是<b>可迁移的语义与常识表示</b>，而这只能来自互联网规模的多模态预训练。这就是下一章 VLA 的登场理由。
+  </div>
+</section>
+
+<!-- ============ 07 VLA 范式 ============ -->
+<section id="sec7">
+  <div class="sec-head"><div class="sec-no">07</div><h2>VLA 范式确立：把互联网知识注入关节（2022–2024）</h2></div>
+  <p class="sec-lead">
+    2022 年 12 月，Google 发布 RT-1，第一次证明"用足够多的真实机器人数据训练一个 Transformer，可以让机器人具备跨任务泛化"。此后两年半，RT-2、OpenVLA、π0、Helix、GR00T 依次登场，把<b>视觉-语言-动作模型（VLA）</b>确立为具身智能的主流技术范式。这一章是整份笔记的技术核心。
+  </p>
+
+  <h3><span class="h3no">7.1</span>范式定义：VLA 到底在做什么</h3>
+  <p>VLA（Vision-Language-Action Model）的基本形态是：<b>输入图像 + 语言指令 → 输出机器人动作</b>，整个映射由单一神经网络端到端完成。它与此前方法的关键区别在于三点<sup class="fn"><a href="#ref9">[9]</a><a href="#ref10">[10]</a></sup>：</p>
+  <div class="grid3">
+    <div class="card"><span class="chip-label">① 开放词汇</span><p>不再受限于训练时定义的物体与指令列表——因为视觉-语言底座在海量互联网数据上见过"能想象到的一切事物"。</p></div>
+    <div class="card t-violet"><span class="chip-label">② 语义即先验</span><p>动作不再从零学，而是从"物体是什么、通常怎么用"的语义先验出发——<b>这是 VLA 泛化能力的真正来源</b>。</p></div>
+    <div class="card t-teal"><span class="chip-label">③ 单一模型多任务</span><p>一个模型覆盖数百种任务，不再是"一任务一策略"。这第一次让"机器人基础模型"这个概念成立。</p></div>
+  </div>
+
+  <h3><span class="h3no">7.2</span>关键模型谱系（2022–2025）</h3>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>时间</th><th>模型</th><th>机构</th><th>规模 / 数据</th><th>核心贡献</th></tr></thead>
+    <tbody>
+      <tr><td>2022.12</td><td><b>RT-1</b></td><td>Google DeepMind</td><td>35M 参数 · 13 万条真实轨迹 · 700+ 任务 · 17 个月采集</td><td>首个用 Transformer 做机器人策略的大规模工作；在已见任务上成功率约 97%，对未见任务泛化能力约为此前方法的两倍<sup class="fn"><a href="#ref9">[9]</a></sup></td></tr>
+      <tr><td>2023.07</td><td><b>RT-2</b></td><td>Google DeepMind</td><td>基于 PaLI-X / PaLM-E 视觉语言模型 · 网络数据 + 机器人数据联合训练</td><td><b>第一个真正的 VLA</b>：把动作离散化为文本 token，与互联网图文联合训练。对未见物体的泛化从 32% 提升到 62%；涌现出符号理解、简单推理、人物识别等未专门训练的能力<sup class="fn"><a href="#ref10">[10]</a></sup></td></tr>
+      <tr><td>2024.06</td><td><b>OpenVLA</b></td><td>斯坦福 / 伯克利等</td><td>7B 参数 · 97 万条轨迹 · 22 种本体 · 21 家机构数据（Open X-Embodiment）</td><td><b>把 VLA 开源化</b>：性能超过闭源 RT-2-X 约 16.5 个百分点，成为学术界与创业公司的公共基线<sup class="fn"><a href="#ref11">[11]</a></sup></td></tr>
+      <tr><td>2024.10</td><td><b>π0（pi-zero）</b></td><td>Physical Intelligence</td><td>约 3B 参数 · 跨 8 种机器人平台 · 10,000+ 小时数据</td><td>用 <b>flow matching</b> 替代离散 token，直接输出高频连续动作（50Hz），首次兼顾"语义泛化"与"灵巧高频控制"<sup class="fn"><a href="#ref12">[12]</a></sup></td></tr>
+      <tr><td>2025.02</td><td><b>Helix</b></td><td>Figure AI</td><td>端侧运行 · 双系统 · 全身 35 自由度</td><td><b>首个全身人形 VLA</b>：System 1 视觉运动策略 200Hz 控制上半身，System 2 视觉语言模型 7–9Hz 做场景理解；两台机器人可用同一模型协作<sup class="fn"><a href="#ref12">[12]</a></sup></td></tr>
+      <tr><td>2025.03</td><td><b>Gemini Robotics</b></td><td>Google DeepMind</td><td>Gemini 2.0 底座 + 动作专家（Action Expert）</td><td>把 Gemini 的多模态理解直接延伸到机器人控制；同步发布 <b>ER（Embodied Reasoning）</b>版本，强化空间推理与任务分解<sup class="fn"><a href="#ref12">[12]</a></sup></td></tr>
+      <tr><td>2025.03</td><td><b>GR00T N1</b></td><td>NVIDIA（GTC 2025）</td><td>2.2B 参数 · 开源 · 双系统架构（VLM + DiT 动作头）</td><td><b>面向人形的开源基础模型</b>：System 2 用 VLM 理解环境，System 1 用扩散 Transformer 生成连续动作；配套 Isaac 生态与合成数据管线<sup class="fn"><a href="#ref14">[14]</a></sup></td></tr>
+      <tr><td>2025.04</td><td><b>π0.5</b></td><td>Physical Intelligence</td><td>在 π0 基础上引入分层与异构数据</td><td>面向<b>开放世界泛化</b>：可在完全未训练过的家庭环境中完成长程整理任务（如收拾卧室），把"跨环境泛化"推进一大步<sup class="fn"><a href="#ref12">[12]</a></sup></td></tr>
+      <tr><td>2025.06</td><td><b>SmolVLA / BitVLA</b></td><td>HuggingFace / 学界</td><td>450M 参数 / 三元权重压缩</td><td>把 VLA 推向<b>端侧与低算力部署</b>：SmolVLA 以 4.5 亿参数在消费级 GPU 上可训练可运行；BitVLA 用 1.58-bit 量化把显存占用再压一个量级<sup class="fn"><a href="#ref12">[12]</a></sup></td></tr>
+      <tr><td>2025 起</td><td><b>CoT-VLA / VLAS 等</b></td><td>多家</td><td>引入思维链 / 视觉-语言-动作-空间四元组</td><td>在动作生成前做<b>显式推理</b>（子目标分解、空间关系判断），提升长程任务成功率<sup class="fn"><a href="#ref12">[12]</a></sup></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3><span class="h3no">7.3</span>范式之争：动作头该用离散还是连续</h3>
+  <p>VLA 内部最实质的技术分歧，是<b>如何表示"动作"</b>这一输出。<sup class="fn"><a href="#ref12">[12]</a></sup></p>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>维度</th><th>离散 Token 化（RT-2、OpenVLA）</th><th>连续生成（π0、GR00T N1、Helix）</th></tr></thead>
+    <tbody>
+      <tr><td>做法</td><td>把每个关节角离散成若干 bin，转成文本 token，复用 LLM 的词表与训练方式</td><td>用扩散（Diffusion）或流匹配（Flow Matching）直接回归连续动作序列</td></tr>
+      <tr><td>优势</td><td>可直接复用现成 VLM 与训练基础设施；语义理解能力强；<b>工程实现简单</b></td><td>动作平滑、可高频输出（50–200Hz）；对灵巧操作与力控友好；<b>精度与响应速度占优</b></td></tr>
+      <tr><td>劣势</td><td>离散化损失精度；输出频率低（通常 3–10Hz），难以做精细操作</td><td>训练更复杂、算力开销大；动作生成需要额外采样步骤</td></tr>
+      <tr><td>现状</td><td>学术界与开源基线主流</td><td><b>产业界与高端人形主流</b>——2025 年后几乎所有头部人形系统都采用连续动作头</td></tr>
+    </tbody>
+  </table></div>
+  <p style="font-size:13.5px;color:var(--muted)">这一分歧的实质是<b>"复用语言模型的基础设施"与"尊重物理控制的连续性"之间的取舍</b>：前者赢在研发效率与语义泛化，后者赢在动作精度与实时性。当前产业界的妥协方案是"用离散 token 做高层子目标，用连续生成做低层关节轨迹"。<sup class="fn"><a href="#ref28">[28]</a></sup></p>
+
+  <h3><span class="h3no">7.4</span>"双系统"成为事实标准</h3>
+  <p>几乎与 π0 同时，Figure 的 Helix 与 NVIDIA 的 GR00T N1 独立提出了同一套架构：<b>System 2（慢思考）+ System 1（快反应）</b>。它不是巧合，而是被物理世界的约束逼出来的唯一解。<sup class="fn"><a href="#ref12">[12]</a><a href="#ref14">[14]</a></sup></p>
+  <div class="stack">
+    <div class="layer hl"><div class="lname">SYSTEM 2 · 慢思考</div><div class="ldesc">视觉语言模型：理解场景、解析指令、决定子目标（"先去桌上拿杯子，再放到水槽"）</div><div class="lmetric">频率 1–10 Hz<br>可接受高延迟</div></div>
+    <div class="arrow-up">↓ 目标 / 子任务指令</div>
+    <div class="layer"><div class="lname">SYSTEM 1 · 快反应</div><div class="ldesc">视觉运动策略 / 扩散动作头：把子目标转成关节轨迹，维持平衡、处理扰动、闭环修正</div><div class="lmetric">频率 50–200 Hz<br>必须硬实时</div></div>
+  </div>
+  <div class="okbox"><span class="tt">// 为什么必须是两套</span>
+    物理世界以毫秒级变化：机器人抖一下、物体滑动 1 厘米，策略必须立刻修正。而大模型的推理延迟在数百毫秒到数秒级——<b>用大模型直接控制关节在物理上不可能成立</b>。双系统本质上是把"认知的慢"与"控制的快"解耦，用不同频率的两张网络各自跑在自己合适的时标上。<b>这一架构在 2025 年被业界普遍接受后，人形机器人的控制频率与任务成功率同时出现了台阶式提升。</b><sup class="fn"><a href="#ref27">[27]</a></sup>
+  </div>
+
+  <h3><span class="h3no">7.5</span>这一阶段真正的瓶颈：数据而非算法</h3>
+  <div class="riskbox"><span class="tt">// 一个刺眼的对比</span>
+    LLM 用<b>数十万亿 token</b>的互联网文本训练；而截至 2024 年，全球所有公开机器人轨迹数据加起来（Open X-Embodiment 汇集 21 家机构数据的成果）约<b>200 万条轨迹</b>。按数据密度折算，机器人数据的可用量比语言数据少<b>三到四个数量级</b>。<sup class="fn"><a href="#ref11">[11]</a></sup><br><br>
+    这解释了 2024–2026 年整个行业最大的资源投向：<b>不是刷榜，而是造数据工厂</b>——遥操作采集中心、第一人称人类视频、UMI 手持夹爪、仿真合成轨迹。第 11 章将系统展开这场"数据战争"。
+  </div>
+</section>
+
+<!-- ============ 08 世界模型 ============ -->
+<section id="sec8">
+  <div class="sec-head"><div class="sec-no">08</div><h2>世界模型与"人类学习"：范式切换正在发生（2025–2026）</h2></div>
+  <p class="sec-lead">
+    2025 年下半年起，行业风向出现一次明确转向：从"让机器人模仿动作"（VLA）转向"让机器人理解世界如何运作"（World Model / WAM）。触发点是三个无法回避的失败模式，和一条被验证的新缩放律。
+  </p>
+
+  <h3><span class="h3no">8.1</span>为什么 VLA 还不够：三个失败模式</h3>
+  <div class="grid3">
+    <div class="card t-amber"><span class="chip-label">① 没有物理因果</span><p>VLA 学的是"这个画面下该输出什么动作"的统计关联，而不是"我推这个杯子它会往哪滑"的物理预测。<b>它不会预演后果</b>，所以在匹配分布内很强、稍有偏差就崩。</p></div>
+    <div class="card t-amber"><span class="chip-label">② 长程任务崩溃</span><p>动作误差会逐步累积。演示视频里十步能完成的任务，真机上到第五步就偏离分布，后续每一步都是"分布外推理"，成功率指数级衰减。<b>这是模仿学习的结构性缺陷</b>。</p></div>
+    <div class="card t-amber"><span class="chip-label">③ 数据效率极低</span><p>学会一个新任务动辄需要数百到数千条真机演示，且换一个场景就得重来。<b>人类看一遍就会，机器人看一千遍还是不会</b>——这个差距无法用"放大模型"填平。</p></div>
+  </div>
+
+  <h3><span class="h3no">8.2</span>NVIDIA 的路线图：GR00T 的四次迭代与 EgoScale</h3>
+  <p>NVIDIA 是 2025–2026 年把"世界模型 + 合成数据 + 基础模型"整合成完整技术栈最彻底的玩家。其 GR00T 系列版本迭代本身就是一部行业技术演化史<sup class="fn"><a href="#ref14">[14]</a></sup>：</p>
+  <div class="timeline">
+    <div class="node">
+      <span class="year">2025.03 · GTC</span>
+      <span class="title">GR00T N1：开源人形基础模型</span>
+      <p>2.2B 参数、双系统架构（VLM 做 System 2 + 扩散 Transformer 做 System 1），同时开放仿真数据合成管线与 Isaac 生态。它把"人形基础模型"从概念变成可下载的权重。</p>
+    </div>
+    <div class="node n-green">
+      <span class="year">2025.05–06 · Computex</span>
+      <span class="title">GR00T N1.5：把训练时间从"数周"压到"36 小时"</span>
+      <p>核心改进在数据效率与训练管线：通过更好的数据混合与预训练策略，模型在新本体上的适配训练时间从数周缩短到约 36 小时。同时加入 <b>GR00T-Dreams</b>——用世界模型 Cosmos 从单张图像生成合成操作轨迹，把"采集数据"变成"生成数据"。</p>
+    </div>
+    <div class="node n-green">
+      <span class="year">2025.09</span>
+      <span class="title">GR00T N1.6：引入推理与长程能力</span>
+      <p>强化了对复杂场景的理解与多步任务分解能力，配合新一代 Cosmos 世界基础模型，进一步提升合成数据的物理一致性。</p>
+    </div>
+    <div class="node n-violet">
+      <span class="year">2026 上半年</span>
+      <span class="title">GR00T N1.7 与 EgoScale：第一个"灵巧度缩放律"</span>
+      <p>N1.7 的关键不是模型结构，而是一条被实证的规律——<b>EgoScale</b>：用约 <b>2 万小时人类第一人称（egocentric）视频</b>做预训练，模型在灵巧操作任务上的性能随数据量呈现出可预测的幂律提升，实测约有 <b>2 倍</b>量级增益。<sup class="fn"><a href="#ref15">[15]</a></sup></p>
+      <p style="margin-top:6px"><b>这是行业第一次在"机器人灵巧度"上看到类似 LLM 缩放律的东西</b>，其意义在于：它说明具身智能的数据瓶颈并非无解——只要找到正确的数据形态（人类第一人称视频），边际成本远低于真机遥操作。这条结论在 2026 年直接引发了"人类视频数据争夺战"。</p>
+    </div>
+  </div>
+
+  <h3><span class="h3no">8.3</span>世界基础模型：Cosmos 与它的三类能力</h3>
+  <div class="grid3">
+    <div class="card"><span class="chip-label">COSMOS · PREDICT 预测</span><p>给定当前画面与拟执行的动作，<b>预测未来若干帧的物理演化</b>——让机器人具备"在想象中预演"的能力，用于动作筛选与安全校验。训练语料规模达 <b>2000 万小时以上</b>的视频。</p></div>
+    <div class="card t-violet"><span class="chip-label">COSMOS · TRANSFER 迁移</span><p>把仿真或合成画面转换为照片级真实画面（或反向），<b>抹平 sim2real 的视觉域间隙</b>——仿真里训练的模型可以直接"看到"真实世界的样子。</p></div>
+    <div class="card t-teal"><span class="chip-label">COSMOS · REASON 推理</span><p>根据单帧图像推断接下来可能发生什么、物体之间的因果关系，为任务规划提供物理常识。<b>这是补上 VLA 所缺的那块"物理因果"</b>。</p></div>
+  </div>
+
+  <h4>三条合成数据的量产路径（关键经济性数据）</h4>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>技术</th><th>做法</th><th>经济性数据</th></tr></thead>
+    <tbody>
+      <tr><td><b>GR00T-Dreams</b></td><td>用世界模型从<b>一张图像</b>生成符合物理的操作轨迹视频，将生成结果作为训练数据</td><td>把数据采集从"人力瓶颈"变成"算力瓶颈"；单张图片即可扩展为多视角、多轨迹样本<sup class="fn"><a href="#ref14">[14]</a></sup></td></tr>
+      <tr><td><b>GR00T-Mimic</b></td><td>用少量人类演示扩增出大规模合成轨迹库</td><td>约 <b>75 万条合成轨迹</b>；生成耗时约 <b>11 小时 GPU</b>，等价于约 <b>6500 小时</b>（约 9 个月）的人工采集；下游任务成功率提升约 <b>40%</b><sup class="fn"><a href="#ref14">[14]</a></sup></td></tr>
+      <tr><td><b>LAPA（Latent Action Pre-training）</b></td><td>在<b>没有动作标签</b>的互联网视频上预训练"潜动作"表示，再对齐到真实机器人动作</td><td>用约 <b>18.1 万条视频</b>做预训练，任务成功率提升约 <b>6.22%</b>，同时数据效率提升约 <b>30 倍</b><sup class="fn"><a href="#ref17">[17]</a></sup></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3><span class="h3no">8.4</span>范式宣言：从 VLA 到 WAM</h3>
+  <div class="quotebox">
+    "VLA 已死，WAM（World-Action Model）当立。"
+    <span class="src">— NVIDIA Jim Fan 在 2025–2026 年对范式转向的公开概括：单靠"看图说话出动作"不够，机器人需要"先预测世界会怎样、再决定做什么"。<sup class="fn"><a href="#ref19">[19]</a></sup></span>
+  </div>
+  <p>这一判断的技术依据可以概括为：<b>VLA 把"世界"压缩进了动作分布里，而 WAM 把"世界"显式建模出来</b>。有了显式的世界模型，机器人就能做三件 VLA 做不到的事：<b>① 在想象中试错</b>（不消耗真实试错成本）；<b>② 预判动作后果</b>（避免破坏性动作）；<b>③ 用预测误差做自监督学习</b>（不需要动作标签）。</p>
+
+  <h3><span class="h3no">8.5</span>"人类学习"（AnthroLearning）：数据来源的范式转移</h3>
+  <p>具身智能最具想象力的转向，是把学习对象从"机器人的动作"换成"<b>人类的动作</b>"。逻辑链是清晰的：人类视频在互联网上以每天数百万小时的速度增长，而机器人遥操作数据以每天数百小时的速度增长——<b>两者的差是 4 个数量级</b>。如果能从人类视频中学到可迁移的动作表示，数据瓶颈就被永久解除。<sup class="fn"><a href="#ref15">[15]</a><a href="#ref17">[17]</a></sup></p>
+  <div class="flow">
+    <div class="step"><b>① 采集人类视频</b><small>EGOCENTRIC VIDEO</small><span style="font-size:13px;color:var(--muted)">智能眼镜 / 头戴相机 / 短视频平台第一人称内容</span></div>
+    <div class="step"><b>② 提取潜动作</b><small>LATENT ACTION</small><span style="font-size:13px;color:var(--muted)">无标签预训练，从手-物交互轨迹中反推"意图动作"</span></div>
+    <div class="step"><b>③ 对齐到本体</b><small>RETARGETING</small><span style="font-size:13px;color:var(--muted)">把人类手部动作重定向到机器人灵巧手（形态差异是主要难点）</span></div>
+    <div class="step"><b>④ 真机微调</b><small>FINE-TUNE</small><span style="font-size:13px;color:var(--muted)">用少量真机数据校正动力学差异，完成 sim/human2real</span></div>
+  </div>
+  <div class="warnbox"><span class="tt">// 这条路的三个未解难题</span>
+    ① <b>形态鸿沟</b>——人手有 20+ 自由度与弹性皮肤，机器人灵巧手在结构与触觉上差距明显，重定向并不保真；② <b>视角与标注</b>——第一人称视频缺少精确的相机位姿、力反馈与物体状态标注；③ <b>有效性尚未完全验证</b>——EgoScale 给出了积极信号，但从"视频预训练有效"到"能替代真机数据"仍有距离。<b>2026 年这条路线处于"方向被广泛认可、路径尚未收敛"的阶段。</b>
+  </div>
+
+  <h3><span class="h3no">8.6</span>2026 年中的技术状态盘点</h3>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>能力维度</th><th>成熟度</th><th>当前状态</th></tr></thead>
+    <tbody>
+      <tr><td>单一场景内任务执行</td><td><span class="chip grn">已可用</span></td><td>结构化产线、仓储分拣等场景已进入商业部署，成功率可满足生产要求</td></tr>
+      <tr><td>跨场景 / 开放环境泛化</td><td><span class="chip amb">进行中</span></td><td>π0.5 等已能在未训练过的家庭环境完成长程整理，但稳定性与成功率尚不足商用</td></tr>
+      <tr><td>灵巧手精细操作</td><td><span class="chip amb">进行中</span></td><td>EgoScale 缩放律带来希望，但触觉反馈与力控仍是工程难点</td></tr>
+      <tr><td>全身动态控制</td><td><span class="chip grn">已可用</span></td><td>双足动态平衡、跑跳、上下楼梯已由多家企业演示并进入量产产品</td></tr>
+      <tr><td>长程多步任务（&gt;10 步）</td><td><span class="chip red">较大差距</span></td><td>误差累积导致成功率快速衰减；世界模型是主要突破口</td></tr>
+      <tr><td>物理常识与因果推理</td><td><span class="chip red">较大差距</span></td><td>世界模型刚开始补课，评测基准（WorldArena 等）尚在建立中</td></tr>
+      <tr><td>数据规模化生产</td><td><span class="chip amb">进行中</span></td><td>合成数据 + 人类视频两条路线并行验证，经济性已初步跑通</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ============ 09 中国脉络 ============ -->
+<section id="sec9">
+  <div class="sec-head"><div class="sec-no">09</div><h2>中国脉络：从科研课题到国家产业议程（2023–2026）</h2></div>
+  <p class="sec-lead">
+    在过去三年里，中国是全球唯一把具身智能同时写进<b>国家顶层规划、产业标准体系与地方行动方案</b>的经济体，也是唯一在出货量上形成压倒性规模的一方。理解中国脉络，是理解 2026 年具身智能全球格局的必要条件。
+  </p>
+
+  <h3><span class="h3no">9.1</span>政策谱系：四级递进的制度供给</h3>
+  <div class="timeline">
+    <div class="node">
+      <span class="year">2023.11</span>
+      <span class="title">工信部《人形机器人创新发展指导意见》——第一份国家专项文件</span>
+      <p>首次把人形机器人定义为"有望成为继计算机、智能手机、新能源汽车后的<b>颠覆性产品</b>"，并给出明确时间表：<b>到 2025 年实现批量生产、到 2027 年综合实力达到世界先进水平</b>，同时在"大脑、小脑、肢体"三类关键技术、整机产品、场景应用、产业生态上作出部署。这份文件在产业界被视为中国具身智能的政策起点。<sup class="fn"><a href="#ref24">[24]</a></sup></p>
+    </div>
+    <div class="node n-violet">
+      <span class="year">2025.03</span>
+      <span class="title">具身智能首次写入《政府工作报告》</span>
+      <p>2025 年《政府工作报告》在"培育壮大新兴产业、未来产业"部分明确提出<b>建立未来产业投入增长机制，培育生物制造、量子科技、具身智能、6G 等未来产业</b>——这是"具身智能"作为产业概念第一次进入国家最高层级的工作部署。<sup class="fn"><a href="#ref24">[24]</a></sup></p>
+    </div>
+    <div class="node n-violet">
+      <span class="year">2025–2026</span>
+      <span class="title">纳入"十五五"规划前瞻布局</span>
+      <p>在"十五五"规划的前期研究与建议中，具身智能被列为需要前瞻布局的未来产业方向之一，与人工智能、量子信息、生物制造等并列。这意味着产业支持从"年度工作部署"上升为<b>五年周期的国家战略安排</b>。<sup class="fn"><a href="#ref24">[24]</a></sup></p>
+    </div>
+    <div class="node n-green">
+      <span class="year">2026.03</span>
+      <span class="title">具身智能连续第二年写入《政府工作报告》</span>
+      <p>2026 年《政府工作报告》再次提及具身智能，并更强调<b>与人工智能深度融合、推动规模化商业化落地</b>。政策关注点从"培育产业"转向"兑现产业"——这是判断中国具身智能进入第二阶段的政策信号。<sup class="fn"><a href="#ref25">[25]</a></sup></p>
+    </div>
+    <div class="node n-teal">
+      <span class="year">2026</span>
+      <span class="title">《人形机器人与具身智能标准体系（2026 版）》发布</span>
+      <p>在 2023 版标准体系基础上修订发布，覆盖<b>基础共性、安全、整机、关键零部件、软件与算法、应用场景</b>等维度，并新增具身智能相关术语、评测与数据规范。标准体系的迭代是产业从"各家自定义"走向"可规模化采购与互操作"的前提。<sup class="fn"><a href="#ref25">[25]</a></sup></p>
+    </div>
+    <div class="node">
+      <span class="year">2024–2026 · 地方</span>
+      <span class="title">地方行动方案与产业基金密集落地</span>
+      <p>北京、上海、深圳、杭州、重庆、成都等地陆续发布具身智能/人形机器人专项行动方案，配套设立百亿级产业基金、建设训练场与数据采集中心（如上海的人形机器人训练场、北京亦庄的机器人产业园）。<b>地方政府的介入使"数据采集"从企业成本变成了公共基础设施。</b><sup class="fn"><a href="#ref24">[24]</a></sup></p>
+    </div>
+  </div>
+
+  <h3><span class="h3no">9.2</span>产业规模：三个关键数据</h3>
+  <div class="grid3">
+    <div class="card"><span class="chip-label">2025 · 出货与份额</span><p>2025 年全球人形机器人出货量约 <b>1.44 万台</b>，其中中国企业占据约 <b>84.7%</b>，且<b>出货量前六名全部为中国企业</b>。<sup class="fn"><a href="#ref21">[21]</a><a href="#ref22">[22]</a></sup></p></div>
+    <div class="card t-violet"><span class="chip-label">2026 · 预测增速</span><p>多家机构预计 2026 年全球出货量将达约 <b>5.1 万台</b>，同比增长约 <b>717%</b>，其中中国厂商占比有望超过 <b>90%</b>。2026 年被称为中国具身智能的"<b>量产元年</b>"。<sup class="fn"><a href="#ref22">[22]</a></sup></p></div>
+    <div class="card t-teal"><span class="chip-label">成本 · 三年降 72%</span><p>工业级全尺寸人形机器人整机均价从 2023 年约 <b>59 万元</b>降至 2025 年约 <b>16.76 万元</b>，降幅约 <b>72%</b>——这是中国供应链国产化最直接的量化证据。<sup class="fn"><a href="#ref23">[23]</a></sup></p></div>
+  </div>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>企业</th><th>成立</th><th>代表产品</th><th>2025–2026 关键事实</th></tr></thead>
+    <tbody>
+      <tr><td><b>宇树科技<br>Unitree</b></td><td>2016</td><td>四足 Go 系列 / 人形 H1、G1、H2</td><td>2025 年出货约 <b>5500 台以上</b>、份额约 <b>31%</b>，为当年出货第一；以极致成本控制（G1 售价降至十万元以内级别）打开科研与商用市场；<b>2025 年 8 月在科创板上市（688836）</b>，成为"人形机器人第一股"<sup class="fn"><a href="#ref21">[21]</a><a href="#ref22">[22]</a></sup></td></tr>
+      <tr><td><b>智元机器人<br>AgiBot</b></td><td>2023</td><td>远征 A2 / 灵犀系列、具身基座模型</td><td>2025 年出货约 <b>5168 台</b>、份额约 <b>29%</b>；2026 年上半年出货量约 <b>8400 台</b>，据公开报道跃居全球第一；同时是少有的"本体 + 基座模型"双线并进的中国公司<sup class="fn"><a href="#ref21">[21]</a><a href="#ref22">[22]</a></sup></td></tr>
+      <tr><td><b>优必选<br>UBTECH</b></td><td>2012</td><td>Walker 系列、工业人形 U1</td><td>2025 年公开的工业场景订单累计约 <b>1.3 万台</b>级别，是"订单驱动"路线的代表；聚焦工厂、仓储等结构化场景<sup class="fn"><a href="#ref21">[21]</a><a href="#ref22">[22]</a></sup></td></tr>
+      <tr><td><b>其他主要玩家</b></td><td>—</td><td>—</td><td>傅利叶（GR 系列，医疗康复起家）、乐聚（夸父系列）、星动纪元、银河通用（Galbot，聚焦大模型 + 零售）、加速进化、松延动力、众擎（PM01）等，形成"整机 + 模型 + 场景"多层次竞争<sup class="fn"><a href="#ref21">[21]</a></sup></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3><span class="h3no">9.3</span>供应链：降本 72% 是怎么发生的</h3>
+  <p>人形机器人成本结构大致为：<b>关节模组（含减速器、电机、驱动器）占约一半，灵巧手与传感器占约两成，其余为结构件、电池与计算单元</b>。中国的降本路径是逐环节国产替代 + 规模摊薄：<sup class="fn"><a href="#ref23">[23]</a><a href="#ref30">[30]</a></sup></p>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>核心部件</th><th>此前格局</th><th>国产化进展与降本逻辑</th></tr></thead>
+    <tbody>
+      <tr><td><b>谐波减速器</b></td><td>日本哈默纳科长期主导</td><td>绿的谐波等实现量产替代，单台人形用量十余个，规模化后单价显著下降<div style="color:var(--dim);font-size:12.5px">（典型关节装配中谐波减速器的成本占比最高）</div></td></tr>
+      <tr><td><b>行星滚柱丝杠</b></td><td>欧洲厂商主导，单价高、产能紧</td><td>直线执行器核心件，国内多家厂商扩产，是 2024–2025 年最紧张的瓶颈环节之一</td></tr>
+      <tr><td><b>无框力矩电机 / 空心杯电机</b></td><td>进口为主</td><td>国产电机厂商快速跟进，配合国产驱动芯片，抬高关节模组集成度并压低成本</td></tr>
+      <tr><td><b>六维力 / 触觉传感器</b></td><td>ATI 等进口主导，价格昂贵</td><td>国产六维力传感器价格大幅下探；灵巧手触觉方案从"每指一传感"走向阵列化，成本与精度同步改善</td></tr>
+      <tr><td><b>灵巧手</b></td><td>整手进口数万至十万元级</td><td>国产方案下探至数千元至万元级，自由度与负载同步提升；但<b>高精度触觉与寿命仍与国际先进水平有差距</b></td></tr>
+      <tr><td><b>计算平台</b></td><td>NVIDIA Jetson 系列为主流</td><td>域控制器方案成熟；国产算力芯片在端侧占比仍低，是当前对海外依赖度最高的环节之一</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3><span class="h3no">9.4</span>资本热度与它的隐忧</h3>
+  <div class="grid2">
+    <div class="card t-green"><span class="chip-label">资本 · 一年五倍</span><p>2026 年上半年，国内具身智能赛道融资规模据公开统计超过 <b>900 亿元</b>，同比增长约 <b>500%</b>。资金集中流向两类标的：<b>有出货量的整机厂</b>与<b>有数据/模型壁垒的"大脑"公司</b>。多地政府引导基金直接参与，形成"政策—资本—订单"的正循环。<sup class="fn"><a href="#ref22">[22]</a></sup></p></div>
+    <div class="card t-amber"><span class="chip-label">隐忧 · 三个需要警惕的信号</span><p>① <b>出货 ≠ 干活</b>——大量出货流向科研、教育与展示场景，真正产生经济价值的"在岗时长"缺乏公开验证；② <b>同质化严重</b>——多数整机厂在硬件规格上高度趋同，差异化主要靠价格；③ <b>"大脑"短板未解</b>——中国在硬件供应链上占绝对优势，但在具身基础模型、世界模型的原创性上仍显著弱于美国。<sup class="fn"><a href="#ref22">[22]</a><a href="#ref23">[23]</a></sup></p></div>
+  </div>
+</section>
+
+<!-- ============ 10 全球格局 ============ -->
+<section id="sec10">
+  <div class="sec-head"><div class="sec-no">10</div><h2>全球产业格局：两条路径的结构性分歧</h2></div>
+  <p class="sec-lead">
+    2026 年的具身智能产业呈现出一种罕见的格局：<b>技术标准的定义权在美国，物理产能的规模优势在中国。</b>这不是简单的"谁更强"，而是两种资源禀赋与产业逻辑的自然结果。
+  </p>
+
+  <h3><span class="h3no">10.1</span>美国阵营：押注"大脑先行"</h3>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>公司</th><th>代表本体</th><th>估值 / 融资</th><th>路线与关键事实</th></tr></thead>
+    <tbody>
+      <tr><td><b>Figure AI</b></td><td>Figure 01 / 02 / 03</td><td>约 <b>390 亿美元</b>估值，累计融资超 <b>19 亿美元</b></td><td>最彻底的"垂直整合 + 自研 AI"路线：自研 Helix VLA（双系统、全身 35 自由度）、自建 BotQ 工厂（规划年产能约 <b>12,000 台</b>）；已在 <b>宝马 Spartanburg 工厂</b>等场景开展部署验证<sup class="fn"><a href="#ref13">[13]</a></sup></td></tr>
+      <tr><td><b>Tesla Optimus</b></td><td>Optimus V2 / V3</td><td>上市公司，无独立估值</td><td>依托汽车产线的制造能力与 FSD 的视觉-神经网络积累，目标售价 <b>2–3 万美元</b>；在 Fremont 工厂建设专用产线。<b>最大的差异化是"自己就是第一个大客户"</b>——特斯拉工厂本身提供海量真实任务与数据<sup class="fn"><a href="#ref13">[13]</a></sup></td></tr>
+      <tr><td><b>Boston Dynamics</b></td><td>Spot / Stretch / Atlas</td><td>现代汽车集团持股约 80%</td><td>动态运动能力的全球标杆。电动 <b>Atlas</b>（2024 年 4 月发布，28 自由度）转向电驱以适配量产；<b>CES 2026 发布量产版 Atlas</b>，载荷约 25 公斤、腕关节支持 360° 旋转，计划在现代 Metaplant 等场景部署；配套产能目标指向万台级/年<sup class="fn"><a href="#ref13">[13]</a></sup></td></tr>
+      <tr><td><b>1X Technologies</b></td><td>EVE / NEO</td><td>约 <b>100 亿美元</b>估值</td><td>聚焦<b>家庭场景</b>：NEO 定位家用，公开定价约 <b>2 万美元或 499 美元/月</b>订阅；<b>关键权衡：早期版本在复杂任务上采用远程遥操作兜底</b>——用人类操作员补足 AI 能力，是"先落地再自动化"的务实路线<sup class="fn"><a href="#ref13">[13]</a></sup></td></tr>
+      <tr><td><b>Apptronik</b></td><td>Apollo</td><td>约 <b>55 亿美元</b>估值，融资约 <b>9.35 亿美元</b></td><td>与 <b>Google DeepMind</b> 深度合作（Apollo 是 Gemini Robotics 的硬件平台之一）；与奔驰、GXO 物流开展仓储与制造试点<sup class="fn"><a href="#ref13">[13]</a></sup></td></tr>
+      <tr><td><b>Agility Robotics</b></td><td>Digit</td><td>约 <b>21 亿美元</b>估值</td><td><b>最早实现商用部署的人形机器人之一</b>：在 GXO 物流仓库执行搬运任务（Digit 是"双足 + 反关节腿"形态的早期代表）；自建 RoboFab 工厂<sup class="fn"><a href="#ref13">[13]</a></sup></td></tr>
+      <tr><td><b>NEURA Robotics</b>（德）</td><td>4NE-1</td><td>约 <b>70 亿美元</b>估值级别</td><td>欧洲代表，主打认知机器人与工业协作场景<sup class="fn"><a href="#ref13">[13]</a></sup></td></tr>
+      <tr><td><b>Skild AI</b></td><td>无本体（纯模型）</td><td>约 <b>45 亿美元</b>估值</td><td><b>"只做大脑、不做身体"</b>路线的代表：开发机器人基础模型（Robot Foundation Model），授权给各家本体厂商——是中美路线之外的第三种商业模式<sup class="fn"><a href="#ref13">[13]</a></sup></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3><span class="h3no">10.2</span>Boston Dynamics 谱系：三十年动态运动的编年</h3>
+  <div class="timeline">
+    <div class="node n-amber"><span class="year">2005</span><span class="title">BigDog：四足动态平衡的公开宣言</span><p>以液压驱动、能承受侧踹而不倒，向世界展示了"动态平衡优于静态稳定"的腿式机器人设计哲学。</p></div>
+    <div class="node n-amber"><span class="year">2012</span><span class="title">Cheetah：跑出约 28.3 mph（45.5 km/h）</span><p>当时最快的腿式机器人，用于探索高速动态奔跑的极限。</p></div>
+    <div class="node"><span class="year">2013</span><span class="title">液压 Atlas：为 DARPA 机器人挑战赛而生</span><p>身高约 1.8 米的人形机器人，成为此后十年全球人形机器人研究的标准平台（2015 年 DARPA Robotics Challenge 上多支队伍使用）。</p></div>
+    <div class="node n-violet"><span class="year">2024.04</span><span class="title">电动 Atlas：从液压转向电驱的范式切换</span><p>发布全电动 Atlas，关节可 360° 旋转、身形更强壮灵活。从液压到电驱的关键动因是<b>可靠性与可维护性</b>——液压系统泄漏与维护成本无法支撑量产与商业部署。</p></div>
+    <div class="node n-green"><span class="year">2026.01 · CES</span><span class="title">量产版 Atlas：正式进入产品化阶段</span><p>载荷约 25 公斤，腕关节支持 360° 旋转，面向现代汽车集团的生产场景（Metaplant America / RMAC 等）部署；波士顿动力与母公司现代的产能规划指向万台级/年的制造目标。<b>这标志着"实验室明星"完成了向量产产品的转身。</b><sup class="fn"><a href="#ref13">[13]</a></sup></p></div>
+  </div>
+
+  <h3><span class="h3no">10.3</span>中美路径对比：结构性差异</h3>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>维度</th><th>美国：大脑先行</th><th>中国：身体先行</th></tr></thead>
+    <tbody>
+      <tr><td><b>核心命题</b></td><td>先做出通用智能，再找身体与场景</td><td>先做出便宜可靠的身体，再逐步上智能</td></tr>
+      <tr><td><b>价值主张</b></td><td>通用性、泛化能力、软件授权</td><td>成本、交付能力、供应链规模</td></tr>
+      <tr><td><b>典型打法</b></td><td>自研 VLA / 世界模型；垂直整合软硬件；高估值融资</td><td>快速迭代本体、压低 BOM 成本、争取订单与政府资源</td></tr>
+      <tr><td><b>数据策略</b></td><td>自建遥操作采集 + 人类视频 + 仿真合成（三线并行）</td><td>政府/园区共建训练场 + 场景方联合采集（公共基础设施化）</td></tr>
+      <tr><td><b>优势</b></td><td>基础模型原创性、生态定义权、算力</td><td>制造与供应链、成本、出货规模、场景密度</td></tr>
+      <tr><td><b>风险</b></td><td>硬件成本高、量产能力弱、商业化路径长</td><td>"大脑"受制于人、同质化竞争、真实价值验证不足</td></tr>
+      <tr><td><b>2026 现状</b></td><td>技术标杆与标准制定者</td><td>出货与产能的绝对主力</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3><span class="h3no">10.4</span>三种商业模式并存</h3>
+  <div class="grid3">
+    <div class="card"><span class="chip-label">卖硬件（CAPEX）</span><p>整机销售，一次性收入。代表：宇树、智元、优必选、特斯拉。<br><b>优点：</b>现金回流快、可规模化；<b>难点：</b>客户需自己承担使用风险，"出货不等于干活"。</p></div>
+    <div class="card t-violet"><span class="chip-label">卖服务（RaaS）</span><p>按"机器人工时"或"任务量"收费（Robot-as-a-Service）。代表：Agility、1X（订阅制）。<br><b>优点：</b>降低客户决策门槛、厂商与客户利益绑定；<b>难点：</b>厂商需承担全部运维与故障成本，对可靠性要求极高。</p></div>
+    <div class="card t-teal"><span class="chip-label">卖模型（授权）</span><p>只做"大脑"，授权给本体厂商或场景方。代表：Skild AI、Physical Intelligence。<br><b>优点：</b>资产轻、边际成本低、可跨本体复用；<b>难点：</b>需在多家本体上证明可迁移性，商业模式尚无大规模验证。</p></div>
+  </div>
+  <div class="callout"><span class="tt">// 一个值得记住的判断</span>
+    这三种模式不是互斥的，而是<b>产业成熟度的三个阶段</b>：早期靠卖硬件建立装机量与数据回流；中期待可靠性达标后转向 RaaS 提高单客价值；成熟期模型能力跨本体可迁移后，"卖大脑"才成为可能。<b>2026 年的产业仍处在第一阶段向第二阶段过渡的早期。</b>
+  </div>
+</section>
+
+<!-- ============ 11 底座 ============ -->
+<section id="sec11">
+  <div class="sec-head"><div class="sec-no">11</div><h2>支撑底座：数据金字塔 · 算力工具链 · 评测基准</h2></div>
+  <p class="sec-lead">
+    如果说 VLA 与体系模型是具身智能的"上层建筑"，那么数据、算力与评测就是它的地基。这三者共同决定了行业的真实产能与迭代速度——也是 2026 年竞争最激烈、最不透明的地方。
+  </p>
+
+  <h3><span class="h3no">11.1</span>数据金字塔：行业的共识结构</h3>
+  <p>2025 年以来，几乎所有中美头部公司都独立提出了结构相似的"数据金字塔"。虽然分层数量从三层到五层不等，但逻辑完全一致：<b>越靠塔尖的数据越真实、越贵、越稀缺；越靠塔基的数据越容易规模化，但需要更多转换成本。</b><sup class="fn"><a href="#ref16">[16]</a><a href="#ref17">[17]</a></sup></p>
+  <div class="stack">
+    <div class="layer hl"><div class="lname">塔尖 · 真机遥操作数据</div><div class="ldesc">人类穿动作捕捉服/遥操作设备，在真机上完成任务，采集带精确动作标签的轨迹。<b>质量最高、成本最高</b></div><div class="lmetric">最真实<br>最贵</div></div>
+    <div class="layer"><div class="lname">第二层 · UMI 式无本体数据</div><div class="ldesc">用手持夹爪 + 相机在真实场景中采集（不含机器人本体），保留真实物理交互但无需占用整机</div><div class="lmetric">成本大幅下降</div></div>
+    <div class="layer"><div class="lname">第三层 · 第一人称人类视频（EGO）</div><div class="ldesc">智能眼镜/头戴相机采集人类日常操作视频，覆盖最广、增长最快；需解决形态重定向与标注缺失问题</div><div class="lmetric">规模最大</div></div>
+    <div class="layer"><div class="lname">第四层 · 仿真合成数据</div><div class="ldesc">物理仿真 + 域随机化 + 世界模型生成的轨迹。GR00T-Mimic 约 75 万条合成轨迹；GR00T-Dreams 从单图生成</div><div class="lmetric">算力换数据</div></div>
+    <div class="layer"><div class="lname">塔基 · 通用互联网数据</div><div class="ldesc">图文对、视频、语言语料——提供语义与常识先验，但不含动作标签（LAPA 用它做潜动作预训练）</div><div class="lmetric">近乎免费</div></div>
+  </div>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>采集方式</th><th>单条成本</th><th>动作精度</th><th>规模潜力</th><th>典型使用者</th></tr></thead>
+    <tbody>
+      <tr><td><b>真机遥操作</b></td><td><span class="chip red">极高</span></td><td><span class="chip grn">最高</span></td><td><span class="chip red">受人力限制</span></td><td>几乎所有头部公司的基础数据</td></tr>
+      <tr><td><b>UMI 式手持采集</b></td><td><span class="chip amb">中</span></td><td><span class="chip grn">高</span></td><td><span class="chip amb">中</span></td><td>斯坦福 UMI、国内多家数据服务商</td></tr>
+      <tr><td><b>第一人称人类视频</b></td><td><span class="chip grn">低</span></td><td><span class="chip red">缺失</span></td><td><span class="chip grn">极大</span></td><td>NVIDIA EgoScale、京东 EgoLive、大晓 Kairos</td></tr>
+      <tr><td><b>仿真合成</b></td><td><span class="chip grn">低（算力计）</span></td><td><span class="chip grn">精确</span></td><td><span class="chip grn">极大</span></td><td>NVIDIA Isaac / Cosmos、Genesis、各家仿真团队</td></tr>
+      <tr><td><b>互联网视频/图文</b></td><td><span class="chip grn">近零</span></td><td><span class="chip red">无标签</span></td><td><span class="chip grn">近乎无限</span></td><td>VLM 预训练、LAPA 潜动作预训练</td></tr>
+    </tbody>
+  </table></div>
+
+  <h4>国内四家机构的金字塔变体</h4>
+  <div class="grid2">
+    <div class="card"><span class="chip-label">腾讯 · 张正友的四层框架</span><p>把具身数据分为<b>真实数据、仿真数据、互联网数据、合成数据</b>四类，并强调"数据金字塔不是替代关系而是配比关系"——塔尖数据用于精调，塔基数据用于预训练，不同训练阶段使用不同层的组合<sup class="fn"><a href="#ref16">[16]</a></sup>。</p></div>
+    <div class="card t-violet"><span class="chip-label">京东 · EgoLive 与千万小时计划</span><p>以<b>第一人称人类视频</b>为核心资产，公开提出两年内积累约 <b>1000 万小时</b> Ego 视频数据的计划，配套建设采集网络与标注管线。逻辑是"人类视频是唯一能以互联网速度增长的动作数据源"<sup class="fn"><a href="#ref17">[17]</a></sup>。</p></div>
+    <div class="card t-teal"><span class="chip-label">极佳视界 · "双金字塔"</span><p>同时提出<b>数据金字塔（5 层）与算法金字塔（3 层）</b>，主张两者逐层对应：底层通用视频预训练、中层人类动作对齐、顶层真机精调。其"拾光 S1"产品已进入社区场景实测，并在 WorldArena 评测中取得领先成绩<sup class="fn"><a href="#ref17">[17]</a><a href="#ref20">[20]</a></sup>。</p></div>
+    <div class="card t-amber"><span class="chip-label">大晓机器人 · Kairos 与力触觉补齐</span><p>Kairos 3.1 采用<b>三层数据金字塔</b>，并配套 ACE Sense Glove 数据手套，宣称可实现约 <b>0.01N</b> 级别的力/触觉感知——直指"视频数据缺乏力反馈"这一根本缺陷<sup class="fn"><a href="#ref17">[17]</a></sup>。</p></div>
+  </div>
+
+  <h3><span class="h3no">11.2</span>算力与工具链：谁在提供"训练场地"</h3>
+  <div class="grid3">
+    <div class="card"><span class="chip-label">仿真平台</span><p><b>NVIDIA Isaac Sim / Isaac Lab</b>（GPU 并行仿真、物理精度与生态最完整）；<b>MuJoCo</b>（接触动力学学术标准，2021 年开源）；<b>Genesis</b>（2024 年开源，主打极高速并行与统一物理引擎）。</p></div>
+    <div class="card t-violet"><span class="chip-label">世界基础模型</span><p><b>NVIDIA Cosmos</b>（Predict / Transfer / Reason 三类能力，视频预训练语料 2000 万小时以上）；<b>Google Genie</b> 系列（从图像生成可交互环境）。用于生成合成数据与预演动作后果<sup class="fn"><a href="#ref29">[29]</a></sup>。</p></div>
+    <div class="card t-teal"><span class="chip-label">端侧算力</span><p>人形机器人的嵌入式推理平台（NVIDIA Jetson 系列等）在 2025–2026 年算力大幅提升，使"两个网络同时跑在机身上"（一个 200Hz 控制、一个 7–10Hz 推理）成为可能。<b>端侧算力是"双系统"架构落地的硬件前提。</b></p></div>
+  </div>
+  <div class="callout"><span class="tt">// 一个容易被忽略的战略点</span>
+    具身智能的"训练场地"高度集中在少数国外平台上（Isaac、MuJoCo、Genesis、Cosmos）。这意味着<b>中国在硬件产能上的优势，并没有自动转化为工具链与标准上的话语权</b>。国内多家机构正在推进自主仿真引擎与数据格式标准，但短期内难以替代。
+  </div>
+
+  <h3><span class="h3no">11.3</span>评测基准：一个仍在建立中的裁判体系</h3>
+  <p>具身智能的评测比 LLM 困难得多——因为性能不仅取决于模型，还取决于本体、场景、任务分布与安全限制。<b>"我做到了 90% 成功率"这句话在没有统一基准的情况下几乎没有信息量。</b>当前的基准体系可分为四类<sup class="fn"><a href="#ref20">[20]</a></sup>：</p>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>类型</th><th>代表基准</th><th>测什么</th><th>局限</th></tr></thead>
+    <tbody>
+      <tr><td><b>仿真操作</b></td><td>LIBERO、RoboCasa、SimplerEnv</td><td>仿真环境中的操作任务成功率与泛化能力</td><td>与真机存在域间隙，仿真高分不必然转化为真机表现</td></tr>
+      <tr><td><b>双臂协作</b></td><td>RoboTwin 2.0</td><td>双臂协同任务的完成质量与鲁棒性</td><td>任务覆盖面仍有限</td></tr>
+      <tr><td><b>世界模型</b></td><td>WorldArena、EWMBench</td><td>世界模型对物理演化的预测保真度（多维度打分）</td><td>评测维度与权重仍在迭代，行业共识未形成</td></tr>
+      <tr><td><b>真机部署</b></td><td>各家企业自建场景测试</td><td>真实场景连续运行时长、干预率、MTBF</td><td><b>数据不公开、口径不统一，无法横向比较</b></td></tr>
+    </tbody>
+  </table></div>
+  <div class="okbox"><span class="tt">// 几个可对照的公开成绩</span>
+    ① <b>WorldArena</b> 评测中，冠军模型得分约 <b>73.64</b>，第二名约 <b>73.06</b>——差距极小，说明该基准目前区分度有限，也说明头部世界模型的水平已相当接近<sup class="fn"><a href="#ref20">[20]</a></sup>。<br>
+    ② 深度机智公开的 <b>PhysBrain 1.0</b>（基于约 3000 小时 Ego 数据训练，采用 TwinBrainVLA 双脑架构 + LangForce 语言力场）：在 <b>SimplerEnv WidowX</b> 基准上报告成功率约 <b>80.2%</b>，而同期对照的 π0.5 约 <b>57.1%</b>；在 <b>LIBERO</b> 上报告约 <b>98.8%</b><sup class="fn"><a href="#ref20">[20]</a></sup>。<br>
+    <span style="color:var(--muted);font-size:13px">（注：上述数据为企业/机构自行公开的报告结果，评测条件与基线设置可能与其他榜单不可直接类比，仅供参考。）</span>
+  </div>
+
+  <h3><span class="h3no">11.4</span>开源生态：公共基础设施正在成形</h3>
+  <div class="grid2">
+    <div class="card"><span class="chip-label">数据 · OPEN X-EMBODIMENT</span><p>由 21 家机构联合贡献的跨本体机器人数据集，汇集 <b>100 万条以上轨迹、22 种机器人本体、500+ 技能</b>，是当前最大的公开真机操作数据集。RT-X、OpenVLA 等模型均在其上训练，<b>它是学术界唯一可用的"大规模真机基线"</b><sup class="fn"><a href="#ref35">[35]</a></sup>。</p></div>
+    <div class="card t-violet"><span class="chip-label">模型 · OPENVLA / GR00T / LEROBOT</span><p><b>OpenVLA</b>（7B 开源 VLA）把产业级模型带到学术界可复现的规模；<b>GR00T N1</b> 开源人形基础模型权重与合成数据管线；<b>HuggingFace LeRobot</b> 提供从数据格式、训练脚本到真机部署的端到端工具链。三者共同构成具身智能的"公共基础设施"<sup class="fn"><a href="#ref35">[35]</a></sup>。</p></div>
+  </div>
+  <div class="tealbox"><span class="tt">// 开源的双重作用</span>
+    对学术界，开源把研究门槛从"拥有几百万元机器人平台"降到"一块 GPU + 公开数据集"；<b>对产业界，开源则是标准制定权的争夺</b>——谁的模型被最多人用作基线，谁就定义了"什么是正常的做法"。NVIDIA 与 HuggingFace 在这一层的投入，其战略意义不亚于模型性能本身。
+  </div>
+</section>
+
+<!-- ============ 12 挑战与治理 ============ -->
+<section id="sec12">
+  <div class="sec-head"><div class="sec-no">12</div><h2>挑战、治理与风险：狂热之下必须看清的六件事</h2></div>
+  <p class="sec-lead">
+    2026 年的具身智能处在一个典型的"预期远超兑现"的阶段。本章不讨论可能性，只讨论已经出现的问题：技术上未解的、治理上未立的、商业上未验证的。
+  </p>
+
+  <h3><span class="h3no">12.1</span>六个技术挑战</h3>
+  <div class="grid2">
+    <div class="card t-amber"><span class="chip-label">① 泛化 vs 可靠的悖论</span><p>模型越通用，在具体任务上的可靠性越低；越专门化，越失去通用价值。<b>"通用且可靠"目前无解</b>——这也是产业界普遍选择"通用模型 + 场景微调"的原因。</p></div>
+    <div class="card t-amber"><span class="chip-label">② 长程任务的误差累积</span><p>模仿学习在十余步之后成功率急剧衰减。世界模型是当前唯一有希望的方向，但需要预测精度达到极高水准才有意义。</p></div>
+    <div class="card t-amber"><span class="chip-label">③ 触觉与力控的缺失</span><p>视频数据里没有力信息，而插拔、拧拧、装配、折叠衣物等大量任务本质上是<b>力控任务</b>。触觉传感器的精度、寿命、成本都还是硬约束。</p></div>
+    <div class="card t-amber"><span class="chip-label">④ 硬件的可靠性与寿命</span><p>工业客户关心的不是"能不能做一次"，而是"能不能连续做十万次不掉链子"。关节寿命、电池续航、维护成本是量产产品的真正门槛。</p></div>
+    <div class="card t-amber"><span class="chip-label">⑤ 能耗与散热</span><p>人形机器人要背负电池完成 8 小时工作，同时运行高算力推理——<b>能效比是限制其能力的隐性天花板</b>。</p></div>
+    <div class="card t-amber"><span class="chip-label">⑥ 评估体系不成熟</span><p>缺乏公认的真机评测基准，导致"能力"无法被第三方验证，对外沟通高度依赖企业自述演示视频。</p></div>
+  </div>
+
+  <h3><span class="h3no">12.2</span>安全与治理：三条必须尽快立起的轨道</h3>
+  <div class="grid3">
+    <div class="card"><span class="chip-label">物理安全</span><p>人机共存场景下的碰撞力限制、急停机制、失效安全（fail-safe）设计已有国际标准依据（ISO 10218 系列工业机器人安全标准、ISO/TS 15066 协作机器人技术要求）；但<b>双足人形机器人在非结构化环境中的安全标准仍近乎空白</b>——一台 60 公斤的机器人在商场里摔倒，责任与防护设计目前没有成熟答案<sup class="fn"><a href="#ref32">[32]</a></sup>。</p></div>
+    <div class="card t-violet"><span class="chip-label">数据与隐私</span><p>家庭场景的第一人称视频采集中包含大量私密信息（居住空间、家庭成员、生活习惯）。<b>"用人类视频训练机器人"这条路线天然与隐私保护冲突</b>，需要在采集、脱敏、存储、跨境流动各环节建立规范，而目前多数项目仍处于"先采再说"的早期状态<sup class="fn"><a href="#ref33">[33]</a></sup>。</p></div>
+    <div class="card t-amber"><span class="chip-label">责任与远程操作</span><p>1X NEO 等产品采用<b>远程遥操作兜底</b>——人在远方控制你的家用机器人。这带来三重问题：操作员能看到什么、操作记录是否留存、执行动作的责任归于谁。<b>这类"人机混合控制"的法律定性目前没有清晰答案</b><sup class="fn"><a href="#ref33">[33]</a></sup>。</p></div>
+  </div>
+  <div class="riskbox"><span class="tt">// 一个被忽视的风险：军事化</span>
+    波士顿动力早期项目（BigDog 等）由 DARPA 资助，四足平台的军事化应用已成现实。人形机器人在复杂地形中的通用性同样使其具备明确的军事价值，而具备自主决策能力的武装系统涉及国际人道法上的严重争议。<b>这是具身智能技术发展中最需要提前划定伦理红线的方向，也是行业自律与国际治理最滞后的领域。</b>
+  </div>
+
+  <h3><span class="h3no">12.3</span>商业现实：估值与收入的巨大缺口</h3>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>观察维度</th><th>2026 年现状</th><th>含义</th></tr></thead>
+    <tbody>
+      <tr><td><b>出货量的构成</b></td><td>大量出货流向科研院所、教育、展演与政府示范项目</td><td><b>"在岗产生经济价值"的机器数量远小于出货量</b>，真实的商业闭环尚未大规模验证</td></tr>
+      <tr><td><b>单机经济的可行性</b></td><td>工业级整机约 16.76 万元，但运维、集成、数据标注成本未计入</td><td>加上隐性成本后，与人力的成本交叉点可能需要进一步下移</td></tr>
+      <tr><td><b>估值与实际收入</b></td><td>多家公司估值达数百亿人民币甚至更高，实际营收规模远小于此</td><td>估值建立在"通用智能终将实现"的长期预期上，<b>对技术进展的容错率很低</b></td></tr>
+      <tr><td><b>竞争格局</b></td><td>中国整机厂数量众多、硬件规格趋同</td><td>价格战风险高，行业整合大概率发生</td></tr>
+    </tbody>
+  </table></div>
+  <div class="warnbox"><span class="tt">// 历史的提醒</span>
+    具身智能并非第一次经历热潮。1980 年代的工业机器人热、2000 年前后的人形机器人热、2015 年前后的协作机器人热，都经历过"预期峰值 → 失望低谷 → 务实增长"的曲线。当前的高度乐观并不必然错误，但<b>把"技术演示成功"等同于"产业闭环成立"，是这个行业历史上反复出现的误判</b>。<sup class="fn"><a href="#ref34">[34]</a></sup>
+  </div>
+
+  <h3><span class="h3no">12.4</span>结语：这门学科真正在解决什么问题</h3>
+  <p>回看七十年，具身智能的历史可以被读成一场关于<b>"意义从哪里来"</b>的漫长辩论。符号主义说意义来自符号系统的内部结构；连接主义说意义来自数据中的统计规律；行为主义说意义来自身体与世界的耦合。三次尝试都各自成功过，也各自触到了天花板。</p>
+  <p>2022 年之后发生的事，是这三条线第一次被同一个技术框架容纳——<b>大模型提供可迁移的语义先验（连接主义），任务规划显式生成推理链（符号主义），强化学习与真实交互提供接地（行为主义）</b>。而世界模型的出现，则给出了第四块拼图：<b>对物理因果的显式建模</b>。</p>
+  <div class="quotebox">
+    具身智能要回答的最终问题不是"机器人能做什么"，而是：<b>当智能拥有了身体、必须承受行动的后果、必须在没有人替它兜底的真实世界里做决定时，"理解"这件事本身意味着什么。</b>
+    <span class="src">— 本笔记对这门学科问题的概括</span>
+  </div>
+  <p style="font-size:13.5px;color:var(--muted)">2026 年，这个问题的答案仍然只写了一半。已经确定的是：<b>继续在纯文本与纯仿真中寻找答案的时代结束了</b>；接下来的进展，将来自那些真正把机器放到世界里、并且有能力持续生成高质量真实数据的团队。<sup class="fn"><a href="#ref36">[36]</a></sup></p>
+
+  <h3><span class="h3no">12.5</span>参考文献</h3>
+  <p style="font-size:13.5px;color:var(--muted)">以下为本文关键论断的公开来源。点击编号可跳回正文对应位置，点击标题链接可访问原文。部分中文产业数据来自券商研报与行业媒体统计，口径已在正文中标注。</p>
+  <details class="app" id="ref1"><summary>[1] 具身认知的哲学源流：亚里士多德 / 笛卡尔 / 梅洛-庞蒂 / 莱考夫 / 瓦雷拉</summary>
+    <ol>
+      <li>亚里士多德《论灵魂》（De Anima）：灵魂作为身体的形式，感知与运动是灵魂的功能</li>
+      <li>René Descartes《第一哲学沉思集》（Meditations on First Philosophy, 1641）：思维实体（Res Cogitans）与广延实体（Res Extensa）的二元划分</li>
+      <li>Maurice Merleau-Ponty《知觉现象学》（Phénoménologie de la perception, 1945）：身体主体（le corps propre）、身体图式（schéma corporel）、"具身性"（Embodiment）</li>
+      <li>George Lakoff《女人、火与危险事物》（Women, Fire, and Dangerous Things, 1987）：认知语义学、意象图式（image schema）由身体经验塑造</li>
+      <li>Francisco Varela, Evan Thompson, Eleanor Rosch《具身心智》（The Embodied Mind, 1991）：生成论（Enaction）</li>
+    </ol>
+  </details>
+  <details class="app" id="ref2"><summary>[2] 具身智能的定义与"大脑 / 身体 / 环境"三位一体架构</summary>
+    <ol>
+      <li><a href="https://www.thepaper.cn/" target="_blank" rel="noopener">澎湃新闻 / 科普中国：具身智能概念界定与技术架构科普</a></li>
+      <li><a href="http://www.aas.net.cn/" target="_blank" rel="noopener">《自动化学报》：具身智能相关综述与研究进展</a></li>
+      <li><a href="https://www.iyiou.com/" target="_blank" rel="noopener">亿欧智库：具身智能产业研究报告（定义、技术栈与产业链）</a></li>
+    </ol>
+  </details>
+  <details class="app" id="ref3"><summary>[3] 具身智能与机器人发展通史时间线（1950–2002）</summary>
+    <ol>
+      <li><a href="https://en.wikipedia.org/wiki/Embodied_agent" target="_blank" rel="noopener">Wikipedia: Embodied agent / History of robots</a></li>
+      <li>Grey Walter（1950–1951）Machina speculatrix（Elmer / Elsie）"电子乌龟"：光趋、避障、自主充电</li>
+      <li>Unimate（1961，通用汽车新泽西工厂）：世界第一台工业机器人，示教-再现范式</li>
+      <li>Shakey（1966–1972，SRI）：第一个集成感知-规划-执行的移动机器人；STRIPS（1971）</li>
+      <li>WABOT-1（1973，早稻田大学加藤一郎实验室）：世界第一台全尺寸人形机器人</li>
+      <li>本田 E 系列（1986）→ P1（1993）→ P2（1996）→ P3（1997）→ ASIMO（2000）</li>
+      <li>Sony AIBO（1999）；iRobot Roomba（2002）</li>
+    </ol>
+  </details>
+  <details class="app" id="ref4"><summary>[4] Rodney Brooks 与行为主义：包含架构与"没有表示的智能"</summary>
+    <ol>
+      <li>R. Brooks, "Intelligence without Representation", <i>Artificial Intelligence</i>, 1991</li>
+      <li>R. Brooks, "Elephants Don't Play Chess", <i>Robotics and Autonomous Systems</i>, 1990</li>
+      <li>R. Brooks, "Intelligence without Reason", IJCAI 1991</li>
+      <li>R. Brooks &amp; J. Connell, "Achieving Artificial Intelligence through Building Robots", MIT AI Memo, 1986</li>
+      <li>Genghis 六足机器人（1991）与 Subsumption Architecture 分层抑制机制</li>
+      <li><a href="https://people.csail.mit.edu/brooks/" target="_blank" rel="noopener">MIT CSAIL · Rodney Brooks 个人主页与论文列表</a></li>
+    </ol>
+  </details>
+  <details class="app" id="ref5"><summary>[5] AI 三大流派（符号主义 / 连接主义 / 行为主义）及其在具身智能上的分歧</summary>
+    <ol>
+      <li><a href="https://www.zhihu.com/" target="_blank" rel="noopener">人工智能三大流派综述：符号主义、连接主义、行为主义的核心主张与代表人物</a></li>
+      <li><a href="https://www.jiqizhixin.com/" target="_blank" rel="noopener">机器之心：从符号主义到行为主义——AI 研究范式变迁</a></li>
+      <li>行为主义在具身场景的能力边界与"无表示"架构的工程局限</li>
+    </ol>
+  </details>
+  <details class="app" id="ref6"><summary>[6] 人工智能发展史：深蓝 / AlphaGo / ChatGPT 与三流派融合</summary>
+    <ol>
+      <li>IBM Deep Blue 战胜卡斯帕罗夫（1997）：符号主义 + 暴力搜索的巅峰及其"感知与行动被外包"的边界</li>
+      <li>DeepMind AlphaGo（2016）/ AlphaGo Zero（2017）：神经网络估值 + MCTS；自我博弈不依赖人类棋谱</li>
+      <li>ChatGPT（2022）与 RLHF：被广泛解读为连接主义（Transformer）+ 符号主义（Chain-of-Thought）+ 行为主义（奖励驱动调校）的首次融合</li>
+      <li><a href="https://openai.com/research/" target="_blank" rel="noopener">OpenAI Research：对齐与 RLHF 相关公开材料</a></li>
+    </ol>
+  </details>
+  <details class="app" id="ref7"><summary>[7] 符号接地问题、框架问题与 Cyc 常识工程</summary>
+    <ol>
+      <li>Stevan Harnad, "The Symbol Grounding Problem", <i>Physica D</i>, 1990</li>
+      <li>John McCarthy &amp; Patrick Hayes, "Some Philosophical Problems from the Standpoint of Artificial Intelligence", 1969（框架问题的经典表述）</li>
+      <li>Douglas Lenat, Cyc 项目（1984 起）：超过 250 万条断言，证明大规模知识工程可行，同时暴露人工编码成本天花板</li>
+      <li>STRIPS 规划器（1971，SRI）与 Sense–Plan–Act 三段式架构</li>
+    </ol>
+  </details>
+  <details class="app" id="ref8"><summary>[8] 深度学习与强化学习融合：sim2real、域随机化与大规模真实数据</summary>
+    <ol>
+      <li>J. Tobin et al., "Domain Randomization for Transferring Deep Neural Networks from Simulation to the Real World", IROS 2017</li>
+      <li>D. Kalashnikov et al., "QT-Opt: Scalable Deep Reinforcement Learning for Vision-Based Robotic Manipulation", 2018（Google 机械臂农场，80 万+ 次真实抓取）</li>
+      <li>OpenAI, "Solving Rubik's Cube with a Robot Hand", 2019（Shadow 灵巧手、自动域随机化 ADR）</li>
+      <li>MuJoCo（2012 起，2021 年 10 月 DeepMind 收购并开源）；NVIDIA Isaac Sim / Isaac Gym</li>
+    </ol>
+  </details>
+  <details class="app" id="ref9"><summary>[9] RT-1（2022）· Google DeepMind</summary>
+    <ol>
+      <li><a href="https://robotics-transformer1.github.io/" target="_blank" rel="noopener">RT-1: Robotics Transformer for Real-World Control at Scale（2022-12）</a></li>
+      <li>数据规模：13 万条真实机器人轨迹、700+ 任务、17 个月采集；在已见任务上成功率约 97%，对未见任务泛化能力显著优于前代方法</li>
+      <li>CLIP（2021）开放词汇视觉-语言表示；GPT-3（2020）少样本泛化——VLA 所需组件的技术前身</li>
+    </ol>
+  </details>
+  <details class="app" id="ref10"><summary>[10] RT-2（2023）· 第一个真正的 VLA</summary>
+    <ol>
+      <li><a href="https://robotics-transformer2.github.io/" target="_blank" rel="noopener">RT-2: Vision-Language-Action Models Transfer Web Knowledge to Robotic Control（2023-07）</a></li>
+      <li>基于 PaLI-X / PaLM-E 视觉语言模型；将动作离散化为文本 token，与互联网图文数据联合训练</li>
+      <li>对未见物体泛化从约 32% 提升至约 62%；涌现符号理解、简单推理与人物识别等能力</li>
+    </ol>
+  </details>
+  <details class="app" id="ref11"><summary>[11] OpenVLA（2024）与 Open X-Embodiment 数据规模对比</summary>
+    <ol>
+      <li><a href="https://openvla.github.io/" target="_blank" rel="noopener">OpenVLA: An Open-Source Vision-Language-Action Model（2024-06）</a></li>
+      <li>7B 参数；97 万条轨迹、22 种机器人本体、21 家机构数据；性能超过 RT-2-X 约 16.5 个百分点</li>
+      <li>机器人公开轨迹数据（约 200 万条量级）与 LLM 互联网文本数据（数十万亿 token）之间<b>三到四个数量级</b>的差距</li>
+    </ol>
+  </details>
+  <details class="app" id="ref12"><summary>[12] π0 / π0.5 · Helix · Gemini Robotics · SmolVLA / BitVLA / CoT-VLA</summary>
+    <ol>
+      <li><a href="https://www.physicalintelligence.company/" target="_blank" rel="noopener">Physical Intelligence：π0（2024-10，flow matching 连续动作控制）与 π0.5（2025-04，开放世界泛化）</a></li>
+      <li><a href="https://www.figure.ai/" target="_blank" rel="noopener">Figure AI：Helix 全身 VLA（2025-02；System 1 视觉运动策略 200Hz + System 2 VLM 7–9Hz，全身 35 自由度）</a></li>
+      <li><a href="https://deepmind.google/discover/blog/" target="_blank" rel="noopener">Google DeepMind：Gemini Robotics 与 Gemini Robotics-ER（2025-03）</a></li>
+      <li>HuggingFace SmolVLA（约 450M 参数，2025-06）/ BitVLA（1.58-bit 三元权重量化）/ CoT-VLA / VLAS</li>
+    </ol>
+  </details>
+  <details class="app" id="ref13"><summary>[13] 全球人形机器人企业与产品谱系</summary>
+    <ol>
+      <li><a href="https://www.figure.ai/" target="_blank" rel="noopener">Figure AI：Figure 01/02/03；估值约 390 亿美元，累计融资超 19 亿美元；BotQ 工厂规划年产能约 12,000 台；宝马 Spartanburg 工厂部署验证</a></li>
+      <li><a href="https://www.tesla.com/AI" target="_blank" rel="noopener">Tesla Optimus：目标售价 2–3 万美元；Fremont 产线；复用 FSD 视觉-神经网络积累</a></li>
+      <li><a href="https://bostondynamics.com/atlas/" target="_blank" rel="noopener">Boston Dynamics Atlas：液压 Atlas（2013）→ 电动 Atlas（2024-04，28 自由度）→ 量产版 Atlas（CES 2026，载荷约 25kg、腕关节 360° 旋转）</a></li>
+      <li><a href="https://www.1x.tech/" target="_blank" rel="noopener">1X Technologies：EVE / NEO；约 100 亿美元估值；公开定价约 2 万美元或 499 美元/月订阅；早期版本采用远程遥操作兜底</a></li>
+      <li><a href="https://apptronik.com/" target="_blank" rel="noopener">Apptronik：Apollo；约 55 亿美元估值、融资约 9.35 亿美元；与 Google DeepMind、奔驰、GXO 合作</a></li>
+      <li><a href="https://agilityrobotics.com/" target="_blank" rel="noopener">Agility Robotics：Digit；约 21 亿美元估值；在 GXO 物流仓库执行搬运任务；自建 RoboFab 工厂</a></li>
+      <li>NEURA Robotics（德国，4NE-1）；Skild AI（纯模型路线，约 45 亿美元估值）</li>
+    </ol>
+  </details>
+  <details class="app" id="ref14"><summary>[14] NVIDIA Isaac GR00T 与 Cosmos 技术栈</summary>
+    <ol>
+      <li><a href="https://developer.nvidia.com/isaac/gr00t" target="_blank" rel="noopener">NVIDIA Isaac GR00T：N1（GTC 2025-03，2.2B 参数、双系统架构、开源）</a></li>
+      <li>GR00T N1.5（Computex 2025）：新本体适配训练时间从数周压缩至约 36 小时</li>
+      <li>GR00T N1.6（2025-09）：强化推理与长程任务分解能力</li>
+      <li><a href="https://www.nvidia.com/en-us/ai/cosmos/" target="_blank" rel="noopener">NVIDIA Cosmos 世界基础模型（CES 2025 发布）：Predict / Transfer / Reason 三类能力，视频预训练语料 2000 万小时以上</a></li>
+      <li>GR00T-Dreams：从单张图像生成符合物理的操作轨迹，用于合成数据生产</li>
+      <li>GR00T-Mimic：约 75 万条合成轨迹；生成耗时约 11 小时 GPU，等价于约 6500 小时（约 9 个月）人工采集；下游任务成功率提升约 40%</li>
+    </ol>
+  </details>
+  <details class="app" id="ref15"><summary>[15] EgoScale 与人类第一人称视频的缩放律</summary>
+    <ol>
+      <li>GR00T N1.7（2026 年上半年）：以约 2 万小时人类第一人称（egocentric）视频预训练，在灵巧操作任务上呈现可预测的缩放关系，实测约 2 倍量级增益</li>
+      <li><a href="https://developer.nvidia.com/isaac/gr00t" target="_blank" rel="noopener">NVIDIA 官方技术博客与发布会材料</a></li>
+      <li>关键含义：机器人灵巧度首次出现类似 LLM 的缩放律；"人类视频数据"边际成本远低于真机遥操作</li>
+    </ol>
+  </details>
+  <details class="app" id="ref16"><summary>[16] 具身智能数据金字塔（腾讯张正友四层框架等）</summary>
+    <ol>
+      <li>腾讯 Robotics X / 张正友关于具身智能数据的公开分享：真实数据、仿真数据、互联网数据、合成数据的四层划分与配比关系</li>
+      <li>塔尖真机遥操作 → 第二层 UMI 式无本体数据 → 第三层第一人称人类视频 → 第四层仿真合成 → 塔基通用互联网数据的金字塔结构</li>
+    </ol>
+  </details>
+  <details class="app" id="ref17"><summary>[17] 中国机构的数据金字塔实践与 LAPA 潜动作预训练</summary>
+    <ol>
+      <li>京东 EgoLive：以第一人称人类视频为核心资产，公开提出两年积累约 1000 万小时 Ego 视频数据的计划</li>
+      <li>极佳视界："双金字塔"（数据 5 层 + 算法 3 层）；"拾光 S1"进入社区场景实测</li>
+      <li>大晓机器人 Kairos 3.1：三层数据金字塔；ACE Sense Glove 数据手套，力/触觉感知约 0.01N 级别</li>
+      <li>LAPA（Latent Action Pre-training）：用约 18.1 万条无动作标签视频做潜动作预训练，任务成功率提升约 6.22%，数据效率提升约 30 倍</li>
+      <li>五层数据金字塔相关论文（北京大学等机构）</li>
+    </ol>
+  </details>
+  <details class="app" id="ref18"><summary>[18] 世界模型与物理 AGI 综述</summary>
+    <ol>
+      <li>世界模型（World Model）技术综述：从 Ha &amp; Schmidhuber 的 World Models（2018）到视频生成式世界模型</li>
+      <li>物理 AGI（Physical AGI）概念与路线讨论：具身智能作为通向通用智能的必经路径</li>
+      <li><a href="https://www.nvidia.com/en-us/ai/cosmos/" target="_blank" rel="noopener">Cosmos 与 Genie 系列作为世界模型的两条工程路线</a></li>
+    </ol>
+  </details>
+  <details class="app" id="ref19"><summary>[19] "VLA 已死，WAM 当立"：范式转向的行业判断</summary>
+    <ol>
+      <li>NVIDIA Jim Fan 关于 VLA 局限性与世界-动作模型（World-Action Model, WAM）的公开论述（2025–2026）</li>
+      <li>核心论证：VLA 把世界压缩进动作分布，WAM 显式建模世界 → 支持"想象中试错"、"预判动作后果"、"用预测误差自监督"</li>
+      <li>VLA 的三个失败模式：缺乏物理因果 / 长程任务误差累积 / 数据效率极低</li>
+    </ol>
+  </details>
+  <details class="app" id="ref20"><summary>[20] 具身智能评测基准与公开成绩</summary>
+    <ol>
+      <li>仿真操作基准：LIBERO、RoboCasa、SimplerEnv（WidowX 等）；双臂协作基准：RoboTwin 2.0</li>
+      <li>世界模型基准：WorldArena（多维打分，冠军约 73.64 / 亚军约 73.06）、EWMBench</li>
+      <li>深度机智 PhysBrain 1.0：基于约 3000 小时 Ego 数据训练，TwinBrainVLA 双脑架构 + LangForce 语言力场；报告 SimplerEnv WidowX 约 80.2%（对照 π0.5 约 57.1%）、LIBERO 约 98.8%
+        <div style="color:var(--dim);font-size:12.5px">（为企业/机构自行公开的报告结果，评测条件与基线设置可能与其他榜单不可直接类比）</div></li>
+    </ol>
+  </details>
+  <details class="app" id="ref21"><summary>[21] 2025 年全球人形机器人出货量与中国企业份额</summary>
+    <ol>
+      <li>2025 年全球人形机器人出货量约 1.44 万台；中国企业占比约 84.7%，出货前六名全部为中国企业</li>
+      <li>宇树科技：2025 年出货约 5500 台以上、份额约 31%；2025 年 8 月科创板上市（688836）</li>
+      <li>智元机器人：2025 年出货约 5168 台、份额约 29%；2026 年上半年出货约 8400 台</li>
+      <li>优必选：工业人形 U1 等场景订单累计约 1.3 万台级别</li>
+      <li>其他：傅利叶、乐聚、星动纪元、银河通用、加速进化、松延动力、众擎等</li>
+      <li><a href="https://www.iyiou.com/" target="_blank" rel="noopener">亿欧智库 / 霞光智库 相关产业统计</a></li>
+    </ol>
+  </details>
+  <details class="app" id="ref22"><summary>[22] 2026 年量产预测、市场规模与融资热度</summary>
+    <ol>
+      <li>机构预测：2026 年全球人形机器人出货量约 5.1 万台，同比增长约 717%，中国厂商占比有望超过 90%</li>
+      <li>2026 年上半年国内具身智能赛道融资规模据公开统计超过 900 亿元，同比增长约 500%</li>
+      <li><a href="https://www.iyiou.com/" target="_blank" rel="noopener">华福证券 / 中研普华 / 霞光智库 等人形机器人产业研究报告</a></li>
+    </ol>
+  </details>
+  <details class="app" id="ref23"><summary>[23] 成本结构与供应链国产化</summary>
+    <ol>
+      <li>工业级全尺寸人形机器人整机均价：2023 年约 59 万元 → 2025 年约 16.76 万元，降幅约 72%</li>
+      <li>成本结构：关节模组（减速器 + 电机 + 驱动器）约占一半，灵巧手与传感器约占两成，其余为结构件、电池与计算单元</li>
+      <li>核心零部件国产化：谐波减速器（绿的谐波等）、行星滚柱丝杠、无框力矩电机 / 空心杯电机、六维力传感器、灵巧手</li>
+      <li><a href="https://www.chinacir.com.cn/" target="_blank" rel="noopener">中国产业信息网 / 各券商机器人产业链深度报告</a></li>
+    </ol>
+  </details>
+  <details class="app" id="ref24"><summary>[24] 中国具身智能政策谱系（2023–2025）</summary>
+    <ol>
+      <li><a href="https://www.miit.gov.cn/" target="_blank" rel="noopener">工信部《人形机器人创新发展指导意见》（2023-11）：到 2025 年实现批量生产、到 2027 年综合实力达到世界先进水平；"大脑、小脑、肢体"三类关键技术</a></li>
+      <li>2025 年《政府工作报告》：在培育未来产业部分首次明确提及"具身智能"</li>
+      <li>"十五五"规划前瞻布局：具身智能被列为需前瞻布局的未来产业方向之一</li>
+      <li>地方行动方案：北京、上海、深圳、杭州、重庆、成都等地专项方案与产业基金；上海人形机器人训练场等公共数据基础设施</li>
+    </ol>
+  </details>
+  <details class="app" id="ref25"><summary>[25] 2026 年政策与标准体系</summary>
+    <ol>
+      <li>2026 年《政府工作报告》：具身智能连续第二年写入，更强调与人工智能深度融合、推动规模化商业化落地</li>
+      <li>《人形机器人与具身智能标准体系（2026 版）》：覆盖基础共性、安全、整机、关键零部件、软件与算法、应用场景等维度，新增具身智能术语、评测与数据规范</li>
+      <li><a href="https://www.miit.gov.cn/" target="_blank" rel="noopener">工业和信息化部相关标准发布材料</a></li>
+    </ol>
+  </details>
+  <details class="app" id="ref26"><summary>[26] 深度强化学习与机器人操作：从 DQN 到大规模并行训练</summary>
+    <ol>
+      <li>Mnih et al., "Human-level control through deep reinforcement learning"（DQN, Nature 2015）</li>
+      <li>AlphaGo Zero（2017）：仅靠自我博弈从零超越所有版本；前提是"可无限试错、可自动判定胜负"的环境</li>
+      <li>NVIDIA Isaac Gym / Isaac Lab：GPU 并行仿真使"百万级并行环境训练一个策略"成为可能</li>
+    </ol>
+  </details>
+  <details class="app" id="ref27"><summary>[27] 双系统架构（System 1 / System 2）技术解析</summary>
+    <ol>
+      <li>Figure Helix：System 1 视觉运动策略（约 200Hz）控制上半身，System 2 视觉语言模型（约 7–9Hz）做场景理解与子目标分解</li>
+      <li>NVIDIA GR00T N1：System 2 用 VLM 理解环境 + System 1 用扩散 Transformer 生成连续动作</li>
+      <li>技术动因：大模型推理延迟（数百毫秒至秒级）与物理控制实时性（毫秒级）之间存在不可调和的时标冲突</li>
+    </ol>
+  </details>
+  <details class="app" id="ref28"><summary>[28] 动作表示范式：离散 token 化 vs 扩散 / 流匹配</summary>
+    <ol>
+      <li><a href="https://robotics-transformer2.github.io/" target="_blank" rel="noopener">离散 token 化（RT-2、OpenVLA）：复用 LLM 词表与训练基础设施，语义强但输出频率低（约 3–10Hz）</a></li>
+      <li><a href="https://www.physicalintelligence.company/" target="_blank" rel="noopener">连续生成（π0 的 flow matching、GR00T N1 的扩散动作头）：动作平滑、可高频（50–200Hz），适合灵巧操作与力控</a></li>
+      <li>2025 年后头部人形系统普遍采用连续动作头</li>
+    </ol>
+  </details>
+  <details class="app" id="ref29"><summary>[29] 世界模型技术路线：Cosmos / Genie / WAM</summary>
+    <ol>
+      <li>NVIDIA Cosmos：Predict（预测物理演化）/ Transfer（sim2real 画面转换）/ Reason（因果与物理常识推理）</li>
+      <li>Google DeepMind Genie 系列：从图像生成可交互的虚拟环境</li>
+      <li>WAM（World-Action Model）：把世界模型与动作生成统一在同一框架内</li>
+    </ol>
+  </details>
+  <details class="app" id="ref30"><summary>[30] 人形机器人硬件技术：减速器 / 丝杠 / 电机 / 传感器 / 灵巧手</summary>
+    <ol>
+      <li>谐波减速器（哈默纳科 → 绿的谐波等国产替代）；行星滚柱丝杠（直线执行器核心件）</li>
+      <li>无框力矩电机、空心杯电机、伺服驱动器国产化</li>
+      <li>六维力/力矩传感器（ATI 等进口主导 → 国产价格大幅下探）；灵巧手触觉阵列化方案</li>
+      <li>关节模组集成化趋势与成本占比结构</li>
+    </ol>
+  </details>
+  <details class="app" id="ref31"><summary>[31] 全身控制（WBC）与动态平衡</summary>
+    <ol>
+      <li>Marc Raibert（MIT Leg Lab）"动态平衡优于静态稳定"的设计哲学；Boston Dynamics 早期腿式机器人系列</li>
+      <li>全身控制（Whole-Body Control）：在满足接触约束、力矩限制、平衡条件的前提下求解全身关节轨迹</li>
+      <li>底层安全反射层与包含架构（Subsumption）的继承关系</li>
+    </ol>
+  </details>
+  <details class="app" id="ref32"><summary>[32] 机器人安全标准与人机协作</summary>
+    <ol>
+      <li>ISO 10218-1 / 10218-2：工业机器人安全要求</li>
+      <li>ISO/TS 15066：协作机器人技术要求（功率与力限制、碰撞力上限）</li>
+      <li>缺口：双足人形机器人在非结构化公共环境中的安全标准近乎空白</li>
+    </ol>
+  </details>
+  <details class="app" id="ref33"><summary>[33] 具身智能的数据隐私、远程操作与伦理</summary>
+    <ol>
+      <li>家庭场景第一人称视频采集中的私密信息（居住空间、家庭成员、生活习惯）与脱敏、存储、跨境流动规范缺失</li>
+      <li>远程遥操作兜底模式（如 1X NEO）带来的操作员可见范围、操作记录留存与责任归属问题</li>
+      <li>军事化应用风险与自主武装系统的国际人道法争议</li>
+    </ol>
+  </details>
+  <details class="app" id="ref34"><summary>[34] 具身智能产业泡沫与商业化风险讨论</summary>
+    <ol>
+      <li>出货量构成分析：大量出货流向科研、教育、展演与政府示范项目，"在岗经济价值"缺乏公开验证</li>
+      <li>历史参照：1980 年代工业机器人热、2000 年前后人形机器人热、2015 年前后协作机器人热的"预期峰值 → 失望低谷 → 务实增长"曲线</li>
+      <li>估值与实际营收规模的差距对技术进展容错率的影响</li>
+    </ol>
+  </details>
+  <details class="app" id="ref35"><summary>[35] 开源生态：数据、模型与工具链</summary>
+    <ol>
+      <li>Open X-Embodiment：21 家机构联合贡献，100 万条以上轨迹、22 种本体、500+ 技能</li>
+      <li><a href="https://openvla.github.io/" target="_blank" rel="noopener">OpenVLA：7B 开源 VLA，学术界与创业公司的公共基线</a></li>
+      <li><a href="https://developer.nvidia.com/isaac/gr00t" target="_blank" rel="noopener">NVIDIA GR00T N1：开源人形基础模型权重与合成数据管线</a></li>
+      <li><a href="https://github.com/huggingface/lerobot" target="_blank" rel="noopener">HuggingFace LeRobot：从数据格式、训练脚本到真机部署的端到端工具链</a></li>
+    </ol>
+  </details>
+  <details class="app" id="ref36"><summary>[36] 具身智能综述与 2026 年展望</summary>
+    <ol>
+      <li>具身智能技术栈综述：大脑（VLM + 动作头 + 世界模型）/ 身体（关节模组 + 灵巧手 + 传感）/ 环境（真机场景 + 仿真 + 数字孪生）</li>
+      <li>能力成熟度盘点（2026 年中）：单场景任务与全身动态控制已可用；跨场景泛化、灵巧操作、数据规模化进行中；长程任务与物理常识仍有较大差距</li>
+      <li>路线判断：从"纯文本与纯仿真中寻找答案"转向"把机器放到世界里 + 持续生成高质量真实数据"</li>
+    </ol>
+  </details>
+
+  <div class="tealbox" style="margin-top:18px"><span class="tt">// 三种阅读路径建议</span>
+    <b>5 分钟速览：</b>结论区 8 条 → §1 是什么 → §7.4 双系统架构 → §12.4 结语。<br>
+    <b>30 分钟精读（做分享）：</b>§1 → §2 思想源流 → §4 Brooks 与符号主义之争 → §5.2 包含架构 → §7 VLA 谱系表 → §8 世界模型 → §10.3 中美对比。<br>
+    <b>关注产业与投资：</b>§9 中国政策与产业 → §10 全球格局与商业模式 → §11.1 数据金字塔 → §12.3 商业现实与风险。
+  </div>
+</section>
+</main>
+</div>
+
+<footer class="foot">
+  <div class="wrap">
+    <span>具身智能（Embodied AI）发展脉络全景笔记 · v1.0 精装版 · 2026-09-11</span>
+    <span>关键论断均标注公开来源（36 组参考文献见 §12）· 笔记 / 分享两用</span>
+  </div>
+</footer>
+
+<button id="backtop" title="回到顶部" aria-label="回到顶部">↑</button>
+
+<script>
+(function () {
+  var bar = document.getElementById('progress');
+  var backtop = document.getElementById('backtop');
+  var links = Array.prototype.slice.call(document.querySelectorAll('#tocnav a'));
+  var sections = links.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+
+  function onScroll() {
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+    backtop.classList.toggle('show', h.scrollTop > 600);
+    var idx = -1;
+    for (var i = 0; i < sections.length; i++) {
+      if (sections[i] && sections[i].getBoundingClientRect().top <= 120) idx = i;
+    }
+    links.forEach(function (a, i) { a.classList.toggle('active', i === idx); });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  backtop.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+})();
+</script>
+</body>
+</html>
