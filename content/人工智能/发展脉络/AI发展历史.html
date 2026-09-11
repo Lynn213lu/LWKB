@@ -1,29 +1,1087 @@
-
 <!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="从符号主义、专家系统到深度学习与基础模型，梳理人工智能发展的关键阶段。" />
-    <meta name="keywords" content="人工智能,发展历史,深度学习,基础模型" />
-    <title>AI发展历史：从符号推理到基础模型</title>
-    <link rel="stylesheet" href="../../../assets/document.css" />
-  </head>
-  <body>
-    <main>
-      <a class="back-link" href="../../../index.html">← 返回知识文档库</a>
-      <p class="eyebrow">人工智能 / 发展脉络</p>
-      <h1>AI发展历史：从符号推理到基础模型</h1>
-      <p class="lead">人工智能的发展不是一条直线，而是在计算能力、数据规模与理论范式之间多次循环、重组的过程。</p>
-      <p class="meta">整理日期：2026 年 9 月 1 日</p>
-      <h2>三个重要阶段</h2>
-      <table><thead><tr><th>阶段</th><th>核心问题</th><th>代表性方法</th></tr></thead><tbody><tr><td>符号主义</td><td>如何把人类规则编码为可执行推理？</td><td>逻辑、搜索、知识表示</td></tr><tr><td>统计学习</td><td>如何从样本中估计规律？</td><td>概率模型、支持向量机、集成学习</td></tr><tr><td>深度学习与基础模型</td><td>如何以大规模预训练获得通用表征？</td><td>神经网络、Transformer、自监督学习</td></tr></tbody></table>
-      <h2>从规则到表征</h2>
-      <p>早期 AI 的雄心是让机器遵循清晰的符号规则。专家系统在边界明确、规则稳定的场景里很有效，但它们难以承担知识维护成本，也难以处理开放世界中的模糊信息。</p>
-      <p>机器学习将重点转向数据：与其手工写出全部规则，不如让模型从样本中学习决策边界。深度学习进一步减少人工特征工程，借由多层网络学习表征。今天的基础模型则通过海量语料和多模态数据，在一个模型中汇集语言、视觉与推理能力。</p>
-      <aside class="note"><strong>工作视角：</strong>模型能力的跃迁不等于所有问题都应由大模型解决。选择技术路线时，仍需评估任务稳定性、数据条件、可解释性与维护成本。</aside>
-      <h2>下一步关注什么</h2>
-      <p>未来值得持续观察的方向包括：模型在真实工作流中的可靠性、面向特定行业的高质量数据、工具调用与智能体协作，以及对安全和治理要求的工程化回应。</p>
-    </main>
-  </body>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="人工智能发展史全景笔记：从莱布尼茨与图灵的可计算思想，到 1956 达特茅斯会议、两次 AI 寒冬、专家系统的兴衰、2012 深度学习革命、2017 Transformer、2022 ChatGPT 引爆的生成式 AI、2024–2026 推理模型与 Agent 自主性时代，并覆盖中国 AI 脉络、算力与资本、开源与具身智能、全球治理。全部关键论断标注公开权威出处。">
+<title>人工智能发展史全景笔记 · 精装版（1943—2026）</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  :root {
+    --accent: #0b57d0;
+    --accent-deep: #08419e;
+    --accent-soft: #e8f0fe;
+    --ink: #1c2230;
+    --muted: #596274;
+    --dim: #8a93a3;
+    --line: #e2e7f0;
+    --line-strong: #c6cfdb;
+    --bg: #ffffff;
+    --bg-soft: #f5f7fb;
+    --green: #137a34; --green-soft: #e6f4ea;
+    --amber: #96590a; --amber-soft: #fdf3e3;
+    --red: #b3261e;   --red-soft: #fceae8;
+    --violet: #5835b8; --violet-soft: #f0ebfb;
+    --teal: #0a7c75;  --teal-soft: #e0f4f2;
+    --mono: "SFMono-Regular", "Cascadia Code", Consolas, "Roboto Mono", monospace;
+    --font: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    --radius: 14px;
+    --sidebar-w: 188px;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 400 15px/1.78 var(--font);
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .mono { font-family: var(--mono); }
+  sup.fn { font-family: var(--mono); font-size: 10.5px; }
+  sup.fn a { color: var(--accent); padding: 0 1px; }
+
+  /* ===== 进度条 ===== */
+  #progress { position: fixed; top: 0; left: 0; height: 3px; width: 0;
+    background: linear-gradient(90deg, var(--accent), #6aa4ff); z-index: 200; transition: width .1s linear; }
+
+  /* ===== Hero ===== */
+  header.hero {
+    position: relative; overflow: hidden; color: #fff;
+    background:
+      radial-gradient(1200px 500px at 85% -10%, rgba(255,255,255,.16), transparent 60%),
+      radial-gradient(900px 420px at -5% 110%, rgba(110,168,255,.28), transparent 55%),
+      linear-gradient(135deg, #0a3f9c 0%, #0b57d0 55%, #2f6fe0 100%);
+  }
+  header.hero::before {
+    content: ""; position: absolute; inset: 0; opacity: .5; pointer-events: none;
+    background-image: radial-gradient(rgba(255,255,255,.14) 1px, transparent 1px);
+    background-size: 26px 26px;
+  }
+  .hero-inner { position: relative; max-width: 1240px; margin: 0 auto; padding: 56px 28px 44px; }
+  .kicker { font: 700 12px/1 var(--mono); letter-spacing: .22em; text-transform: uppercase;
+    color: #bfd6ff; margin: 0 0 16px; }
+  h1 { margin: 0; font-size: 40px; line-height: 1.18; letter-spacing: -.015em; color: #fff; }
+  h1 .sub { display: block; margin-top: 10px; color: #d3e2ff; font-size: 18.5px; font-weight: 500; line-height: 1.55; }
+  .lead { margin: 22px 0 0; max-width: 960px; font-size: 15.5px; color: #e8f0ff;
+    background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.22);
+    border-left: 4px solid #9fc3ff; border-radius: 12px; padding: 15px 18px; backdrop-filter: blur(3px); }
+  .lead strong { color: #fff; }
+  .doc-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .doc-meta span { display: inline-flex; align-items: center; gap: 6px; padding: 5px 13px;
+    border: 1px solid rgba(255,255,255,.3); border-radius: 999px; background: rgba(255,255,255,.1);
+    color: #e4eeff; font-size: 12.5px; white-space: nowrap; }
+
+  /* 结论区 */
+  .conclusions-wrap { max-width: 1240px; margin: -26px auto 0; padding: 0 28px; position: relative; }
+  .conclusions { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: 0 12px 34px rgba(10,40,90,.12); padding: 20px 22px; }
+  .conclusions .ttl { color: var(--accent); font: 800 12px/1 var(--mono); letter-spacing: .14em; margin: 0 0 12px; }
+  .conclusions ol { margin: 0; padding-left: 22px; color: #2a3140; counter-reset: cc; list-style: none; display: grid; gap: 9px; }
+  .conclusions ol li { position: relative; font-size: 14.5px; }
+  .conclusions ol li::before { counter-increment: cc; content: counter(cc, decimal-leading-zero);
+    font: 800 11px/1 var(--mono); color: var(--accent); background: var(--accent-soft);
+    border-radius: 6px; padding: 3px 6px; margin-right: 8px; vertical-align: 1px; }
+  .conclusions ol li b { color: var(--accent-deep); }
+
+  /* ===== 布局 ===== */
+  .layout { max-width: 1240px; margin: 34px auto 0; padding: 0 28px; display: grid;
+    grid-template-columns: var(--sidebar-w) minmax(0, 1fr); gap: 30px; }
+  aside.toc { position: sticky; top: 18px; align-self: start; max-height: calc(100vh - 36px);
+    overflow-y: auto; padding: 4px 0 20px; }
+  aside.toc .toc-title { font: 800 11px/1 var(--mono); letter-spacing: .16em; color: var(--dim); margin: 6px 0 10px; padding-left: 10px; }
+  aside.toc nav { display: grid; gap: 2px; border-left: 2px solid var(--line); }
+  aside.toc nav a { display: block; padding: 6px 10px 6px 14px; margin-left: -2px;
+    border-left: 2px solid transparent; color: var(--muted); font-size: 13px; line-height: 1.45; }
+  aside.toc nav a b { display: block; font: 700 10.5px/1.4 var(--mono); color: var(--dim); letter-spacing: .05em; }
+  aside.toc nav a:hover { color: var(--accent); text-decoration: none; }
+  aside.toc nav a.active { border-left-color: var(--accent); color: var(--accent); font-weight: 600; background: linear-gradient(90deg, var(--accent-soft), transparent 80%); }
+  aside.toc nav a.active b { color: var(--accent); }
+
+  main { min-width: 0; padding-bottom: 96px; }
+  section { margin: 58px 0 0; scroll-margin-top: 24px; }
+  section:first-child { margin-top: 8px; }
+  .sec-head { display: flex; align-items: baseline; gap: 14px; margin: 0 0 8px; }
+  .sec-no { color: var(--accent); font: 800 32px/1 var(--mono); letter-spacing: -.03em; opacity: .9; }
+  section > h2 { margin: 0; font-size: 24.5px; line-height: 1.3; letter-spacing: -.012em; }
+  .sec-lead { color: var(--muted); max-width: 940px; margin: 8px 0 18px; font-size: 14.5px; }
+
+  .callout, .warnbox, .riskbox, .okbox, .violetbox, .tealbox, .quotebox {
+    border-radius: 12px; padding: 14px 17px; font-size: 14px; margin: 16px 0; }
+  .callout { background: var(--accent-soft); border-left: 4px solid var(--accent); }
+  .okbox { background: var(--green-soft); border-left: 4px solid var(--green); }
+  .warnbox { background: var(--amber-soft); border-left: 4px solid var(--amber); }
+  .riskbox { background: var(--red-soft); border-left: 4px solid var(--red); }
+  .violetbox { background: var(--violet-soft); border-left: 4px solid var(--violet); }
+  .tealbox { background: var(--teal-soft); border-left: 4px solid var(--teal); }
+  .quotebox { background: var(--bg-soft); border: 1px solid var(--line); border-left: 4px solid var(--accent); font-size: 14.5px; }
+  .quotebox .src { display: block; margin-top: 6px; color: var(--dim); font: 500 12px/1.5 var(--mono); }
+  .callout .tt, .warnbox .tt, .riskbox .tt, .okbox .tt, .violetbox .tt, .tealbox .tt {
+    font: 800 11px/1 var(--mono); letter-spacing: .1em; display: block; margin-bottom: 5px; color: var(--accent); }
+  .warnbox .tt { color: var(--amber); } .riskbox .tt { color: var(--red); }
+  .okbox .tt { color: var(--green); } .violetbox .tt { color: var(--violet); } .tealbox .tt { color: var(--teal); }
+
+  h3 { margin: 28px 0 12px; font-size: 18.5px; letter-spacing: -.006em; }
+  h3 .h3no { color: var(--accent); font: 800 13px/1 var(--mono); margin-right: 8px; vertical-align: 2px; }
+  h4 { margin: 16px 0 7px; font-size: 14.5px; }
+  p { margin: 9px 0; }
+  ul.clean { margin: 8px 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+  ul.clean li { padding-left: 18px; position: relative; }
+  ul.clean li::before { content: ""; position: absolute; left: 2px; top: .68em; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); opacity: .7; }
+  ul.dash { margin: 8px 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+  ul.dash li { padding-left: 17px; position: relative; color: #39414f; }
+  ul.dash li::before { content: "—"; position: absolute; left: 0; color: var(--accent); }
+  ol.steps { margin: 10px 0; padding: 0; list-style: none; display: grid; gap: 9px; }
+  ol.steps li { padding-left: 36px; position: relative; }
+  ol.steps li::before { content: attr(data-n); position: absolute; left: 0; top: 2px; width: 25px; height: 25px;
+    display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); border-radius: 8px; font: 800 12px/1 var(--mono); }
+
+  /* 卡片 */
+  .grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .card { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 16px 17px; transition: box-shadow .18s ease, transform .18s ease, border-color .18s ease; }
+  .card:hover { box-shadow: 0 8px 26px rgba(15,45,100,.09); border-color: var(--line-strong); transform: translateY(-2px); }
+  .card h4 { margin: 0 0 7px; font-size: 14.5px; }
+  .card p { margin: 0; color: var(--muted); font-size: 13.5px; }
+  .card .chip-label { color: var(--accent); font: 800 10.5px/1 var(--mono); letter-spacing: .09em; display: block; margin-bottom: 6px; }
+  .card.t-green .chip-label { color: var(--green); } .card.t-violet .chip-label { color: var(--violet); }
+  .card.t-teal .chip-label { color: var(--teal); } .card.t-amber .chip-label { color: var(--amber); }
+  .card.t-red .chip-label { color: var(--red); }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { display: inline-flex; align-items: center; padding: 3px 10px; background: var(--bg-soft);
+    border: 1px solid var(--line); border-radius: 999px; color: #46505f; font-family: var(--mono); font-size: 12px; }
+
+  /* 表格 */
+  .tbl-wrap { overflow-x: auto; margin: 14px 0; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); }
+  table.t { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  table.t th, table.t td { padding: 10px 13px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.t th { background: var(--bg-soft); color: #28303e; font-weight: 700; font-size: 12.5px; white-space: nowrap; }
+  table.t tr:last-child td { border-bottom: none; }
+  table.t tbody tr:hover td { background: #fafbfe; }
+  table.t td .chip { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11.5px; font-family: var(--mono); background: var(--accent-soft); color: var(--accent); white-space: nowrap; }
+  table.t td .chip.vio { background: var(--violet-soft); color: var(--violet); }
+  table.t td .chip.amb { background: var(--amber-soft); color: var(--amber); }
+  table.t td .chip.grn { background: var(--green-soft); color: var(--green); }
+  table.t td .chip.red { background: var(--red-soft); color: var(--red); }
+
+  /* 时间线 */
+  .timeline { position: relative; margin: 20px 0 16px; padding-left: 24px; border-left: 2px solid var(--line-strong); }
+  .timeline .node { position: relative; padding: 0 0 18px 18px; }
+  .timeline .node::before { content: ""; position: absolute; left: -31px; top: 6px; width: 12px; height: 12px;
+    border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px #fff, 0 0 0 4.5px var(--accent-soft); }
+  .timeline .node .year { color: var(--accent); font: 800 12px/1 var(--mono); letter-spacing: .06em; }
+  .timeline .node .title { display: block; margin: 4px 0 5px; font-weight: 700; font-size: 14.5px; }
+  .timeline .node p { margin: 0; color: var(--muted); font-size: 13.5px; }
+
+  /* 流程 */
+  .flow { display: flex; flex-wrap: wrap; align-items: stretch; gap: 10px; margin: 16px 0; }
+  .flow .step { flex: 1 1 150px; min-width: 0; background: var(--bg); border: 1px solid var(--line);
+    border-top: 3px solid var(--accent); border-radius: 11px; padding: 12px 13px; position: relative; }
+  .flow .step b { display: block; font-size: 13.5px; line-height: 1.45; }
+  .flow .step small { display: block; margin-top: 4px; color: var(--dim); font-family: var(--mono); font-size: 10.5px; letter-spacing: .04em; }
+  .flow .step + .step::before { content: "→"; position: absolute; left: -11px; top: 50%; transform: translateY(-50%);
+    color: var(--accent); font-family: var(--mono); font-weight: 800; background: #fff; z-index: 2; }
+
+  /* 堆栈 */
+  .stack { display: grid; gap: 0; margin: 18px 0; }
+  .stack .layer { border: 1px solid var(--line); border-bottom: none; padding: 13px 18px;
+    display: grid; grid-template-columns: 190px 1fr auto; gap: 14px; align-items: center; background: var(--bg); }
+  .stack .layer:first-child { border-radius: 12px 12px 0 0; }
+  .stack .layer:last-child { border-bottom: 1px solid var(--line); border-radius: 0 0 12px 12px; }
+  .stack .layer .lname { font-weight: 700; font-size: 14px; }
+  .stack .layer .ldesc { color: var(--muted); font-size: 13px; }
+  .stack .layer .lmetric { font: 800 11.5px/1.5 var(--mono); color: var(--red); white-space: nowrap; text-align: right; }
+  .stack .layer.hl { background: linear-gradient(90deg, var(--accent-soft), #fff 65%); }
+  .stack .layer.hl .lmetric { color: var(--green); }
+  .stack .arrow-up { text-align: center; color: var(--accent); font: 800 12px/1 var(--mono); padding: 7px 0; background: var(--bg-soft); border-left: 1px solid var(--line); border-right: 1px solid var(--line); letter-spacing: .1em; }
+
+  pre.code { margin: 12px 0; padding: 13px 15px; background: #f7f9fc; border: 1px solid var(--line);
+    border-radius: 11px; font: 400 12.5px/1.65 var(--mono); color: #2a3140; overflow-x: auto; }
+  pre.code b { color: var(--accent); }
+  pre.code .cm { color: var(--dim); }
+
+  details.app { border: 1px solid var(--line); border-radius: 11px; background: var(--bg); padding: 11px 15px; margin: 9px 0; }
+  details.app[open] { background: var(--bg-soft); }
+  details.app > summary { cursor: pointer; font-weight: 700; font-size: 14px; color: var(--accent); }
+  details.app > summary:hover { text-decoration: underline; }
+  details.app ol, details.app ul { margin: 9px 0 4px; padding-left: 20px; color: #2a3140; font-size: 13.5px; }
+  details.app ol li, details.app ul li { margin: 5px 0; }
+
+  footer.foot { border-top: 1px solid var(--line); background: var(--bg-soft); padding: 30px 0 40px; color: var(--muted); font-size: 13px; }
+  footer.foot .wrap { max-width: 1240px; margin: 0 auto; padding: 0 28px; display: flex; flex-wrap: wrap; gap: 14px; justify-content: space-between; align-items: center; }
+
+  #backtop { position: fixed; right: 22px; bottom: 26px; width: 40px; height: 40px; border-radius: 12px;
+    border: 1px solid var(--line-strong); background: #fff; color: var(--accent); font-size: 17px;
+    display: grid; place-items: center; cursor: pointer; box-shadow: 0 6px 20px rgba(15,45,100,.14);
+    opacity: 0; pointer-events: none; transition: opacity .2s ease; z-index: 90; }
+  #backtop.show { opacity: 1; pointer-events: auto; }
+
+  @media (max-width: 960px) {
+    .layout { grid-template-columns: 1fr; }
+    aside.toc { position: static; max-height: none; border-bottom: 1px solid var(--line); padding-bottom: 14px; }
+    aside.toc nav { grid-template-columns: repeat(2, 1fr); border-left: none; display: grid; }
+    aside.toc nav a { border-left: none; }
+    .grid2, .grid3, .grid4 { grid-template-columns: 1fr; }
+    h1 { font-size: 28px; }
+    .stack .layer { grid-template-columns: 1fr; }
+    .stack .layer .lmetric { text-align: left; }
+  }
+  @media print {
+    #progress, aside.toc, #backtop { display: none !important; }
+    .layout { display: block; }
+    header.hero { background: #0b57d0 !important; -webkit-print-color-adjust: exact; }
+    .card:hover { transform: none; box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<!-- ======================= HERO ======================= -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="kicker">Research Note · History of Artificial Intelligence · 2026-09</div>
+    <h1>人工智能发展史全景笔记
+      <span class="sub">从莱布尼茨的推理演算与图灵机（1936）到 1956 达特茅斯 · 两次 AI 寒冬与专家系统的兴衰 · 2012 深度学习革命 · 2017 Transformer · 2022 ChatGPT 引爆生成式 AI · 2024–2026 推理模型与 Agent 自主性时代</span>
+    </h1>
+    <p class="lead">
+      本笔记以"<strong>每一次范式跃迁，都源于放弃上一代的核心假设</strong>"为主线，梳理人工智能八十余年（1943—2026 年 9 月）的完整演进：
+      从符号主义的逻辑推理，到连接主义的神经网络，到规模化时代的"算力换智能"，再到当下的"推理与行动"。
+      覆盖两次寒冬的成因与教训、专家系统的商业化泡沫、深度学习的三大要素齐备、Transformer 与规模定律、
+      生成式 AI 的社会化扩散、推理模型与 Agent 的工程范式，以及中国 AI 脉络、算力资本、开源生态、具身智能与全球治理。
+      全部关键论断均标注公开权威出处（文末编号参考文献）。
+    </p>
+    <div class="doc-meta">
+      <span>📚 笔记 / 分享材料两用</span>
+      <span>🧭 结构 · 结论先行 → 史前史 → 历程 → 当下 → 生态 → 治理</span>
+      <span>🕰️ 时间跨度 · 古代—2026.09</span>
+      <span>🔗 关键论断 34 组公开来源溯源</span>
+      <span>🔖 v1.0 精装版 · 2026-09-11</span>
+    </div>
+  </div>
+</header>
+
+<div class="conclusions-wrap">
+  <div class="conclusions">
+    <div class="ttl">// 结论先行 · 8 条核心观点</div>
+    <ol>
+      <li><b>AI 史是一条"范式跃迁 + 两次寒冬"的循环曲线，而非单调上升的直线。</b>符号主义（1956—1974）→ 专家系统（1980—1987）→ 统计学习与深度学习（2012—）→ 推理与行动（2024—）。每一次定义性的成功，都来自放弃上一代范式的核心假设：符号主义假设"知识必须被写下来"，深度学习让它被"学出来"；规模化时代假设"训练越大越好"，Agent 时代加上了第二个杠杆——<b>让模型在使用的当下思考得更久、行动得更多</b>。<sup class="fn"><a href="#ref2">[2]</a><a href="#ref28">[28]</a></sup></li>
+      <li><b>两次寒冬的教训不是"技术不行"，而是"承诺远超交付 + 资金突然断供"。</b>第一次寒冬（1974—1980）由莱特希尔报告与机器翻译评估的失败引爆；第二次寒冬（1987—1993）由 LISP 专用机被通用工作站击溃引爆。两次都伴随同一个模式：<b>过度承诺 → 预期落空 → 资助撤出 → 人才流失</b>。<sup class="fn"><a href="#ref4">[4]</a><a href="#ref5">[5]</a><a href="#ref6">[6]</a></sup></li>
+      <li><b>2012 年是真正的分水岭，因为三要素首次同时齐备。</b>算法（卷积网络 + ReLU + Dropout）、数据（ImageNet 千万级标注）、算力（GPU 通用计算）三者叠加，让 AlexNet 把 ImageNet 错误率从 26% 级直接压到 15% 级——此后十年，深度学习成为 AI 的唯一主线。<sup class="fn"><a href="#ref11">[11]</a><a href="#ref12">[12]</a></sup></li>
+      <li><b>Transformer（2017）是当代 AI 的单一地基，规模定律把"智能"变成了价格曲线。</b>自注意力机制去掉了循环结构，使训练可以大规模并行；GPT-3（2020，1750 亿参数）证明"规模本身就能涌现能力"，Kaplan 等人的规模定律则说明性能是算力、数据与参数量的平滑可预测函数。<sup class="fn"><a href="#ref13">[13]</a><a href="#ref15">[15]</a></sup></li>
+      <li><b>2022 年 11 月 ChatGPT 是一次"公共事实"的确立，而非单纯的技术发布。</b>两个月内 1 亿用户，成为当时史上最快被采纳的消费者产品；生成式 AI 三年内达到 <b>53% 的人口采用率</b>，快于个人电脑与互联网。<sup class="fn"><a href="#ref16">[16]</a><a href="#ref25">[25]</a></sup></li>
+      <li><b>2024—2026 的主轴，从"能不能答对"转向"能不能被信任地行动"。</b>o1（2024）与 DeepSeek-R1（2025）开启推理模型范式：用推理时的更长思考换取准确率；MCP（2024）让 Agent 有了连接工具与数据的标准。到 2026 年，前沿系统已能接受"迁移这个代码库""找出并修复这些漏洞"这类<b>跨小时、跨天的持续目标</b>，并在循环中自我验证。<sup class="fn"><a href="#ref18">[18]</a><a href="#ref19">[19]</a><a href="#ref20">[20]</a></sup></li>
+      <li><b>中美模型能力差距已"实质性消失"。</b>斯坦福《2026 AI 指数报告》：中美模型自 2025 年初起多次交替领先，2025 年 2 月 DeepSeek-R1 曾短暂追平美国顶尖模型；截至 2026 年 3 月，领先幅度仅剩 <b>2.7%</b>，前六大实验室在竞技场榜单上的差距在 25 Elo 分以内。竞争焦点已从"原始能力"转向<b>成本与可靠性</b>。<sup class="fn"><a href="#ref25">[25]</a><a href="#ref26">[26]</a></sup></li>
+      <li><b>治理正明显滞后于能力，这是当下最核心的矛盾。</b>有记录的 AI 事故从 2024 年 233 起升至 2025 年 362 起；模型能力呈"锯齿状"——能拿国际数学奥林匹克金牌，却只有 <b>50.1%</b> 的概率正确读指针时钟（人类 90.1%）。欧盟《人工智能法案》于 <b>2026 年 8 月 2 日</b>进入全面执行，罚款上限达 3500 万欧元或全球营业额 7%。<sup class="fn"><a href="#ref25">[25]</a><a href="#ref29">[29]</a></sup></li>
+    </ol>
+  </div>
+</div>
+
+<div class="layout">
+
+<!-- ======================= 侧栏目录 ======================= -->
+<aside class="toc">
+  <div class="toc-title">目录</div>
+  <nav id="tocnav">
+    <a href="#sec1"><b>01</b>史前史：可计算的思想</a>
+    <a href="#sec2"><b>02</b>诞生与黄金年代</a>
+    <a href="#sec3"><b>03</b>两次寒冬与专家系统</a>
+    <a href="#sec4"><b>04</b>统计学习复兴</a>
+    <a href="#sec5"><b>05</b>深度学习革命</a>
+    <a href="#sec6"><b>06</b>Transformer 与大模型</a>
+    <a href="#sec7"><b>07</b>生成式 AI 爆发</a>
+    <a href="#sec8"><b>08</b>推理、Agent 与自主性</a>
+    <a href="#sec9"><b>09</b>中国 AI 发展脉络</a>
+    <a href="#sec10"><b>10</b>支撑生态全景</a>
+    <a href="#sec11"><b>11</b>治理、安全与风险</a>
+    <a href="#sec12"><b>12</b>参考文献</a>
+  </nav>
+</aside>
+
+<!-- ======================= 正文 ======================= -->
+<main>
+
+<!-- ============ 01 史前史 ============ -->
+<section id="sec1">
+  <div class="sec-head"><div class="sec-no">01</div><h2>史前史：从神话与逻辑，到"可计算"的思想</h2></div>
+  <p class="sec-lead">
+    人工智能不是 1956 年凭空出现的。在它能被造出来之前，人类先花了数千年想清楚两件事：<b>思维是否可以被形式化</b>，以及<b>形式化的推理是否可以被机器执行</b>。这两条线索在 20 世纪中叶汇合。
+  </p>
+
+  <div class="timeline">
+    <div class="node">
+      <span class="year">古代—中世纪 · 神话与机械</span>
+      <span class="title">会思考的造物：从塔罗斯到"推理转盘"</span>
+      <p>古希腊神话中的青铜巨人塔罗斯、中国的指南车与木牛流马传说、阿拉伯炼金术中的"造人"想象，都是人造智能的最早投射。13 世纪加泰罗尼亚神学家 <b>拉蒙·柳利（Ramon Llull）</b>设计出 Ars Magna（大术）——用同心圆盘旋转组合基本概念以"机械地"生成真理，被后世视为机械推理的先声<sup class="fn"><a href="#ref2">[2]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">17—19 世纪 · 形式逻辑</span>
+      <span class="title">莱布尼茨的梦想 → 布尔代数 → 弗雷格谓词逻辑</span>
+      <p>莱布尼茨设想一套"普遍字符 + 推理演算"（calculus ratiocinator），让争论可以"坐下来算一算"。1854 年 <b>乔治·布尔</b>把逻辑代数化；1879 年 <b>弗雷格</b>建立谓词逻辑，第一次让"所有""存在""蕴含"这类关系可被严格书写。这条线最终成为符号主义 AI 的语言基础<sup class="fn"><a href="#ref2">[2]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">1931—1936 · 理论临界点</span>
+      <span class="title">哥德尔不完备 → 图灵机：可计算性的边界与可能</span>
+      <p>希尔伯特提出"判定问题"（是否存在通用算法判定任意命题的真假）。1931 年 <b>哥德尔</b>用不完备定理给出否定性回答；1936 年 <b>阿兰·图灵</b>用"图灵机"这一抽象模型重新定义"可计算"——凡能被图灵机计算的，就是可计算的。这个模型同时给出了<b>通用计算机的理论蓝图</b>：一台机器可以模拟任何其他机器<sup class="fn"><a href="#ref1">[1]</a><a href="#ref2">[2]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">1943 · 连接主义起点</span>
+      <span class="title">McCulloch &amp; Pitts：人工神经元的数理模型</span>
+      <p>神经生理学家沃伦·麦卡洛克与逻辑学家沃尔特·皮茨发表《A Logical Calculus of the Ideas Immanent in Nervous Activity》，把神经元抽象为"加权求和 + 阈值触发"的二值单元，并证明这样的网络可以表达任意命题逻辑。这是<b>人工神经网络的第一块基石</b>，也是今天一切深度学习模型最古老的祖先<sup class="fn"><a href="#ref2">[2]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">1943—1949 · 控制论与学习律</span>
+      <span class="title">Wiener 控制论 · Hebb 学习律</span>
+      <p>1948 年诺伯特·维纳的《控制论》把"反馈"确立为机器与生物共通的原理；1949 年唐纳德·赫布提出 <b>Hebb 学习律</b>——"一起激发的神经元会连在一起"——给出了第一个可操作的神经网络<b>学习</b>规则。AI 的三块拼图（表示、计算、学习）至此齐备<sup class="fn"><a href="#ref2">[2]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">1950 · 哲学宣言</span>
+      <span class="title">图灵《计算机器与智能》：提出"模仿游戏"</span>
+      <p>图灵在《Mind》期刊发表划时代论文，开篇即问 <b>"Can machines think?"</b>（机器能思考吗？），随即指出这个问题"太无意义"，转而提出可操作的替代方案——<b>模仿游戏（后称图灵测试）</b>：若人类裁判在文字对话中无法区分机器与人，就不应否认机器"在思考"。论文还逐条反驳了九类反对意见（神学、数学、意识、无中生有等），并预言"五十年后"机器将能在对话中骗过普通提问者<sup class="fn"><a href="#ref1">[1]</a></sup>。</p>
+    </div>
+  </div>
+
+  <div class="quotebox">
+    "We can only see a short distance ahead, but we can see plenty there that needs to be done."
+    <span class="src">— Alan Turing, 1950《Computing Machinery and Intelligence》<sup class="fn"><a href="#ref1">[1]</a></sup></span>
+  </div>
+
+  <div class="callout"><span class="tt">// 这段历史为什么重要</span>
+    AI 后来所有的争论几乎都在图灵这篇论文里被预演过：<b>智能是否等同于行为可测的绩效</b>（图灵测试 vs 意识之争）、<b>符号计算能否穷尽智能</b>（符号主义 vs 连接主义）、<b>规模是否通向智能</b>。八十多年过去，问题换了包装，内核未变。</div>
+</section>
+
+<!-- ============ 02 诞生与黄金年代 ============ -->
+<section id="sec2">
+  <div class="sec-head"><div class="sec-no">02</div><h2>诞生与黄金年代：命名、乐观与第一次幻灭（1950—1974）</h2></div>
+  <p class="sec-lead">
+    这二十多年是 AI 的"英雄时代"：一个学科被命名、一批经典程序被写出、政府资金大量涌入，也埋下了第一次寒冬的全部种子——<b>承诺的时间表远比技术现实激进</b>。
+  </p>
+
+  <h3><span class="h3no">2.1</span>关键节点</h3>
+  <div class="timeline">
+    <div class="node">
+      <span class="year">1951</span>
+      <span class="title">SNARC：第一台神经网络模拟器</span>
+      <p>马文·明斯基与迪恩·埃德蒙兹用 300 个真空管与 40 个模拟突触搭出 SNARC 机器，模拟一只"老鼠"在迷宫中学习路径。这是<b>最早用硬件实现 Hebb 学习</b>的尝试<sup class="fn"><a href="#ref2">[2]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">1956 · 命名时刻</span>
+      <span class="title">达特茅斯会议：Artificial Intelligence 一词诞生</span>
+      <p>约翰·麦卡锡、马文·明斯基、克劳德·香农与纳撒尼尔·罗切斯特在 1955 年提交会议提案，首次使用 <b>"Artificial Intelligence"</b> 一词，并写下那句著名的乐观论断：<i>"学习的每一个方面或智能的任何其他特征，原则上都可以被精确描述，从而使机器能够模拟它。"</i>会议设想"10 个人、两个月就能取得重大进展"——这个时间表从未被兑现，但会议本身确立了 AI 作为独立学科的合法地位<sup class="fn"><a href="#ref3">[3]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">1956—1958 · 符号主义的开路</span>
+      <span class="title">Logic Theorist → GPS → LISP</span>
+      <p>纽厄尔与西蒙的 <b>Logic Theorist</b> 证明了《数学原理》中的若干定理，被视为第一个"会思考"的程序；随后他们提出通用问题求解器 <b>GPS</b>；1958 年麦卡锡设计 <b>LISP</b> 语言——在此后三十年里，它一直是 AI 研究的第一语言<sup class="fn"><a href="#ref2">[2]</a><a href="#ref3">[3]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">1957—1969 · 连接主义的第一次起伏</span>
+      <span class="title">感知机登场，又在《Perceptrons》下退场</span>
+      <p>1957 年弗兰克·罗森布拉特提出 <b>感知机（Perceptron）</b>，并实现了可学习的硬件 Mark I Perceptron；1958 年《纽约时报》报道称海军期待"能走路、说话、看东西、自我复制的机器"，掀起第一轮媒体狂热<sup class="fn"><a href="#ref7">[7]</a></sup>。1969 年明斯基与帕佩特的《Perceptrons》严格证明<b>单层感知机无法表达 XOR 等非线性可分函数</b>，尽管书中已指出多层网络可解决，但"感知机有根本局限"的印象已经造成，连接主义研究资金随之枯竭<sup class="fn"><a href="#ref7">[7]</a><a href="#ref2">[2]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">1966 · 第一次信任崩塌</span>
+      <span class="title">ALPAC 报告：机器翻译被判"无望"</span>
+      <p>美国 ALPAC 委员会评估机器翻译十年投入后，结论是短期内无法达到人类翻译水平，建议停止资助。<b>这是 AI 历史上第一次"评估报告终止一个方向"</b>，也是后来莱特希尔报告的预演<sup class="fn"><a href="#ref2">[2]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">1966—1969 · 经典程序</span>
+      <span class="title">ELIZA 与 Shakey：对话的幻象与移动的机器人</span>
+      <p>1966 年魏泽鲍姆的 <b>ELIZA</b> 用简单的模式匹配扮演心理治疗师，引发"ELIZA 效应"（用户明知是程序仍产生情感依赖）；1969 年 SRI 的 <b>Shakey</b> 成为第一个能自主规划行动的移动机器人。前者暴露了"对话幻象"的伦理风险，后者展示了符号规划的现实困难<sup class="fn"><a href="#ref2">[2]</a></sup>。</p>
+    </div>
+  </div>
+
+  <div class="warnbox"><span class="tt">// 黄金年代的三个隐患</span>
+    ① <b>过度承诺</b>——把"原理上可行"等同于"工程上可实现"；② <b>算力与数据真空</b>——组合爆炸让符号搜索在真实规模下失效；③ <b>资助单一依赖</b>——主要靠 ARPA/DARPA 等政府项目，一旦政策转向便无缓冲<sup class="fn"><a href="#ref4">[4]</a></sup>。</div>
+</section>
+
+<!-- ============ 03 两次寒冬与专家系统 ============ -->
+<section id="sec3">
+  <div class="sec-head"><div class="sec-no">03</div><h2>两次寒冬与专家系统：承诺—落空—撤资的循环（1974—1993）</h2></div>
+  <p class="sec-lead">
+    这二十年是 AI 最跌宕的时期：一次崩塌、一次商业巅峰、再一次崩塌。理解它，才能理解为什么今天的 AI 从业者对"泡沫"这个词如此敏感。
+  </p>
+
+  <h3><span class="h3no">3.1</span>第一次寒冬（1974—1980）</h3>
+  <ul class="dash">
+    <li><b>触发点：莱特希尔报告（1973）。</b>英国数学家詹姆斯·莱特希尔受政府委托评估 AI 研究，结论严厉：AI 在"通用性"上毫无进展，只在玩具问题上取得成果，建议大幅削减资助。报告导致英国 AI 研究几乎全面停摆<sup class="fn"><a href="#ref4">[4]</a><a href="#ref5">[5]</a></sup>。</li>
+    <li><b>美国同步撤资：</b>1969 年《曼斯菲尔德修正案》要求 DARPA 只资助"有明确军事任务导向"的项目，切断了自由探索型 AI 的经费；1973 年石油危机加剧财政紧缩<sup class="fn"><a href="#ref4">[4]</a></sup>。</li>
+    <li><b>技术内因：</b>机器翻译、符号搜索、早期机器人都在"规模"面前崩溃——<b>组合爆炸</b>使得符号主义方法无法处理真实世界的复杂度<sup class="fn"><a href="#ref4">[4]</a></sup>。</li>
+  </ul>
+
+  <h3><span class="h3no">3.2</span>专家系统的黄金十年（1980—1987）</h3>
+  <p>寒冬之后，AI 用"缩窄领域"换取了商业成功：不追求通用智能，只把人类专家的领域知识编码成规则。这是 AI 第一次真正赚到钱<sup class="fn"><a href="#ref6">[6]</a></sup>。</p>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>年份</th><th>系统</th><th>领域</th><th>意义</th></tr></thead>
+    <tbody>
+      <tr><td>1965/1972</td><td>DENDRAL / MYCIN</td><td>有机化学分子结构 / 血液感染诊断</td><td>MYCIN 约 600 条规则，诊断准确率被证明接近甚至超过部分人类专家，且能解释推理过程</td></tr>
+      <tr><td>1980</td><td><b>XCON（R1）</b></td><td>DEC 计算机配置</td><td>为 DEC 配置 VAX 系统，据报道每年节省数千万美元级成本——<b>专家系统商业化的标杆</b></td></tr>
+      <tr><td>1980—1986</td><td>产业爆发</td><td>医疗、金融、制造、地质勘探</td><td>Symbolics、Teknowledge、IntelliCorp 等公司兴起；LISP 专用机成为硬件风口</td></tr>
+      <tr><td>1982</td><td>日本第五代计算机计划</td><td>国家级项目</td><td>十年投入约 4 亿美元，目标是以逻辑编程实现智能计算机，最终未达预期</td></tr>
+    </tbody>
+  </table></div>
+  <p style="font-size:13.5px;color:var(--muted)">表格内容综合自公开史料<sup class="fn"><a href="#ref6">[6]</a><a href="#ref2">[2]</a></sup>。</p>
+
+  <h3><span class="h3no">3.3</span>第二次寒冬（1987—1993）</h3>
+  <ul class="dash">
+    <li><b>硬件基础被抽走：</b>LISP 专用机价格高昂，而 Sun、Apple、PC 等通用工作站性能快速逼近且更便宜。<b>专用机的性价比优势消失，AI 硬件产业在数年内蒸发数亿美元</b><sup class="fn"><a href="#ref4">[4]</a></sup>。</li>
+    <li><b>知识获取瓶颈：</b>专家系统的规则需要人工逐条挖掘，成本高、维护难、无法泛化。规则数量超过一定规模后，一致性与冲突处理成为噩梦<sup class="fn"><a href="#ref4">[4]</a><a href="#ref6">[6]</a></sup>。</li>
+    <li><b>外部环境：</b>冷战结束，国防资助进一步收缩；日本第五代项目被证明失败，官方叙事的正当性受损<sup class="fn"><a href="#ref4">[4]</a></sup>。</li>
+    <li><b>反向的种子：</b>恰恰在寒冬期间，1986 年反向传播算法被重新发掘、1989 年卷积网络用于手写识别、1997 年 LSTM 被提出——<b>连接主义在无人关注的角落里完成了关键积累</b><sup class="fn"><a href="#ref8">[8]</a><a href="#ref9">[9]</a></sup>。</li>
+  </ul>
+
+  <div class="riskbox"><span class="tt">// 两次寒冬的共同结构</span>
+    <b>技术预期 → 资本狂热 → 承诺无法兑现 → 评估报告（Lighthill / ALPAC）或市场信号（LISP 机崩盘）触发信心崩塌 → 资金与人才断崖式流失 → 研究转入低谷但底层积累仍在继续。</b>这个结构在 2026 年被反复拿来对照当下的资本开支（见 §10），因为它是最容易被重演的历史模式。</div>
+</section>
+
+<!-- ============ 04 统计学习复兴 ============ -->
+<section id="sec4">
+  <div class="sec-head"><div class="sec-no">04</div><h2>统计学习的复兴与深度学习的准备期（1986—2011）</h2></div>
+  <p class="sec-lead">
+    在符号主义退潮的同时，另一条路线悄悄成熟：不写规则，而是<b>从数据中估计概率与参数</b>。这段时间没有炫目的公众叙事，却把 2012 年所需的算法全部准备好了。
+  </p>
+
+  <h3><span class="h3no">4.1</span>算法线的关键积累</h3>
+  <div class="timeline">
+    <div class="node">
+      <span class="year">1986 · 反向传播</span>
+      <span class="title">Rumelhart、Hinton、Williams：让多层网络可以被训练</span>
+      <p>三人发表反向传播（Backpropagation）的经典论文，用链式法则把误差从输出层逐层传回，解决了多层网络的参数学习问题。虽然算法本身 1970 年代已被提出，但这次与实验结合，真正点燃了神经网络的第二次生机<sup class="fn"><a href="#ref8">[8]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">1989—1998 · 卷积网络</span>
+      <span class="title">LeCun 的 LeNet：局部连接 + 权值共享</span>
+      <p>杨立昆等人把卷积结构用于手写邮政编码识别，在真实美国邮政数据上达到商业可用精度。<b>卷积网络（CNN）确立了"用结构先验换取样本效率"的范式</b>，这一思想一直延续到今天的视觉模型<sup class="fn"><a href="#ref12">[12]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">1995—2005 · 统计学习主流</span>
+      <span class="title">SVM、Boosting、概率图模型：AI 主流转向统计</span>
+      <p>Vapnik 的支持向量机（1995）、AdaBoost、随机森林、隐马尔可夫模型与贝叶斯网络成为主流。1990s—2000s 的 AI 论文更多来自统计与优化社区，神经网络反而被视为"难以训练、缺乏理论"的落后工具<sup class="fn"><a href="#ref2">[2]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">1997 · 符号与统计的分水岭</span>
+      <span class="title">深蓝击败卡斯帕罗夫：但不是学习</span>
+      <p>IBM 深蓝以 3.5:2.5 击败国际象棋世界冠军卡斯帕罗夫。深蓝每秒评估约 2 亿个局面，依靠<b>暴力搜索 + 人类专家写就的评估函数</b>，本质是符号主义的胜利而非学习方法的胜利——它恰恰反证了"领域知识 + 算力"的极限所在<sup class="fn"><a href="#ref10">[10]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">1997 · 攻克梯度消失</span>
+      <span class="title">Hochreiter &amp; Schmidhuber 提出 LSTM</span>
+      <p>长短期记忆网络（LSTM）用门控机制让梯度可以跨越长序列稳定传播，第一次让循环网络<b>能记住长期依赖</b>。它在随后近二十年间统治了语音识别与序列建模任务，直到 Transformer 出现<sup class="fn"><a href="#ref9">[9]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">2006 · 深度学习"正名"</span>
+      <span class="title">Hinton 的深度信念网络 + 逐层预训练</span>
+      <p>杰弗里·辛顿提出用逐层无监督预训练初始化深层网络，缓解了深层难以训练的问题，并让 <b>"deep learning"</b> 这个此前罕见的说法在学术界流行起来。学术界称之为"深度学习的复兴元年"<sup class="fn"><a href="#ref2">[2]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">2007—2011 · 算力与数据就位</span>
+      <span class="title">CUDA 通用计算 · 大数据 · 语音识别转向 DNN</span>
+      <p>NVIDIA 2007 年发布 CUDA，让 GPU 从图形渲染变为通用并行计算平台；互联网积累了前所未有规模的语料与图像；2010—2011 年前后，微软、Google 等把语音识别系统从 GMM-HMM 换成深度神经网络，<b>词错率出现两位数相对下降</b>——工业界第一次真切感受到深度学习的价值<sup class="fn"><a href="#ref2">[2]</a><a href="#ref12">[12]</a></sup>。</p>
+    </div>
+  </div>
+
+  <div class="okbox"><span class="tt">// 2012 年前夜：三要素齐备</span>
+    到 2011 年，<b>算法</b>（反向传播 + CNN + LSTM + 预训练）、<b>数据</b>（互联网级语料与图像）、<b>算力</b>（GPU + CUDA）已经同时存在，只差一个足够有说服力的公开实验把它们叠在一起。<sup class="fn"><a href="#ref11">[11]</a><a href="#ref12">[12]</a></sup></div>
+</section>
+
+<!-- ============ 05 深度学习革命 ============ -->
+<section id="sec5">
+  <div class="sec-head"><div class="sec-no">05</div><h2>深度学习革命：从 AlexNet 到 AlphaGo（2012—2017）</h2></div>
+  <p class="sec-lead">
+    五年时间，AI 从"学术圈的边缘方法"变成"所有科技巨头的战略重心"。这条曲线有三个明确的拐点：AlexNet、AlphaGo、Transformer。
+  </p>
+
+  <h3><span class="h3no">5.1</span>2012 · AlexNet 引爆</h3>
+  <ul class="dash">
+    <li>2012 年 10 月，AlexNet 在 ImageNet 大规模视觉识别竞赛（ILSVRC）上以 <b>top-5 错误率约 15.3%</b> 夺冠，第二名用的是传统方法，错误率约 26.2%——<b>差距超过 10 个百分点</b>，这是一次压倒性的范式宣告<sup class="fn"><a href="#ref12">[12]</a></sup>。</li>
+    <li>技术要素：8 层网络、ReLU 激活、Dropout 正则化、两块 GTX 580 显卡训练。<b>这套"结构 + 激活 + 正则 + GPU"的组合，成为此后十年的标准配方</b><sup class="fn"><a href="#ref12">[12]</a></sup>。</li>
+    <li>底层前提是 <b>ImageNet</b>——李飞飞团队 2009 年发布的数据集，包含超过 1400 万张人工标注图像、两万余类别，用众包方式解决了"数据规模"这一瓶颈<sup class="fn"><a href="#ref11">[11]</a></sup>。</li>
+    <li>产业反应极快：Google 同年收购辛顿团队的 DNNresearch，2013 年 Facebook 成立 FAIR 实验室，深度学习人才成为最稀缺资源<sup class="fn"><a href="#ref2">[2]</a></sup>。</li>
+  </ul>
+
+  <h3><span class="h3no">5.2</span>2013—2015 · 架构爆发期</h3>
+  <div class="grid3">
+    <div class="card"><span class="chip-label">2013 · Word2Vec</span><p>把词映射为稠密向量，让"语义相似"变成向量空间的几何关系，成为所有 NLP 模型的前置基础设施。</p></div>
+    <div class="card"><span class="chip-label">2014 · GAN</span><p>Ian Goodfellow 提出生成对抗网络，用"生成器 vs 判别器"的博弈训练生成模型，开启图像生成的研究热潮。</p></div>
+    <div class="card"><span class="chip-label">2014 · Seq2Seq</span><p>编码器-解码器结构 + 注意力机制让机器翻译质量发生质变，神经网络开始系统性取代统计机器翻译。</p></div>
+    <div class="card"><span class="chip-label">2015 · ResNet</span><p>何恺明等提出残差连接，让 152 层甚至上千层网络可以稳定训练；ImageNet 错误率降至约 <b>3.57%</b>，低于人类约 5% 的水平。</p></div>
+    <div class="card"><span class="chip-label">2015 · TensorFlow 开源</span><p>Google 开源深度学习框架，把工业级训练能力下放给全行业，深度学习从实验室走向工程化。</p></div>
+    <div class="card"><span class="chip-label">2016 · 语音与翻译上线</span><p>Google 神经机器翻译（GNMT）上线，翻译质量跃升；Facebook 日均机器翻译量达到数十亿条量级。</p></div>
+  </div>
+
+  <h3><span class="h3no">5.3</span>2016—2017 · AlphaGo：强化学习的公开宣言</h3>
+  <ul class="dash">
+    <li>2016 年 3 月，DeepMind 的 <b>AlphaGo</b> 以 4:1 击败围棋世界冠军李世石。围棋状态空间远超国际象棋，长期被视为"符号方法不可能企及"的领域。AlphaGo 用<b>策略网络 + 价值网络 + 蒙特卡洛树搜索</b>的组合，并在 2017 年以 <b>AlphaGo Zero</b> 完全摆脱人类棋谱、仅靠自我对弈从零学起<sup class="fn"><a href="#ref21">[21]</a></sup>。</li>
+    <li>AlphaGo 的意义超出围棋本身：它证明<b>深度神经网络 + 强化学习 + 搜索</b>可以攻克高度复杂的决策问题。这条技术路线直接通向今天的推理模型与 Agent 规划能力<sup class="fn"><a href="#ref21">[21]</a><a href="#ref28">[28]</a></sup>。</li>
+    <li>同期 Google 自研 <b>TPU</b> 加速器投入内部使用，标志着"专用 AI 芯片"成为算力竞赛的正式赛道<sup class="fn"><a href="#ref34">[34]</a></sup>。</li>
+  </ul>
+
+  <div class="callout"><span class="tt">// 一句话总结这五年</span>
+    <b>2012 年证明"深度学习有效"，2015 年证明"深度学习可以很深很准"，2016 年证明"深度学习可以自己学会决策"。</b>三者叠加，让 2017 年的注意力机制一出现就能被立即推向极致规模。</div>
+</section>
+
+<!-- ============ 06 Transformer ============ -->
+<section id="sec6">
+  <div class="sec-head"><div class="sec-no">06</div><h2>Transformer 与大模型时代：把智能变成价格曲线（2017—2022）</h2></div>
+  <p class="sec-lead">
+    2017 年的一篇机器翻译论文，意外地成为此后十年所有主流 AI 系统的共同地基。理解 Transformer 与规模定律，就理解了为什么"更大的模型会更聪明"这件事可以被当作工程问题来推进。
+  </p>
+
+  <h3><span class="h3no">6.1</span>2017 · 架构革命</h3>
+  <ul class="dash">
+    <li><b>《Attention Is All You Need》</b>（Vaswani 等，Google）提出 Transformer：完全抛弃循环结构，仅用<b>自注意力（self-attention）</b>建模序列中任意两个位置的关系。这带来两个决定性收益——<b>训练可以大规模并行</b>，以及<b>长距离依赖不再衰减</b><sup class="fn"><a href="#ref13">[13]</a></sup>。</li>
+    <li>论文本身处理的是机器翻译这一"modest problem"，但其真正意义在于：<b>这套架构越堆越大就越好，且当时看不到天花板</b>。此后几乎所有你听说过的 AI 系统都是 Transformer<sup class="fn"><a href="#ref13">[13]</a><a href="#ref14">[14]</a></sup>。</li>
+  </ul>
+
+  <h3><span class="h3no">6.2</span>2018—2020 · 预训练范式与规模定律</h3>
+  <div class="timeline">
+    <div class="node">
+      <span class="year">2018</span>
+      <span class="title">GPT-1 与 BERT：预训练 + 微调成为标准范式</span>
+      <p>OpenAI 的 GPT-1（约 1.17 亿参数，单向生成式）与 Google 的 BERT（约 3.4 亿参数，双向掩码）先后发布，共同确立了一条新的经济学：<b>先在原始文本上大规模预训练一次，再低成本适配到无数下游任务</b>。"预测下一个词"这个看似简单的任务，悄然成为 AI 中最重要的任务<sup class="fn"><a href="#ref2">[2]</a><a href="#ref15">[15]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">2019</span>
+      <span class="title">GPT-2：15 亿参数与"太危险不宜公开"</span>
+      <p>OpenAI 发布 GPT-2（15 亿参数），并以"担心被滥用"为由分阶段释放权重，引发关于开源与安全的大规模争论——这成为后来开源/闭源路线之争的起点<sup class="fn"><a href="#ref2">[2]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">2020</span>
+      <span class="title">GPT-3 与规模定律：智能有了价格曲线</span>
+      <p>GPT-3 以 <b>1750 亿参数</b>在互联网大规模语料上训练，展现出未经过显式训练的能力——写文章、翻译、答题、简单推理，这些能力<b>"随着规模出现"（emergent）</b>。同期 Kaplan 等人的"缩放定律"（Scaling Laws）论文证明：模型性能是算力、数据量与参数规模的<b>平滑、可预测函数</b>。智能，第一次有了明确的价格曲线<sup class="fn"><a href="#ref15">[15]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">2020—2021 · 多模态与科学</span>
+      <span class="title">ViT · AlphaFold2 · CLIP · Codex</span>
+      <p>Vision Transformer 把同一架构搬到图像；<b>AlphaFold2</b> 在 CASP14 上把蛋白质结构预测精度推到实验级水平，被公认为 AI 对基础科学最深的一次介入；CLIP 打通图文对齐，DALL·E 开启文生图；Codex 驱动 GitHub Copilot，AI 开始写代码<sup class="fn"><a href="#ref22">[22]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">2021—2022 · 修正与开放</span>
+      <span class="title">Chinchilla 定律 · 扩散模型开源 · 参数军备竞赛</span>
+      <p>DeepMind 的 Chinchilla 研究修正了"参数越多越好"的直觉：在给定算力下，<b>数据量与参数量应按约 20:1 的比例同步扩张</b>，很多大模型其实"训练不足"。2022 年 <b>Stable Diffusion</b> 开源把图像生成能力交到公众手中，Midjourney 走红。同期中国发布悟道 2.0 等超大模型，参数规模一度冲到万亿级<sup class="fn"><a href="#ref2">[2]</a><a href="#ref15">[15]</a></sup>。</p>
+    </div>
+  </div>
+
+  <div class="tealbox"><span class="tt">// 这一阶段的核心机制</span>
+    <b>Transformer 提供了可扩展的架构，规模定律提供了可预测的投入产出，预训练提供了可复用的资产。</b>三者叠加，把 AI 从"研究工艺"变成了"资本密集型的工程流水线"——这也同时决定了此后 AI 竞争必须依赖算力与资本。</div>
+</section>
+
+<!-- ============ 07 生成式 AI 爆发 ============ -->
+<section id="sec7">
+  <div class="sec-head"><div class="sec-no">07</div><h2>生成式 AI 爆发：从研究话题到公共事实（2022—2024）</h2></div>
+  <p class="sec-lead">
+    2022 年 11 月之后，AI 不再是一个技术议题，而成为社会、经济、政治的公共事实。这两年决定了此后所有产业与治理议程的基本框架。
+  </p>
+
+  <div class="timeline">
+    <div class="node">
+      <span class="year">2022-11-30 · 引爆点</span>
+      <span class="title">ChatGPT 发布：两个月 1 亿用户</span>
+      <p>OpenAI 以"研究预览版"形式发布 ChatGPT——本质是 GPT-3.5 加上 <b>RLHF（人类反馈强化学习）</b>的对话界面。它以对话这一最自然的交互方式，把大模型能力交到普通人手里：<b>两个月内用户破 1 亿，成为当时史上最快被采纳的消费者产品</b>。AI 从研究话题变成了公共事实<sup class="fn"><a href="#ref16">[16]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">2023-03</span>
+      <span class="title">GPT-4：跨模态与专业考试</span>
+      <p>GPT-4 在专业与学术考试上达到前 10% 水准，并支持图像理解与文本混合输入。它把"大模型能不能算专业能力"这个问题的答案，从"不能"变成了"看任务"<sup class="fn"><a href="#ref17">[17]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">2023 · 生态分化</span>
+      <span class="title">Llama 开源 · Claude · 中国"百模大战"</span>
+      <p>Meta 释放 Llama 权重（7 月 Llama 2 可商用），为全球开源生态奠基<sup class="fn"><a href="#ref33">[33]</a></sup>；Anthropic 发布 Claude 系列，主打安全与长上下文；中国同期进入"百模大战"，百度文心一言、阿里通义千问、智谱 GLM、月之暗面 Kimi、讯飞星火、字节豆包等密集上线<sup class="fn"><a href="#ref27">[27]</a><a href="#ref32">[32]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">2024-02—05 · 多模态元年</span>
+      <span class="title">Sora · Claude 3 · GPT-4o</span>
+      <p>OpenAI 发布文生视频模型 Sora，把"世界模型"讨论推向公众；Anthropic 的 Claude 3 在部分基准上短暂超越 GPT-4；5 月 GPT-4o 以"omni"形态原生整合文本、视觉与<b>实时语音</b>，把交互延迟压到接近真人对话<sup class="fn"><a href="#ref24">[24]</a><a href="#ref20">[20]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">2024-07</span>
+      <span class="title">Llama 3.1 405B：开源逼近前沿</span>
+      <p>Meta 发布 4050 亿参数的 Llama 3.1，证明<b>开放权重模型可以在前沿水平上参与竞争</b>，为创业公司、学术机构与主权 AI 提供了不依赖闭源 API 的选项<sup class="fn"><a href="#ref33">[33]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">2024-09 · 第二根杠杆</span>
+      <span class="title">OpenAI o1：让模型"先想再答"</span>
+      <p>o1 系列用强化学习训练模型在回答前生成<b>长链内部推理</b>，把"推理时计算（test-time compute）"确立为独立于"训练时规模"的第二条能力提升路径——<b>不只模型更大，而是每道题想得更久</b><sup class="fn"><a href="#ref18">[18]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">2024-10 · 学术加冕</span>
+      <span class="title">诺贝尔奖双奖授予 AI</span>
+      <p>2024 年诺贝尔物理学奖授予 <b>John Hopfield 与 Geoffrey Hinton</b>，表彰其在人工神经网络基础性发现与发明上的贡献；化学奖授予 <b>David Baker、Demis Hassabis 与 John Jumper</b>，表彰蛋白质结构预测（AlphaFold）的突破。AI 首次以"基础科学工具与理论"的身份获得最高学术承认<sup class="fn"><a href="#ref23">[23]</a><a href="#ref22">[22]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">2024-11 · 连接标准</span>
+      <span class="title">Anthropic 发布 MCP：Agent 的"USB 接口"</span>
+      <p>Model Context Protocol（MCP）为模型连接外部数据与工具提供开放标准。<b>没有 MCP 之前，每个 Agent 都要为每个数据源写定制胶水代码；有了 MCP，工具可以像外设一样被插拔</b>。它成为 Agent 生态爆发的关键基础设施<sup class="fn"><a href="#ref20">[20]</a></sup>。</p>
+    </div>
+  </div>
+
+  <h3><span class="h3no">7.1</span>采用速度：为什么这次不一样</h3>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>指标</th><th>数值</th><th>口径 / 来源</th></tr></thead>
+    <tbody>
+      <tr><td>ChatGPT 用户破 1 亿</td><td><span class="chip grn">2 个月</span></td><td>当时史上最快消费者应用<sup class="fn"><a href="#ref16">[16]</a></sup></td></tr>
+      <tr><td>生成式 AI 人口采用率</td><td><span class="chip grn">3 年达 53%</span></td><td>快于个人电脑与互联网<sup class="fn"><a href="#ref25">[25]</a></sup></td></tr>
+      <tr><td>企业组织采用率</td><td><span class="chip grn">88%</span></td><td>Stanford AI Index 2026<sup class="fn"><a href="#ref25">[25]</a></sup></td></tr>
+      <tr><td>大学生使用生成式 AI</td><td>4/5（约 80%）</td><td>同上<sup class="fn"><a href="#ref25">[25]</a></sup></td></tr>
+      <tr><td>美国消费者获得的年度价值</td><td>约 1720 亿美元</td><td>2026 年初估算，中位用户价值同比翻三倍<sup class="fn"><a href="#ref25">[25]</a></sup></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ============ 08 推理与 Agent ============ -->
+<section id="sec8">
+  <div class="sec-head"><div class="sec-no">08</div><h2>推理、Agent 与自主性：当问题从"能不能答"变成"能不能被信任地行动"（2024—2026）</h2></div>
+  <p class="sec-lead">
+    这是本笔记覆盖的最新阶段。核心转变只有一句话：<b>AI 的评判标准，从"单次回答的质量"，变成"一长串动作链条的可靠性"</b>。前者是对话问题，后者是工程与治理问题——两者的失效模式完全不同。
+  </p>
+
+  <h3><span class="h3no">8.1</span>推理模型：第二根杠杆的展开</h3>
+  <div class="timeline">
+    <div class="node">
+      <span class="year">2025-01 · 开源冲击</span>
+      <span class="title">DeepSeek-R1：以极低成本达到前沿推理水平</span>
+      <p>深度求索发布开放权重推理模型 R1，在数学与代码等推理任务上比肩当时的一线闭源模型，而训练成本远低于外界对前沿模型的假设。市场反应剧烈——<b>英伟达单日市值蒸发规模一度达到约 6000 亿美元量级</b>，成为 AI 资本叙事的一次压力测试<sup class="fn"><a href="#ref19">[19]</a><a href="#ref2">[2]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">2025 · 推理控制面板化</span>
+      <span class="title">从 o3 到 Opus 4.5 与 Gemini 3 Pro：把"思考多久"变成参数</span>
+      <p>Anthropic 的 Claude Opus 4.5 引入 <b>effort（努力程度）参数</b>，官方称在披露的 64K 思考预算下，以中等努力即可匹配上一代模型、同时减少约 <b>76% 的输出 token</b>；Google 的 Gemini 3 Pro 用 <b>thinking_level</b> 取代硬性 token 预算，并引入"思维签名（thought signatures）"来保证多轮推理的一致性。月之暗面的 Kimi K2 Thinking 则能在一轮任务中连续调用工具约 <b>200—300 次</b>而无需人工介入<sup class="fn"><a href="#ref28">[28]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">2026 · 自适应思考</span>
+      <span class="title">Claude Opus 4.6 → 4.7 → 5；GPT-5.6；DeepSeek V4；Grok 4.5</span>
+      <p>2026 年 2 月 Claude Opus 4.6 引入<b>自适应思考</b>（模型自行决定何时需要更深的推理）；4 月的 Opus 4.7 增加 xhigh 档并弃用旧的 token 预算参数；7 月 Opus 5 默认开启思考并由模型自行决定深度。同期 DeepSeek V4 以 <b>100 万 token 上下文 + 双模式（思考/非思考）</b>开源，GPT-5.6 以 Sol/Terra/Luna 三档并支持"ultra 模式协调子代理"，xAI 的 Grok 4.5 在数十万项多步软件工程任务上做强化学习<sup class="fn"><a href="#ref28">[28]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">2026-08/09 · 代际交叠</span>
+      <span class="title">Claude Sonnet 5 成为默认模型：Agent 能力"下沉到免费层"</span>
+      <p>Anthropic 把新一代中端主力 Claude Sonnet 5 设为免费与 Pro 用户的<b>默认模型</b>，官方称其为"迄今最具代理能力的 Sonnet"。<b>把面向 Agent 的模型做成不加价的默认选项，本身就是一个信号：厂商已预期普通用户（而非仅工程师）会把任务交给模型去执行</b><sup class="fn"><a href="#ref27">[27]</a></sup>。</p>
+    </div>
+  </div>
+
+  <h3><span class="h3no">8.2</span>能力坐标：2026 年 3 月的量化快照</h3>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>维度</th><th>2025 前</th><th>2026 最新</th><th>含义</th></tr></thead>
+    <tbody>
+      <tr><td>编程（SWE-bench Verified）</td><td>约 60%</td><td><span class="chip grn">接近 100%</span></td><td>一年内几乎饱和，编程 Agent 具备生产可用性<sup class="fn"><a href="#ref25">[25]</a></sup></td></tr>
+      <tr><td>计算机操作（OSWorld）</td><td>约 12%</td><td><span class="chip grn">约 66.3%</span></td><td>跨系统真实任务成功率跃升，但仍约每 3 次失败 1 次<sup class="fn"><a href="#ref25">[25]</a></sup></td></tr>
+      <tr><td>竞赛数学</td><td>—</td><td><span class="chip grn">IMO 金牌</span></td><td>Gemini Deep Think 达到金牌水平<sup class="fn"><a href="#ref25">[25]</a></sup></td></tr>
+      <tr><td>日常感知（读指针钟）</td><td>—</td><td><span class="chip red">50.1%</span></td><td>顶尖模型远低于人类 90.1%，体现能力"锯齿状"<sup class="fn"><a href="#ref25">[25]</a></sup></td></tr>
+      <tr><td>机器人真实家务</td><td>—</td><td><span class="chip red">失败约 9/10</span></td><td>具身智能与数字智能之间仍存在巨大落差<sup class="fn"><a href="#ref25">[25]</a></sup></td></tr>
+      <tr><td>顶尖模型彼此差距</td><td>—</td><td>前六名实验室 <b>25 Elo 内</b></td><td>竞争重心从原始能力转向成本与可靠性<sup class="fn"><a href="#ref25">[25]</a></sup></td></tr>
+      <tr><td>中美模型差距</td><td>2025-02 DeepSeek-R1 持平</td><td><b>2.7%</b>（2026-03）</td><td>能力差距"实质性消失"，呈交替领先<sup class="fn"><a href="#ref25">[25]</a><a href="#ref26">[26]</a></sup></td></tr>
+    </tbody>
+  </table></div>
+
+  <h3><span class="h3no">8.3</span>Agent 时代的三个新问题</h3>
+  <div class="grid3">
+    <div class="card t-amber"><span class="chip-label">精度复利问题</span><p><b>对话中 95% 的准确率很惊艳，四十步任务链中 95% 的准确率接近无用</b>——错误会沿链条复利。这解释了为什么 Agent 领域的核心工作是"验证环节"而非"生成能力"。<sup class="fn"><a href="#ref28">[28]</a></sup></p></div>
+    <div class="card t-amber"><span class="chip-label">成本与不可复现</span><p>每一步思考都是必须付费的机器时间；同一条指令两次执行可能走完全不同的路径，<b>可复现性、可审计性变得困难</b>。<sup class="fn"><a href="#ref28">[28]</a></sup></p></div>
+    <div class="card t-amber"><span class="chip-label">监督悖论</span><p>系统越能独立行动，就越难被监督、审计或叫停。<b>自主性与可控性之间存在结构性张力</b>——这是治理议题（§11）的技术根源。<sup class="fn"><a href="#ref28">[28]</a><a href="#ref29">[29]</a></sup></p></div>
+  </div>
+
+  <h3><span class="h3no">8.4</span>市场格局：一超多强的终结</h3>
+  <ul class="dash">
+    <li>据光明网 2026 年 9 月报道：<b>ChatGPT 在全球 AI 助手市场的份额首次跌破 50%</b>（援引 2026 年 6 月的行业报告），全球大模型市场进入多方制衡阶段<sup class="fn"><a href="#ref27">[27]</a></sup>。</li>
+    <li>海外呈"拉锯式交替领先"：2025 年末 Gemini 3 凭原生多模态短暂领跑 → 2026 年初 Anthropic 凭智能体架构与编程能力反超 → 2026 年二季度 OpenAI 以限量发布的 GPT-5.5/5.6 系列重夺前沿制高点 → 2026 年 7 月 Anthropic 推出 Claude Sonnet 5<sup class="fn"><a href="#ref27">[27]</a></sup>。</li>
+    <li>中国阵营加快追赶：MiniMax M3、智谱 GLM-5.2、阿里 Qwen3-Max-Thinking 等旗舰落地；其中 <b>GLM-5.2 在全球百万用户参与的 Code Arena 排行榜盲测中综合成绩位列全球第一</b><sup class="fn"><a href="#ref27">[27]</a></sup>。</li>
+  </ul>
+</section>
+
+<!-- ============ 09 中国 AI ============ -->
+<section id="sec9">
+  <div class="sec-head"><div class="sec-no">09</div><h2>中国 AI 发展脉络：从追赶者到平行的第二极</h2></div>
+  <p class="sec-lead">
+    中国 AI 走过了一条"引进—跟进—政策驱动—开源突围"的路径。到 2026 年，它已不是"追随者"，而是与美国交替领先的平行极点——但优势结构截然不同。
+  </p>
+
+  <div class="timeline">
+    <div class="node">
+      <span class="year">1978—1986 · 起步</span>
+      <span class="title">钱学森的系统工程 → 中国人工智能学会 → 863 计划</span>
+      <p>1978 年钱学森提出《论系统工程》，把智能与系统思维引入国内；1981 年 <b>中国人工智能学会（CAAI）</b>成立；1986 年"863 计划"把"智能计算机"列为重要主题，中国 AI 研究第一次获得国家级系统性支持<sup class="fn"><a href="#ref32">[32]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">2006—2015 · 规划驱动</span>
+      <span class="title">中长期科技规划纲要 → 中国制造 2025 → 互联网+</span>
+      <p>2006 年《国家中长期科学和技术发展规划纲要》把智能技术列入前沿方向；2015 年《中国制造 2025》与"互联网+"行动把 AI 与实体经济结合，催生了一批视觉、语音、自动驾驶公司<sup class="fn"><a href="#ref32">[32]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">2017 · 顶层设计</span>
+      <span class="title">《新一代人工智能发展规划》：三步走目标</span>
+      <p>国务院发布该规划，提出到 2020 年总体技术与应用与世界先进水平同步、到 <b>2025 年部分技术与应用达到世界领先</b>、到 <b>2030 年人工智能理论、技术与应用总体达到世界领先水平</b>，成为世界主要人工智能创新中心。这是中国 AI 从部门议题上升为国家战略的标志<sup class="fn"><a href="#ref32">[32]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">2019—2021 · 承压与技术自主</span>
+      <span class="title">实体清单 → 芯片约束 → "十四五"核心地位</span>
+      <p>部分中国 AI 企业被列入美国实体清单，高端芯片获取受限；"十四五"规划把人工智能列为前沿科技攻关重点。<b>外部约束反而强化了"自主可控"的技术路线选择</b>，并在后来转化为算法效率上的竞争力<sup class="fn"><a href="#ref32">[32]</a><a href="#ref25">[25]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">2023 · 百模大战</span>
+      <span class="title">文心一言、通义千问、GLM、Kimi、豆包密集上线</span>
+      <p>在 ChatGPT 冲击下，中国主要科技公司与中国科学院体系在一年内密集发布大模型，"百模大战"格局形成，同时也迎来《生成式人工智能服务管理暂行办法》（2023 年 8 月）等首批专门监管框架<sup class="fn"><a href="#ref27">[27]</a><a href="#ref32">[32]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">2025-01 · 分水岭</span>
+      <span class="title">DeepSeek-R1 开源：以效率破局</span>
+      <p>R1 以显著更低的训练成本达到前沿推理水平，并开放权重。它带来的不只是技术事件：<b>它证明了在算力受限条件下，通过架构与训练效率创新依然可以追平前沿</b>——这让"算力决定论"第一次被认真质疑，并被斯坦福 AI 指数视为中美差距收敛的关键节点<sup class="fn"><a href="#ref19">[19]</a><a href="#ref25">[25]</a></sup>。</p>
+    </div>
+    <div class="node">
+      <span class="year">2025—2026 · 平行第二极</span>
+      <span class="title">开源生态开花，中国模型周处理量首超美国</span>
+      <p>Qwen、DeepSeek、GLM、Kimi、MiniMax 组成的开源矩阵成为全球开发者生态的重要供给。公开路由平台数据显示，<b>2026 年 2 月中旬中国模型的周处理量首次超过美国模型</b>；GLM-5.2 在 Code Arena 盲测中登顶<sup class="fn"><a href="#ref27">[27]</a></sup>。</p>
+    </div>
+  </div>
+
+  <h3><span class="h3no">9.1</span>优势结构：错位的领先</h3>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>维度</th><th>领先方</th><th>2026 年口径</th></tr></thead>
+    <tbody>
+      <tr><td>顶尖模型数量</td><td><span class="chip">美国</span></td><td>2025 年美国产出 50 个重要模型 vs 中国 30 个<sup class="fn"><a href="#ref25">[25]</a><a href="#ref26">[26]</a></sup></td></tr>
+      <tr><td>论文发表量 / 引用量</td><td><span class="chip grn">中国</span></td><td>中国在全球被引最高的 100 篇 AI 论文中占比由 2021 年 33 篇升至 2024 年 41 篇<sup class="fn"><a href="#ref25">[25]</a></sup></td></tr>
+      <tr><td>专利产出 / 工业机器人安装量</td><td><span class="chip grn">中国</span></td><td>中国在专利授权与工业机器人装机量上领先<sup class="fn"><a href="#ref25">[25]</a></sup></td></tr>
+      <tr><td>私人 AI 投资</td><td><span class="chip">美国</span></td><td>2025 年美国私人投资 2859 亿美元，约为中国的 23 倍以上<sup class="fn"><a href="#ref25">[25]</a></sup></td></tr>
+      <tr><td>数据中心与算力</td><td><span class="chip">美国</span></td><td>美国 5427 个数据中心，超过其他国家十倍以上<sup class="fn"><a href="#ref25">[25]</a></sup></td></tr>
+      <tr><td>开源贡献</td><td>趋于均衡</td><td>世界其他地区在 GitHub 上的贡献已超过欧洲、接近美国<sup class="fn"><a href="#ref25">[25]</a></sup></td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout"><span class="tt">// 一句话读法</span>
+    <b>美国领先在"资本 + 算力 + 顶尖模型数量"，中国领先在"人才规模 + 学术产出 + 专利 + 制造落地 + 开源供给"。</b>前者决定单点上限，后者决定扩散速度与产业渗透——这两条曲线的交汇点，正是 2026 年竞争格局最不确定的部分<sup class="fn"><a href="#ref25">[25]</a><a href="#ref27">[27]</a></sup>。</div>
+</section>
+
+<!-- ============ 10 支撑生态 ============ -->
+<section id="sec10">
+  <div class="sec-head"><div class="sec-no">10</div><h2>支撑生态全景：算力、资本、数据、开源、多模态与具身</h2></div>
+  <p class="sec-lead">
+    当代 AI 的进展不是单一算法的胜利，而是六条基础设施曲线同时推进的结果。理解它们，才能判断哪些是可持续的，哪些是脆弱的。
+  </p>
+
+  <h3><span class="h3no">10.1</span>算力与资本：人类历史上最大规模的基础设施建设</h3>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>公司 / 项目</th><th>2026 年 AI 资本开支（估算）</th><th>重点</th></tr></thead>
+    <tbody>
+      <tr><td>Amazon（AWS）</td><td>约 2000 亿美元</td><td>数据中心、自研芯片（Trainium/Inferentia）、Bedrock</td></tr>
+      <tr><td>Alphabet / Google</td><td>约 1700—1850 亿美元</td><td>Google Cloud、TPU、Gemini 基础设施</td></tr>
+      <tr><td>Meta</td><td>约 1150—1350 亿美元</td><td>模型训练、推荐 ASIC、千兆瓦级数据中心</td></tr>
+      <tr><td>Microsoft</td><td>约 1200 亿美元（含 Azure/OpenAI）</td><td>Azure AI、Copilot、Stargate</td></tr>
+      <tr><td><b>Stargate</b>（OpenAI + SoftBank + Oracle）</td><td><b>承诺总额约 5000 亿美元</b></td><td>美国全国性 AI 数据中心网络，分 4—5 年投入</td></tr>
+    </tbody>
+  </table></div>
+  <p style="font-size:13.5px;color:var(--muted)">口径说明：四大云厂 2026 年 AI 基建开支合计约 6250—6450 亿美元量级（含 Oracle 约 6600—6900 亿美元），其中约 <b>75%</b> 直接投向 AI 基础设施；数字为第三方研究机构（Futurum / IDC / Dell'Oro 等）汇总估算，各来源区间不一，仅供量级参考<sup class="fn"><a href="#ref31">[31]</a></sup>。</p>
+
+  <div class="grid2">
+    <div class="card t-violet"><span class="chip-label">算力的物理约束</span><p>全球 AI 算力容量自 2022 年以来<b>年均增长 3.3 倍</b>，已达约 1710 万块 H100 等效规模；美国数据中心超 5427 个；AI 数据中心电力容量达 <b>29.6 GW</b>（接近纽约州峰值用电）。所有超大规模厂商均表示"受供给约束"——瓶颈已从硅片转向<b>电力与冷却<sup class="fn"><a href="#ref25">[25]</a><a href="#ref31">[31]</a></sup></b>。</p></div>
+    <div class="card t-red"><span class="chip-label">单点依赖与金融风险</span><p>全球领先 AI 芯片几乎全部由<b>台积电</b>一家代工，整条供应链依赖单一节点；同时国际清算银行（BIS）警告，这种以债务支撑、集中于少数买家的建设模式"可能把全球经济一起拖下水"，并类比 19 世纪铁路狂热<sup class="fn"><a href="#ref25">[25]</a><a href="#ref31">[31]</a></sup>。</p></div>
+  </div>
+
+  <h3><span class="h3no">10.2</span>开源生态：从 Llama 到多元供给</h3>
+  <ul class="dash">
+    <li>2023 年 Meta 释放 Llama 权重是转折点；此后 Mistral、DeepSeek、Qwen、GLM、Kimi、OLMo 等形成多层次供给<sup class="fn"><a href="#ref33">[33]</a></sup>。</li>
+    <li>但差距并未消失：斯坦福报告指出，<b>顶尖闭源模型与顶尖开源模型的差距在 2025 年重新扩大到 3.3%</b>——2024 年曾接近弥合之后再度拉开<sup class="fn"><a href="#ref25">[25]</a></sup>。</li>
+    <li>开源的战略价值更多体现在：<b>主权 AI 的可选项、成本可控的部署路径、以及语言与文化的多样性</b>。2026 年的架构趋势是混合专家（MoE）——如 Mistral Small 4 以 1190 亿总参数仅激活 65 亿、Inkling 以 9750 亿总参数仅激活 410 亿，用"总知识量"与"单次推理算力"解耦来压低成本<sup class="fn"><a href="#ref25">[25]</a></sup>。</li>
+  </ul>
+
+  <h3><span class="h3no">10.3</span>多模态、世界模型与具身智能</h3>
+  <div class="grid3">
+    <div class="card t-teal"><span class="chip-label">多模态</span><p>从 GPT-4o 的原生文本+视觉+实时语音，到 Sora / Veo 系列的视频生成，再到图像、音频、3D 的统一建模。<b>多模态不再是加分项，而是前沿模型的默认形态</b><sup class="fn"><a href="#ref24">[24]</a></sup>。</p></div>
+    <div class="card t-teal"><span class="chip-label">世界模型</span><p>文生视频模型展现出对物理世界的隐式理解，被广泛讨论为"世界模型"雏形；进一步方向是可交互、可预测、可规划的环境模拟——它被视为通向具身智能的中间站<sup class="fn"><a href="#ref24">[24]</a></sup>。</p></div>
+    <div class="card t-teal"><span class="chip-label">具身智能</span><p>人形机器人与具身 AI 在 2025—2026 获得大量资本与政策关注（如杭州国家具身智能应用中试基地）。但斯坦福数据提醒：<b>机器人在真实家庭任务中仍失败约 9/10</b>，数字智能与物理智能之间存在显著落差<sup class="fn"><a href="#ref25">[25]</a><a href="#ref27">[27]</a></sup>。</p></div>
+  </div>
+
+  <h3><span class="h3no">10.4</span>成本曲线：三年下降超过 99%</h3>
+  <div class="stack">
+    <div class="layer hl"><div class="lname">推理成本</div><div class="ldesc">每百万 token 的处理成本三年间下降超过 <b>99%</b>，通用智能正在中端层被"商品化"</div><div class="lmetric">↓ 99%+</div></div>
+    <div class="layer hl"><div class="lname">能力收敛</div><div class="ldesc">编码基准上，开源模型与最强闭源模型的差距已缩小到 1 个百分点以内</div><div class="lmetric">差距 &lt; 1%</div></div>
+    <div class="layer"><div class="lname">定价分化</div><div class="ldesc">美国新旗舰逆势涨价，中国厂商从价格战转向收费——<b>中端商品化、前沿重新定价稀缺性</b></div><div class="lmetric">双向分化</div></div>
+  </div>
+  <p style="font-size:13px;color:var(--muted)">口径说明：成本与定价数据来自行业媒体汇总（援引公开路由平台与厂商定价），统计口径与时间窗不一，方向性结论可靠、绝对数值仅供参考<sup class="fn"><a href="#ref27">[27]</a></sup>。</p>
+</section>
+
+<!-- ============ 11 治理 ============ -->
+<section id="sec11">
+  <div class="sec-head"><div class="sec-no">11</div><h2>治理、安全与风险：能力与规则的赛跑</h2></div>
+  <p class="sec-lead">
+    2026 年是全球 AI 治理从"原则宣示"走向"强制执法"的一年。欧盟法案全面生效，事故数据持续上升，而模型的"锯齿状能力"让风险判断变得异常困难。
+  </p>
+
+  <h3><span class="h3no">11.1</span>欧盟《人工智能法案》：全球第一部全面性 AI 法律</h3>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>时间</th><th>生效内容</th></tr></thead>
+    <tbody>
+      <tr><td>2024-08-01</td><td>法案生效（Regulation (EU) 2024/1689），合规时钟启动</td></tr>
+      <tr><td>2025-02-02</td><td>禁止类 AI 实践（第 5 条）+ AI 素养义务（第 4 条）适用</td></tr>
+      <tr><td>2025-08-02</td><td><b>通用人工智能（GPAI）模型义务</b>适用；成员国须指定主管机构并制定罚则；欧盟层面治理架构（AI Board 等）建成</td></tr>
+      <tr><td><b>2026-08-02</b></td><td><b>法案大部分规则生效并开始执行</b>：第 50 条透明度义务适用（聊天机器人须告知"你在与 AI 交互"，AI 生成/修改内容须标注机器可读标识，深度伪造须明示）；AI Office 获得完整调查、评估与处罚权</td></tr>
+      <tr><td>2026-12-02</td><td>新增禁止条款适用于<b>非自愿性深度伪造与儿童性虐待材料（CSAM）生成</b>；部分合成内容提供者过渡期截止</td></tr>
+      <tr><td>2027-08-02</td><td>成员国应至少建成一个 AI 监管沙盒；此前已上市 GPAI 模型须完成合规</td></tr>
+      <tr><td>2027-12-02</td><td>附件 III 高风险 AI 系统义务适用（经《Digital Omnibus on AI》从 2026-08 推迟 16 个月）</td></tr>
+      <tr><td>2028-08-02</td><td>嵌入受监管产品（附件 I）的高风险 AI 义务适用（推迟 12 个月）</td></tr>
+    </tbody>
+  </table></div>
+  <ul class="dash">
+    <li><b>罚款结构高于 GDPR：</b>禁止类违规最高 <b>3500 万欧元或全球年营业额 7%</b>；通用 AI 模型违规最高 1500 万欧元或 3%<sup class="fn"><a href="#ref29">[29]</a></sup>。</li>
+    <li><b>系统性风险门槛：</b>训练算力超过 <b>10^25 FLOPs</b> 的 GPAI 模型须额外承担对抗测试（红队）、系统性风险评估、事件报告与网络安全义务；截至 2026 年 3 月已有 <b>6 个 GPAI 模型</b>被认定具系统性风险<sup class="fn"><a href="#ref30">[30]</a></sup>。</li>
+    <li><b>延期而非放松：</b>2026 年 6 月通过的《Digital Omnibus on AI》仅推迟了高风险义务的生效时点，理由是配套协调标准（CEN/CENELEC）尚未就绪，<b>实体要求本身未被修改</b><sup class="fn"><a href="#ref29">[29]</a></sup>。</li>
+  </ul>
+
+  <h3><span class="h3no">11.2</span>其他主要治理框架</h3>
+  <div class="grid2">
+    <div class="card"><span class="chip-label">中国</span><p>《生成式人工智能服务管理暂行办法》（2023-08）确立备案与内容安全要求；《人工智能生成合成内容标识办法》（2025）要求生成内容显式与隐式标识；《全球人工智能治理倡议》（2023）提出发展与安全并重的国际主张。</p></div>
+    <div class="card"><span class="chip-label">美国与国际</span><p>以行政令、NIST AI 风险管理框架（AI RMF）与各州立法并行推进；国际层面通过 AI 安全峰会（布莱切利 2023、首尔 2024、巴黎 2025）与《国际 AI 安全报告》构建科学共识，2026 年报告继续强调前沿模型风险的评估缺口<sup class="fn"><a href="#ref29">[29]</a></sup>。</p></div>
+  </div>
+
+  <h3><span class="h3no">11.3</span>风险清单：2026 年的六个现实关切</h3>
+  <div class="grid3">
+    <div class="card t-red"><span class="chip-label">① 治理滞后于能力</span><p>几乎所有前沿开发者都报告能力基准，但负责任 AI 基准的报告仍然零散；<b>有记录的 AI 事故从 233 起（2024）升至 362 起（2025）</b><sup class="fn"><a href="#ref25">[25]</a></sup>。</p></div>
+    <div class="card t-red"><span class="chip-label">② 安全与准确率的权衡</span><p>研究发现，<b>改善负责任 AI 的一个维度（如安全性）可能损害另一个维度（如准确性）</b>，治理无法简单叠加<sup class="fn"><a href="#ref25">[25]</a></sup>。</p></div>
+    <div class="card t-red"><span class="chip-label">③ 能力锯齿与误判</span><p>能拿 IMO 金牌却读不准时钟（50.1%）。<b>用高分推断通用可靠性，是当前最常见的评估错误</b><sup class="fn"><a href="#ref25">[25]</a></sup>。</p></div>
+    <div class="card t-red"><span class="chip-label">④ 劳动力结构冲击</span><p>AI 在客服与软件开发带来 14%—26% 的生产力提升，同时<b>美国 22—25 岁软件开发者就业率自 2024 年以来下降近 20%</b>——冲击集中在入门岗位<sup class="fn"><a href="#ref25">[25]</a><a href="#ref26">[26]</a></sup>。</p></div>
+    <div class="card t-red"><span class="chip-label">⑤ 滥用与双重用途</span><p>开放能力天然是"双重用途资产"：善意研究受益的同时，恶意行为者也获得更低的技术门槛。安全研究界普遍认为<b>中立工具无法被完全沙箱化</b>，只能在访问层与检测层持续加固<sup class="fn"><a href="#ref29">[29]</a></sup>。</p></div>
+    <div class="card t-red" style="grid-column:1/-1"><span class="chip-label">⑥ 认知鸿沟</span><p>斯坦福报告显示，<b>73% 的 AI 专家预期 AI 将带来积极影响，而公众中仅有 23%</b>。这种预期差本身就是治理风险——它决定了政策空间与社会信任的边界<sup class="fn"><a href="#ref25">[25]</a><a href="#ref26">[26]</a></sup>。</p></div>
+  </div>
+
+  <div class="riskbox"><span class="tt">// 数据可信度提醒</span>
+    本笔记引用的量化数据来源性质各异：斯坦福 AI 指数为独立学术研究、欧盟时间线为官方法规服务台、模型能力与推理机制部分来自社区百科（aiwiki.ai）与厂商官方公告、算力资本开支为第三方研究机构估算。<b>引用时请注明口径，不要把方向性结论当成精确数字；2026 年数据仍处快速修订中。</b></div>
+</section>
+
+<!-- ============ 12 参考文献 ============ -->
+<section id="sec12">
+  <div class="sec-head"><div class="sec-no">12</div><h2>参考文献与延伸阅读</h2></div>
+  <p class="sec-lead">正文中 <sup class="fn">[n]</sup> 编号对应下列公开来源；均为可直接访问的权威或一手资料。</p>
+
+  <details class="app" open id="ref1"><summary>[1] Alan Turing（1950）· 计算机器与智能</summary>
+    <ol>
+      <li>Turing, A. M. "Computing Machinery and Intelligence." <i>Mind</i>, Vol. 59, No. 236, 1950 —— 图灵测试（模仿游戏）原始论文与九类反驳</li>
+      <li><a href="https://en.wikipedia.org/wiki/Computing_Machinery_and_Intelligence" target="_blank" rel="noopener">Wikipedia · Computing Machinery and Intelligence</a></li>
+    </ol>
+  </details>
+
+  <details class="app" id="ref2"><summary>[2] Wikipedia · History of artificial intelligence</summary>
+    <ol>
+      <li><a href="https://en.wikipedia.org/wiki/History_of_artificial_intelligence" target="_blank" rel="noopener">en.wikipedia.org/wiki/History_of_artificial_intelligence</a> —— 本文通史主干：McCulloch-Pitts、达特茅斯、ALPAC、ELIZA、感知机之争、专家系统、两次寒冬、反向传播、深度学习复兴</li>
+      <li><a href="https://en.wikipedia.org/wiki/Deep_learning" target="_blank" rel="noopener">Wikipedia · Deep learning</a>（2006 年复兴、预训练、语音识别转向 DNN）</li>
+      <li><a href="https://en.wikipedia.org/wiki/Scaling_laws_(machine_learning)" target="_blank" rel="noopener">Wikipedia · Scaling laws (machine learning)</a>（Kaplan 与 Chinchilla）</li>
+    </ol>
+  </details>
+
+  <details class="app" id="ref3"><summary>[3] 达特茅斯会议（1956）· AI 一词的诞生</summary>
+    <ol>
+      <li><a href="https://www.dartmouth.edu/~ai50/systems/ai50.pdf" target="_blank" rel="noopener">1955 年会议提案原文（Dartmouth 官方档案）："we propose that a 2 month, 10 man study…"</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Dartmouth_workshop" target="_blank" rel="noopener">Wikipedia · Dartmouth workshop</a></li>
+    </ol>
+  </details>
+
+  <details class="app" id="ref4"><summary>[4] Wikipedia · AI winter（两次寒冬）</summary>
+    <ol><li><a href="https://en.wikipedia.org/wiki/AI_winter" target="_blank" rel="noopener">en.wikipedia.org/wiki/AI_winter</a> —— 莱特希尔报告、曼斯菲尔德修正案、DARPA 撤资、LISP 机市场崩溃、日本第五代计算机计划</li></ol>
+  </details>
+
+  <details class="app" id="ref5"><summary>[5] Lighthill Report（1973）· 英国 AI 评估报告</summary>
+    <ol><li>Lighthill, J. "Artificial Intelligence: A General Survey." Science Research Council, 1973 —— 第一次寒冬的直接触发文件</li></ol>
+  </details>
+
+  <details class="app" id="ref6"><summary>[6] Wikipedia · Expert system（专家系统的兴衰）</summary>
+    <ol><li><a href="https://en.wikipedia.org/wiki/Expert_system" target="_blank" rel="noopener">en.wikipedia.org/wiki/Expert_system</a> —— MYCIN、DENDRAL、XCON(R1) 与 1980 年代商业化浪潮、知识获取瓶颈</li></ol>
+  </details>
+
+  <details class="app" id="ref7"><summary>[7] Wikipedia · Perceptron（感知机的兴起与沉寂）</summary>
+    <ol>
+      <li><a href="https://en.wikipedia.org/wiki/Perceptron" target="_blank" rel="noopener">en.wikipedia.org/wiki/Perceptron</a> —— Rosenblatt 1957/1958、Mark I Perceptron、1958 年媒体狂热</li>
+      <li>Minsky, M. &amp; Papert, S. <i>Perceptrons</i>, MIT Press, 1969 —— 单层感知机无法表达 XOR 的证明</li>
+    </ol>
+  </details>
+
+  <details class="app" id="ref8"><summary>[8] 反向传播（1986）· 多层网络可训练</summary>
+    <ol>
+      <li>Rumelhart, D., Hinton, G. &amp; Williams, R. "Learning representations by back-propagating errors." <i>Nature</i>, 323, 1986</li>
+      <li><a href="https://en.wikipedia.org/wiki/Backpropagation" target="_blank" rel="noopener">Wikipedia · Backpropagation</a>（含 1970 年代前史与 1986 年再发现）</li>
+    </ol>
+  </details>
+
+  <details class="app" id="ref9"><summary>[9] LSTM（1997）· 长短期记忆网络</summary>
+    <ol><li>Hochreiter, S. &amp; Schmidhuber, J. "Long Short-Term Memory." <i>Neural Computation</i>, 9(8), 1997 —— 门控机制解决梯度消失</li></ol>
+  </details>
+
+  <details class="app" id="ref10"><summary>[10] IBM 深蓝（1997）· 人机对弈里程碑</summary>
+    <ol><li><a href="https://www.ibm.com/history/deep-blue" target="_blank" rel="noopener">IBM 官方 · Deep Blue 历史档案</a> —— 每秒约 2 亿局面评估、暴力搜索 + 专家评估函数</li></ol>
+  </details>
+
+  <details class="app" id="ref11"><summary>[11] ImageNet（2009）· 数据规模瓶颈的破解</summary>
+    <ol><li>Deng, J. et al. "ImageNet: A Large-Scale Hierarchical Image Database." CVPR 2009 —— 1400 万+ 标注图像、两万余类别</li></ol>
+  </details>
+
+  <details class="app" id="ref12"><summary>[12] AlexNet（2012）与卷积网络 · 深度学习革命起点</summary>
+    <ol>
+      <li>Krizhevsky, A., Sutskever, I. &amp; Hinton, G. "ImageNet Classification with Deep Convolutional Neural Networks." NIPS 2012 —— top-5 错误率约 15.3% vs 第二名 26.2%</li>
+      <li>LeCun, Y. et al. "Gradient-based learning applied to document recognition." <i>Proceedings of the IEEE</i>, 1998 —— LeNet 与卷积网络范式</li>
+      <li>He, K. et al. "Deep Residual Learning for Image Recognition." CVPR 2016 —— ResNet 与 3.57% 错误率</li>
+    </ol>
+  </details>
+
+  <details class="app" id="ref13"><summary>[13] Transformer 原始论文（2017）</summary>
+    <ol><li>Vaswani, A. et al. "Attention Is All You Need." NeurIPS 2017 · arXiv:1706.03762 —— <a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">arxiv.org/abs/1706.03762</a></li></ol>
+  </details>
+
+  <details class="app" id="ref14"><summary>[14] Wikipedia · Transformer（深度学习架构）</summary>
+    <ol><li><a href="https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)" target="_blank" rel="noopener">en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)</a> —— 自注意力、多头机制、并行化与后续影响</li></ol>
+  </details>
+
+  <details class="app" id="ref15"><summary>[15] GPT-3 与规模定律（2020—2022）</summary>
+    <ol>
+      <li>Brown, T. et al. "Language Models are Few-Shot Learners." NeurIPS 2020 · arXiv:2005.14165 —— GPT-3 与 1750 亿参数</li>
+      <li>Kaplan, J. et al. "Scaling Laws for Neural Language Models." arXiv:2001.08361, 2020</li>
+      <li>Hoffmann, J. et al. "Training Compute-Optimal Large Language Models." (Chinchilla) arXiv:2203.15556, 2022</li>
+    </ol>
+  </details>
+
+  <details class="app" id="ref16"><summary>[16] OpenAI（2022-11-30）· Introducing ChatGPT</summary>
+    <ol><li><a href="https://openai.com/index/chatgpt/" target="_blank" rel="noopener">openai.com/index/chatgpt · "research preview" 与 RLHF 对话训练</a></li></ol>
+  </details>
+
+  <details class="app" id="ref17"><summary>[17] OpenAI（2023-03）· GPT-4</summary>
+    <ol><li><a href="https://openai.com/index/gpt-4-research/" target="_blank" rel="noopener">GPT-4 Technical Report / 官方发布页</a> —— 多模态输入与专业考试成绩</li></ol>
+  </details>
+
+  <details class="app" id="ref18"><summary>[18] OpenAI（2024-09）· Learning to Reason with LLMs（o1）</summary>
+    <ol><li><a href="https://openai.com/index/learning-to-reason-with-llms/" target="_blank" rel="noopener">openai.com/index/learning-to-reason-with-llms —— 推理时计算（test-time compute）与链式思考训练</a></li></ol>
+  </details>
+
+  <details class="app" id="ref19"><summary>[19] DeepSeek-R1（2025-01）· 开源推理模型</summary>
+    <ol><li>DeepSeek-AI. "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning." arXiv:2501.12948 —— <a href="https://arxiv.org/abs/2501.12948" target="_blank" rel="noopener">arxiv.org/abs/2501.12948</a></li></ol>
+  </details>
+
+  <details class="app" id="ref20"><summary>[20] Anthropic · Claude 与 Model Context Protocol（2024-11）</summary>
+    <ol>
+      <li><a href="https://www.anthropic.com/news/model-context-protocol" target="_blank" rel="noopener">Introducing the Model Context Protocol（MCP 官方公告）</a></li>
+      <li><a href="https://www.anthropic.com/news/claude-3-family" target="_blank" rel="noopener">Claude 3 系列发布（2024-03）</a></li>
+    </ol>
+  </details>
+
+  <details class="app" id="ref21"><summary>[21] AlphaGo（2016—2017）· 强化学习的公开宣言</summary>
+    <ol>
+      <li>Silver, D. et al. "Mastering the game of Go with deep neural networks and tree search." <i>Nature</i>, 529, 2016</li>
+      <li>Silver, D. et al. "Mastering the game of Go without human knowledge." <i>Nature</i>, 550, 2017 —— AlphaGo Zero 自我对弈</li>
+    </ol>
+  </details>
+
+  <details class="app" id="ref22"><summary>[22] AlphaFold 与 2024 诺贝尔化学奖</summary>
+    <ol>
+      <li>Jumper, J. et al. "Highly accurate protein structure prediction with AlphaFold." <i>Nature</i>, 596, 2021</li>
+      <li><a href="https://www.nobelprize.org/prizes/chemistry/2024/summary/" target="_blank" rel="noopener">Nobel Prize 2024 · Chemistry（Baker, Hassabis, Jumper）官方页</a></li>
+    </ol>
+  </details>
+
+  <details class="app" id="ref23"><summary>[23] 2024 诺贝尔物理学奖 · Hopfield 与 Hinton</summary>
+    <ol><li><a href="https://www.nobelprize.org/prizes/physics/2024/summary/" target="_blank" rel="noopener">nobelprize.org · Physics 2024 —— 表彰人工神经网络的基础性发现与发明</a></li></ol>
+  </details>
+
+  <details class="app" id="ref24"><summary>[24] 多模态与世界模型 · Sora / GPT-4o / Veo</summary>
+    <ol>
+      <li><a href="https://openai.com/index/video-generation-models-as-world-simulators/" target="_blank" rel="noopener">OpenAI · Video generation models as world simulators（Sora 技术说明，2024-02）</a></li>
+      <li><a href="https://openai.com/index/hello-gpt-4o/" target="_blank" rel="noopener">OpenAI · Hello GPT-4o（2024-05，原生多模态与实时语音）</a></li>
+    </ol>
+  </details>
+
+  <details class="app" open id="ref25"><summary>[25] Stanford HAI · 2026 AI Index Report（核心数据来源）</summary>
+    <ol>
+      <li><a href="https://hai.stanford.edu/ai-index/2026-ai-index-report" target="_blank" rel="noopener">hai.stanford.edu/ai-index/2026-ai-index-report —— 官方报告页与 Top Takeaways</a></li>
+      <li><a href="https://hai.stanford.edu/assets/files/ai_index_report_2026.pdf" target="_blank" rel="noopener">报告全文 PDF</a></li>
+      <li>本文引用的关键数字：产业界贡献 &gt;90% 前沿模型；SWE-bench Verified 60%→近 100%；企业采用率 88%；OSWorld 12%→66.3%；IMO 金牌 vs 读钟 50.1%；中美差距 2.7%；美国私人投资 2859 亿美元；数据中心 5427 个；算力容量年增 3.3 倍（1710 万 H100 等效）；数据中心电力 29.6 GW；事故 233→362；专家/公众 73% vs 23%；机器人家庭任务失败约 9/10；开源与闭源差距 3.3%</li>
+    </ol>
+  </details>
+
+  <details class="app" id="ref26"><summary>[26] 中国科学院 · 《2026 年人工智能指数报告》中文解读</summary>
+    <ol><li><a href="https://casisd.cas.cn/zkcg/ydkb/kjzcyzxkb/2026/zczxkb202606/202607/t20260706_8241970.html" target="_blank" rel="noopener">中国科学院科技战略咨询研究院 · 斯坦福《2026 年 AI 指数报告》要点摘编</a></li></ol>
+  </details>
+
+  <details class="app" open id="ref27"><summary>[27] 光明网（2026-09-03）· 人工智能大模型发展迈入新阶段</summary>
+    <ol><li><a href="https://news.gmw.cn/2026-09/03/content_38982185.htm" target="_blank" rel="noopener">news.gmw.cn · ChatGPT 全球份额首破 50% 以下、海外交替领先时间线、GLM-5.2 Code Arena 登顶、中国模型周处理量首超美国、成本三年下降 99%+</a></li></ol>
+  </details>
+
+  <details class="app" id="ref28"><summary>[28] AI Wiki · Reasoning models（推理模型谱系 2025—2026）</summary>
+    <ol><li><a href="https://aiwiki.ai/wiki/reasoning_model" target="_blank" rel="noopener">aiwiki.ai/wiki/reasoning_model —— Claude Opus 4.5/4.6/4.7/5、Gemini 3 Pro（thinking_level / thought signatures）、Kimi K2 Thinking、DeepSeek V4、GPT-5.6、Grok 4.5、Qwen3.8 等推理控制机制与 Agent 可靠性讨论</a></li></ol>
+  </details>
+
+  <details class="app" open id="ref29"><summary>[29] 欧盟《人工智能法案》· 官方实施时间线</summary>
+    <ol>
+      <li><a href="https://ai-act-service-desk.ec.europa.eu/en/ai-act/timeline/timeline-implementation-eu-ai-act" target="_blank" rel="noopener">EU AI Act Service Desk · Timeline for the Implementation of the EU AI Act</a></li>
+      <li><a href="https://www.legiscope.com/blog/eu-ai-act-timeline-deadlines.html" target="_blank" rel="noopener">分阶段合规日历与罚款结构（第三方整理，供对照）</a>—— 2026-08-02 全面执行、第 50 条透明度、2026-12-02 新增禁止、Digital Omnibus 推迟条款</li>
+    </ol>
+  </details>
+
+  <details class="app" id="ref30"><summary>[30] 欧盟委员会 · 通用人工智能（GPAI）模型义务指南</summary>
+    <ol><li><a href="https://digital-strategy.ec.europa.eu/en/policies/guidelines-gpai-providers" target="_blank" rel="noopener">digital-strategy.ec.europa.eu · Guidelines for providers of general-purpose AI models —— 10^25 FLOPs 系统性风险门槛、开源豁免条件、2026-08-02 起执法</a></li></ol>
+  </details>
+
+  <details class="app" id="ref31"><summary>[31] AI Business Weekly · AI Spending Statistics 2026（算力资本开支）</summary>
+    <ol><li><a href="https://aibusinessweekly.net/p/ai-spending-statistics" target="_blank" rel="noopener">aibusinessweekly.net · 四大云厂 2026 年 capex（Amazon ~$200B / Alphabet ~$185B / Meta ~$125B / Microsoft ~$120B）、Stargate 5000 亿美元、约 75% 投向 AI 基建</a>；交叉参考 Futurum Group、IDC、Dell'Oro Group 汇总与 BIS 风险警示（口径为第三方估算，仅供量级参考）</li></ol>
+  </details>
+
+  <details class="app" id="ref32"><summary>[32] 中国人工智能发展脉络</summary>
+    <ol>
+      <li><a href="https://en.wikipedia.org/wiki/Artificial_intelligence_in_China" target="_blank" rel="noopener">Wikipedia · Artificial intelligence in China（CAAI 1981、863 计划、2017 新一代 AI 发展规划三步走、实体清单影响）</a></li>
+      <li>《新一代人工智能发展规划》，国务院，2017-07 —— 2025 / 2030 分阶段目标</li>
+    </ol>
+  </details>
+
+  <details class="app" id="ref33"><summary>[33] Meta · Llama 开源路线</summary>
+    <ol>
+      <li><a href="https://ai.meta.com/llama/" target="_blank" rel="noopener">ai.meta.com/llama —— Llama 系列开放权重发布</a></li>
+      <li><a href="https://ai.meta.com/blog/meta-llama-3-1/" target="_blank" rel="noopener">Llama 3.1 405B（2024-07）—— 开放权重模型参与前沿竞争</a></li>
+    </ol>
+  </details>
+
+  <details class="app" id="ref34"><summary>[34] NVIDIA · GPU、TPU 与算力架构演进</summary>
+    <ol>
+      <li><a href="https://www.nvidia.com/en-us/data-center/" target="_blank" rel="noopener">NVIDIA Data Center · Blackwell / Vera Rubin 平台与加速计算</a></li>
+      <li>NVIDIA CUDA（2007 起）—— GPU 通用并行计算的关键前提；Google TPU（2016 起）—— 专用 AI 加速器赛道开启</li>
+    </ol>
+  </details>
+
+  <div class="tealbox" style="margin-top:18px"><span class="tt">// 三种阅读路径建议</span>
+    <b>5 分钟速览：</b>结论区 → §6.2 规模定律 → §8.2 能力坐标表。<br>
+    <b>30 分钟精读（做分享）：</b>§1 史前史 → §3 两次寒冬 → §5 深度学习革命 → §6 Transformer → §8 推理与 Agent → §9 中国脉络。<br>
+    <b>判断趋势前必读：</b>§10 支撑生态（算力与资本的真实约束）→ §11 治理与风险，再回到 §12 按需取原文。</div>
+</section>
+
+</main>
+</div>
+
+<footer class="foot">
+  <div class="wrap">
+    <span>人工智能发展史全景笔记 · v1.0 精装版 · 2026-09-11 · 覆盖至 2026 年 9 月</span>
+    <span>关键论断均标注公开来源（34 组参考文献见 §12）· 笔记 / 分享两用</span>
+  </div>
+</footer>
+
+<button id="backtop" title="回到顶部" aria-label="回到顶部">↑</button>
+
+<script>
+(function () {
+  var bar = document.getElementById('progress');
+  var backtop = document.getElementById('backtop');
+  var links = Array.prototype.slice.call(document.querySelectorAll('#tocnav a'));
+  var sections = links.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+
+  function onScroll() {
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+    backtop.classList.toggle('show', h.scrollTop > 600);
+    // scrollspy
+    var idx = -1;
+    for (var i = 0; i < sections.length; i++) {
+      if (sections[i] && sections[i].getBoundingClientRect().top <= 120) idx = i;
+    }
+    links.forEach(function (a, i) { a.classList.toggle('active', i === idx); });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  backtop.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+})();
+</script>
+</body>
 </html>
