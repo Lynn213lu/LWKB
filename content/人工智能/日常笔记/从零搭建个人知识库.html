@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>从零搭建个人知识库 · LLM Wiki 方法论实战教程</title>
+<link rel="stylesheet" href="styles-v05.css">
+<style>
+/* —— 本页专用：对话话术演示组件（不改动 kit 既有选择器） —— */
+.chat { background: linear-gradient(180deg,#F7FAFD 0%,#F2F6FB 100%); border:1px solid #D5E0EF; border-radius:12px; padding:16px 18px 14px; margin:16px 0 22px; box-shadow:0 1px 3px rgba(11,37,69,.06); }
+.chat-label { font-size:12px; font-weight:700; color:var(--c-primary-deep); letter-spacing:1px; margin-bottom:10px; display:flex; align-items:center; gap:7px; }
+.chat-label::before { content:""; width:4px; height:13px; border-radius:2px; background:linear-gradient(180deg,var(--c-primary),var(--c-accent)); }
+.chat-turn { display:flex; gap:10px; margin-bottom:9px; }
+.chat-turn:last-child { margin-bottom:0; }
+.chat-who { flex:none; width:44px; font-size:11px; font-weight:700; border-radius:6px; display:flex; align-items:center; justify-content:center; letter-spacing:1px; }
+.chat-turn.user .chat-who { background:linear-gradient(135deg,#3E7BD6,#143C7A); color:#fff; }
+.chat-turn.ai .chat-who { background:linear-gradient(135deg,#E29A4E,#C07A24); color:#fff; }
+.chat-say { flex:1; background:#fff; border:1px solid var(--c-border); border-radius:8px; padding:8px 12px; font-size:13px; line-height:1.75; color:var(--c-text); }
+.chat-say b { color:var(--c-ink); }
+.chat-say .say-note { display:block; margin-top:4px; font-size:12px; color:var(--c-text-faint); }
+/* 目录树演示 */
+.tree { background:#0B2545; color:#D7E4F5; border-radius:12px; padding:18px 22px; font-family:Consolas,"Courier New",monospace; font-size:12.5px; line-height:1.9; margin:16px 0 22px; box-shadow:0 6px 20px rgba(11,37,69,.25); overflow-x:auto; }
+.tree .t-head { color:#F0C674; font-weight:700; }
+.tree .t-dir { color:#7FB3E8; font-weight:700; }
+.tree .t-note { color:#7A92B5; }
+.tree .t-gold { color:#F0C674; }
+/* 数字结果卡 */
+.kpi-row { display:flex; flex-wrap:wrap; gap:12px; margin:18px 0 24px; }
+.kpi { flex:1; min-width:150px; background:#fff; border:1px solid var(--c-border); border-radius:10px; padding:14px 16px 12px; text-align:center; box-shadow:0 2px 6px rgba(11,37,69,.06); }
+.kpi .k-num { font-size:26px; font-weight:800; background:linear-gradient(135deg,var(--c-primary),var(--c-accent-deep)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.kpi .k-cap { font-size:12px; color:var(--c-text-faint); margin-top:3px; letter-spacing:.5px; }
+</style>
+</head>
+<body>
+
+<!-- =============================================================
+     顶部导航
+     ============================================================= -->
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="topnav-brand">
+      <span class="topnav-brand-mark">KB</span>
+      <span>个人知识库搭建教程</span>
+    </div>
+    <div class="topnav-slogan">让知识持续编译 · 让 AI 有据可查</div>
+  </div>
+</nav>
+
+<!-- =============================================================
+     Hero
+     ============================================================= -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">LLM Wiki 方法论 · 从 0 到 1 实战</div>
+    <h1 class="hero-title">
+      <span class="t1">从零搭建个人知识库</span>
+      <span class="t2">一套可复用的搭建方法<em>以 KBDemo 为例</em></span>
+    </h1>
+    <div class="hero-rule"></div>
+    <p class="hero-subtitle">
+      把散落的文档变成 AI 可读、可查、可维护的知识库：理解"编译而非检索"的前沿理论，装好两个工具，学会五句对话，避开七个坑。全程以一次真实的知识库搭建过程（KBDemo，6 篇粗糙文档 → 33 个文件的三层知识库）作为贯穿案例。
+    </p>
+    <div class="hero-date centered">2026 年 9 月</div>
+  </div>
+</header>
+
+<!-- =============================================================
+     主体：左侧目录 + 右侧正文
+     ============================================================= -->
+<div class="layout">
+
+  <!-- ---------- 左侧浮动目录 ---------- -->
+  <aside class="toc" aria-label="目录">
+    <div class="toc-label">目&nbsp;录</div>
+    <ul class="toc-list">
+      <li class="toc-item"><a href="#prologue"><span class="toc-num">00</span><span>写在前面</span></a></li>
+      <li class="toc-item"><a href="#ch1"><span class="toc-num">01</span><span>为什么需要知识库</span></a></li>
+      <li class="toc-item"><a href="#ch2"><span class="toc-num">02</span><span>前沿理论：LLM Wiki</span></a></li>
+      <li class="toc-item"><a href="#ch3"><span class="toc-num">03</span><span>三层架构拆解</span></a></li>
+      <li class="toc-item"><a href="#ch4"><span class="toc-num">04</span><span>工具准备与安装</span></a></li>
+      <li class="toc-item"><a href="#ch5"><span class="toc-num">05</span><span>五步实操：与 AI 协作</span></a></li>
+      <li class="toc-item"><a href="#ch6"><span class="toc-num">06</span><span>实战案例：KBDemo</span></a></li>
+      <li class="toc-item"><a href="#ch7"><span class="toc-num">07</span><span>注意事项与避坑</span></a></li>
+      <li class="toc-item"><a href="#ch8"><span class="toc-num">08</span><span>能用来做什么</span></a></li>
+      <li class="toc-item"><a href="#ch9"><span class="toc-num">09</span><span>优点与投入成本</span></a></li>
+      <li class="toc-item"><a href="#faq"><span class="toc-num">附</span><span>FAQ</span></a></li>
+    </ul>
+  </aside>
+
+  <!-- ---------- 右侧正文 ---------- -->
+  <main class="main">
+
+    <!-- 写在前面 -->
+    <section id="prologue" class="chapter">
+      <h2 class="chapter-title"><span class="num">序</span>写在前面</h2>
+      <p>本教程面向<b>想把散落的资料管理起来的人</b>——不需要编程能力，只需要一台电脑、若干文档素材，和一个能用文件读写能力的 AI 助手。全文按"理论 → 装备 → 实操 → 案例 → 避坑 → 应用"的顺序组织，全程穿插一次真实搭建的完整过程（KBDemo），你可以照抄话术直接复现。</p>
+      <p>时间投入参考：首次搭建约 <b>2–4 小时</b>（其中大部分是整理素材的时间），之后每次新增材料的维护成本约<b>几分钟</b>。读完本教程即可动手。</p>
+    </section>
+
+    <!-- 一、为什么需要知识库 -->
+    <section id="ch1" class="chapter">
+      <h2 class="chapter-title"><span class="num">一</span>为什么需要个人知识库</h2>
+
+      <blockquote>知识库解决的不是"存不下"的问题，而是"找到了也用不上、用上了也不可信"的问题。</blockquote>
+
+      <h3 class="section-title">1.1 四个典型痛点</h3>
+      <p>绝大多数职场人的资料管理长期停留在"文件夹 + 微信收藏 + 网盘"的状态，痛点高度一致：</p>
+
+      <div class="table-wrap"><div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>痛点</th><th>日常表现</th><th>真实代价</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>信息散落</b></td><td>文档分散在聊天记录、邮件、网盘、本地文件夹，命名随缘</td><td>找一个口径、一个结论要翻半小时，找到了还不确定是最新版</td></tr>
+            <tr><td><b>AI 健忘</b></td><td>每次问 AI 都要从头解释背景，AI 给的答案无法验证来源</td><td>AI 无法沉淀你的业务上下文，每次对话都是一次性消耗</td></tr>
+            <tr><td><b>口径混乱</b></td><td>同一个指标在不同文档里有不同算法，新旧版本互相覆盖</td><td>跨团队对齐成本高，汇报时数据互相打架</td></tr>
+            <tr><td><b>经验流失</b></td><td>项目复盘、方法总结写在某篇文档里，换个人就找不到了</td><td>组织记忆随人员流动归零，重复踩坑</td></tr>
+          </tbody>
+        </table>
+      </div></div>
+
+      <h3 class="section-title">1.2 知识库的解法</h3>
+      <p>本教程所指的"个人知识库"，不是笔记软件里的文件夹，而是一套<b>结构化、可溯源、AI 可直接消费</b>的知识资产：原始材料集中存放且只读；知识被"编译"成一个个独立页面，页面之间互相链接；每个事实都能回溯到原文；AI 在回答你的问题时先读编译产物、再回溯原文，而不是靠猜。</p>
+      <p>一句话概括它的使用体验：<b>你用自然语言问，AI 基于你的知识库答，每个结论都带出处。</b></p>
+    </section>
+
+    <!-- 二、前沿理论 -->
+    <section id="ch2" class="chapter">
+      <h2 class="chapter-title"><span class="num">二</span>前沿理论：LLM Wiki 方法论</h2>
+
+      <h3 class="section-title">2.1 LLM Wiki：Karpathy 提出的"编译式"知识库</h3>
+      <p><b>由谁提出</b>：2026 年 4 月 2 日，OpenAI 联合创始人、前 Tesla AI 总监 <b>Andrej Karpathy</b> 在个人 Gist 上发布了一页理念文档《一种使用 LLM 构建个人知识库的模式》，LLM Wiki 方法论由此得名。有趣的是，这份文档本身就是一段<b>设计成直接粘贴给 LLM Agent 的提示词</b>——理念只有一页，所有细节交给 AI 与你协作落地。这也奠定了本教程的风格：你要学的不是一堆配置，而是一种"把知识交给 AI 编译"的协作方式。</p>
+      <p><b>它解决什么</b>：让 AI 利用私有知识，业界第一代方案是 RAG（检索增强生成）：提问时临时去文档堆里搜索相关片段，拼进提示词让 AI 回答。Karpathy 用一句话点破它的致命缺陷——<b>"There's no accumulation."（没有积累）</b>。每次提问都重新检索、重新理解，答案消失在聊天记录里，知识从来没有沉淀下来。他的解法借用了计算机科学里最经典的类比：RAG 像<b>解释器</b>（每次执行都重新解析），我们真正需要的是<b>编译器</b>（预先把知识编译成可直接使用的结构）——AI 把原始文档<b>一次性消化</b>成结构化的知识页面（wiki），此后问答直接读编译产物，只在需要原文精度时回溯源文件（raw）。</p>
+
+      <div class="badge-pair">
+        <div class="badge-card main">
+          <div class="badge-head">RAG · 解释器范式</div>
+          <p>每次提问 → 临时搜索 → 拼接上下文 → 生成回答。知识始终是"原材料"，AI 每次都从零理解，没有积累：无法发现矛盾，无法追踪更新，问过的综合问题下次还得重新推导。</p>
+        </div>
+        <div class="badge-card alt">
+          <div class="badge-head">LLM Wiki · 编译器范式</div>
+          <p>摄入一次 → 编译成结构化页面 → 问答直读产物 → 按需回溯原文。知识被"消化"过：口径统一、矛盾被标注、每次查询都让库更完善。</p>
+        </div>
+      </div>
+
+      <p><b>它有多流行</b>：一页 Gist 在发布后数周内病毒式传播，成为 AI 圈讨论最热的个人知识管理方案：技术社区出现大量解读与复现文章；由于不依赖任何专门软件，Claude Code、Codex 等通用 Agent 开箱即可落地，社区还涌现出多个专门的开源实现。Karpathy 本人用这套方法维护着一个约 <b>100 篇来源、40 万字</b>的研究 wiki；他实测在约 100 个来源、数百个页面的规模下，仅靠 index / log 两个导航文件就能高效问答——<b>完全不需要向量数据库等 RAG 基础设施</b>。这也是它对个人极友好的原因：整套系统就是硬盘上的一个文件夹。</p>
+
+      <p><b>它的优点</b>：</p>
+      <div class="table-wrap"><div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>优点</th><th>说明</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>知识复利</b></td><td>编译一次、永久复用；一次问答产生的高质量结论还能回填入库，越用越准</td></tr>
+            <tr><td><b>口径统一</b></td><td>同一事实只在一处维护，全库引用；文档间的矛盾被显式标注，而非静默覆盖</td></tr>
+            <tr><td><b>结论可溯源</b></td><td>每个结论都能回溯到 raw 层的原始文件，AI 回答自带出处，可验证、可审计</td></tr>
+            <tr><td><b>零基础设施</b></td><td>纯 Markdown 文件夹，无向量库、无中间件、无服务端，随时整体拷贝备份或换工具</td></tr>
+            <tr><td><b>维护外包</b></td><td>交叉引用、归档、更新这些"没人愿意做"的脏活全由 AI 承担，库保持最新的成本趋近于零</td></tr>
+          </tbody>
+        </table>
+      </div></div>
+
+      <p><b>它适合什么场景</b>：Karpathy 在原文中给出的判断是——<b>凡是需要随时间积累知识、并希望知识有条理而非零散的场景，都适用</b>：</p>
+      <div class="table-wrap"><div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>场景</th><th>做法与产出</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>深度研究</b></td><td>数周或数月围绕一个主题持续摄入论文、报告、文章，逐步构建出拥有演进论点的全面 wiki</td></tr>
+            <tr><td><b>读书 / 课程笔记</b></td><td>边读边归档章节，为人物、概念、方法建页并互链，读完时天然得到一份配套 wiki</td></tr>
+            <tr><td><b>团队 / 商业知识库</b></td><td>以会议记录、项目文档、客户通话为输入，AI 承担维护，让内部 wiki 长期保持最新</td></tr>
+            <tr><td><b>个人成长</b></td><td>归档日记、健康记录、目标复盘，逐步构建关于自己的结构化图景</td></tr>
+            <tr><td><b>一次性整合任务</b></td><td>竞品分析、尽职调查、旅行规划——既要有条理又有明确截止日的知识密集型任务</td></tr>
+            <tr><td><b>给 AI 系统供知识</b></td><td>作为 Agent / 工作流的可靠知识源（本教程第八章展开）</td></tr>
+          </tbody>
+        </table>
+      </div></div>
+
+      <h3 class="section-title">2.2 核心心智：AI 是编译器，不是搜索引擎</h3>
+      <p>这是整套方法最重要的一个观念转换。你与 AI 的分工是：</p>
+      <div class="table-wrap"><div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>事项</th><th>人负责</th><th>AI 负责</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>原始材料</td><td>收集、放入 raw/ 层（此后<b>永不修改</b>）</td><td>只读，作为唯一事实来源</td></tr>
+            <tr><td>知识页面</td><td>审阅、裁决冲突</td><td>创建、更新、重构（wiki/ 层）</td></tr>
+            <tr><td>规则契约</td><td>确认后生效</td><td>提议修改（schema/ 层）</td></tr>
+            <tr><td>矛盾处理</td><td>人工裁决</td><td>标注并登记，<b>绝不静默覆盖</b></td></tr>
+          </tbody>
+        </table>
+      </div></div>
+
+      <h3 class="section-title">2.3 复利原则：每次使用都让知识库变好</h3>
+      <p>LLM Wiki 的第二条原则：查询不是"用完即走"。当一次问答产生了库里没有的高质量结论，AI 应主动询问是否回填进知识库；定期做一次"体检"（Lint），清理死链、孤儿页和过期内容。知识库因此形成飞轮：</p>
+
+      <div class="loop-flow">
+        <div class="loop-steps">
+          <div class="loop-node"><div class="loop-dot">1</div><div class="loop-name">摄入 Ingest</div></div>
+          <div class="loop-node n3"><div class="loop-dot">2</div><div class="loop-name">查询 Query</div></div>
+          <div class="loop-node n4"><div class="loop-dot">3</div><div class="loop-name">回填 Enrich</div></div>
+          <div class="loop-node n5"><div class="loop-dot">4</div><div class="loop-name">体检 Lint</div></div>
+          <div class="loop-node n6"><div class="loop-dot">5</div><div class="loop-name">溯源 Trust</div></div>
+        </div>
+        <div class="loop-return">
+          <span class="loop-return-label">查询产生的新结论回流入库，回答质量随使用次数持续上升——这就是知识资产的复利</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 三、三层架构 -->
+    <section id="ch3" class="chapter">
+      <h2 class="chapter-title"><span class="num">三</span>三层架构拆解</h2>
+
+      <p class="chapter-lead">整个知识库只有三个文件夹：raw 存原件、schema 存规则、wiki 存编译产物。层与层之间只有两条数据流：向上编译、向下溯源。</p>
+
+      <div class="arch">
+        <div class="arch-title">个人知识库三层架构（KBDemo 实际结构）</div>
+        <div class="arch-stack">
+          <div class="arch-layer l-blue">
+            <div class="arch-tag">wiki<span class="en">编译产物层</span></div>
+            <div class="arch-body">
+              <div class="arch-cell"><b>index</b> 总目录</div>
+              <div class="arch-cell"><b>log</b> 变更日志</div>
+              <div class="arch-cell"><b>open-questions</b> 待核实项</div>
+              <div class="arch-cell">summaries 源文档摘要</div>
+              <div class="arch-cell hero-cell"><b>主题页：指标 / 概念 / 实体</b>（AI 问答直接消费这层）</div>
+            </div>
+          </div>
+          <div class="arch-arrow"><span class="line ln-blue"></span><span class="lbl">溯源：每个 wiki 页面带 sources 字段回指 raw 原文</span></div>
+          <div class="arch-layer l-orange">
+            <div class="arch-tag">schema<span class="en">操作契约层</span></div>
+            <div class="arch-body">
+              <div class="arch-cell"><b>AGENTS</b> 操作协议（摄入 / 查询 / 体检 / 冲突处理）</div>
+              <div class="arch-cell"><b>ontology</b> 实体类型与关系类型定义</div>
+              <div class="arch-cell"><b>conventions</b> 命名 / 格式 / 标注规范</div>
+            </div>
+          </div>
+          <div class="arch-arrow"><span class="line ln-orange"></span><span class="lbl">约束：编译必须遵循的"语法规则"，AI 动手前必读</span></div>
+          <div class="arch-layer l-navy">
+            <div class="arch-tag">raw<span class="en">真相层 · 只读</span></div>
+            <div class="arch-body">
+              <div class="arch-cell">你的原始材料：文档、笔记、周报、口径说明……</div>
+              <div class="arch-cell"><b>永不修改、永不删除</b>——保证一切结论可回溯</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="section-title">3.1 各层职责一览</h3>
+      <div class="table-wrap"><div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>层</th><th>内容</th><th>谁写</th><th>类比</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>raw/</b></td><td>原始文档，保留原文件名与原始格式</td><td>人（放入后只读）</td><td>源代码</td></tr>
+            <tr><td><b>schema/</b></td><td>三份契约：怎么编译（AGENTS）、什么算实体（ontology）、什么格式（conventions）</td><td>AI 起草 + 人确认</td><td>编译规范</td></tr>
+            <tr><td><b>wiki/</b></td><td>摘要页（每篇原文一页）+ 主题页（指标 / 概念 / 实体）+ 中枢三页</td><td>AI（完全负责）</td><td>编译产物</td></tr>
+          </tbody>
+        </table>
+      </div></div>
+
+      <h3 class="section-title">3.2 wiki 层的关键设计</h3>
+      <p>wiki 层不是"把原文换个格式再存一遍"，而是做了三件原文做不到的事：</p>
+      <ul class="todo-list">
+        <li><b>原子化</b>：一个指标 / 一个概念一页。同一事实只在一处维护，全库引用（KBDemo 中"TR 抽成率"被 5 篇原文反复提及，编译后只需维护一个 TR 页）；</li>
+        <li><b>结构化</b>：每页固定"一句话定义 → 计算方式 → 口径状态 → 使用约束 → 相关链接"的骨架，AI 读起来像读数据库表；</li>
+        <li><b>状态标注</b>：口径是否已确认、内容是否待核实、数据是否缺失，用统一符号（✅ / ⚠️ / 📌）显式标注——AI 回答时会自动带上这些边界，避免把"待核实"当"已确认"输出去。</li>
+      </ul>
+      <p>中枢三页是知识库的"仪表盘"：<b>index</b> 总目录（一页看清全库有什么）、<b>log</b> 变更日志（每次编译留痕）、<b>open-questions</b> 待核实清单（所有矛盾和缺口集中登记，等人工裁决）。</p>
+    </section>
+
+    <!-- 四、工具准备 -->
+    <section id="ch4" class="chapter">
+      <h2 class="chapter-title"><span class="num">四</span>工具准备与安装</h2>
+
+      <p class="chapter-lead">只需要两样东西：一个"看知识库"的软件（Obsidian），一个"建知识库"的 AI 助手。都是免费或已有企业授权的。</p>
+
+      <h3 class="section-title">4.1 Obsidian：本地知识库的查看器</h3>
+      <p>知识库本体就是一堆 Markdown 文本文件，任何编辑器都能打开，但推荐用 Obsidian 获得可视化体验——它能渲染 <code>[[双链]]</code>，点开页面能看到关系图谱。</p>
+      <div class="table-wrap"><div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>步骤</th><th>操作</th><th>说明</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1. 下载</td><td>访问 obsidian.md，下载对应系统安装包（Windows / macOS / Linux）</td><td>个人使用免费，无需注册账号</td></tr>
+            <tr><td>2. 安装</td><td>默认下一步完成安装</td><td>纯本地软件，不上传任何数据</td></tr>
+            <tr><td>3. 打开库</td><td>Open folder as vault → 选择你的知识库文件夹（如 D:\lling\KBDemo）</td><td>每个知识库就是一个普通文件夹，可随时整体拷贝备份</td></tr>
+            <tr><td>4. 日常使用</td><td>左侧文件树浏览；<code>[[页面名]]</code> 点击跳转；Ctrl+P 全局搜索</td><td>把 .obsidian 配置目录留在库里即可保留个人偏好</td></tr>
+          </tbody>
+        </table>
+      </div></div>
+      <p class="say-note">替代方案：Typora、VS Code、甚至记事本都可以打开 Markdown，只是没有双链图谱。Obsidian 不是必需品，只是体验最好。</p>
+
+      <h3 class="section-title">4.2 AI 助手：知识库的编译器</h3>
+      <p>选择标准只有一条：<b>AI 必须能读写你电脑上的文件</b>（而不只是聊天）。满足这一点的工具都可以：</p>
+      <div class="table-wrap"><div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>工具类型</th><th>代表</th><th>适用</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>桌面 Agent</td><td>WorkBuddy 等内置文件读写的 AI 助手</td><td>开箱即用，推荐企业用户首选（数据不出内网授权范围）</td></tr>
+            <tr><td>终端 Agent</td><td>Claude Code、Codex 等 CLI 工具</td><td>技术用户偏好，可脚本化批处理</td></tr>
+            <tr><td>自建方案</td><td>任意大模型 + 文件读写插件 / API</td><td>已有 LLM 平台的团队，把本教程的 schema 契约作为系统提示词即可</td></tr>
+          </tbody>
+        </table>
+      </div></div>
+      <div class="callout-pending">
+        <b>选型提醒：</b>知识库会沉淀工作内容，个人学习类知识库用什么模型都可以；工作类知识库请优先选择公司已授权的 AI 工具，注意不要把涉密材料放入知识库（见第七章避坑清单）。
+      </div>
+
+      <h3 class="section-title">4.3 初始化：新建一个文件夹就够了</h3>
+      <p>到这里，<b>你唯一要动手的事</b>就是：在任意位置新建一个文件夹，把素材文件原样放进去。完事。KBDemo 案例的全部手动操作就是这一步——作者在 D 盘建了一个 <code>D:\lling\KBDemo\</code> 文件夹，拖进去 6 篇定价文档，仅此而已：</p>
+      <div class="tree">
+<span class="t-head">D:\lling\KBDemo\</span>  <span class="t-note">← 一个知识库 = 一个普通文件夹，建好放素材即可</span><br>
+├── 定价基础知识.md              <span class="t-note">← 素材原样放入，命名随意</span><br>
+├── 基础计价规则.md<br>
+├── wyc基础指标定义.md<br>
+├── 经营指标口径体系.md<br>
+├── GMV、TR与毛利通用归因方法.md<br>
+└── 策略实验评估方法与推全决策.md  <span class="t-note">← 6 篇，格式粗糙完全没关系</span>
+      </div>
+      <p class="say-note">三件事<b>都不用做</b>：不用建 raw / schema / wiki 子目录（AI 会在第五章 Step 1 建骨架并把素材归位）；不用整理文档格式（KBDemo 的原始文档连表格都是压坏的，整理本身就是 AI 的编译工作）；不用写任何规则文件（schema 契约也由 AI 起草、你确认）。准备工作到此结束，剩下的一切都发生在下一章的对话里。</p>
+    </section>
+
+    <!-- 五、五步实操 -->
+    <section id="ch5" class="chapter">
+      <h2 class="chapter-title"><span class="num">五</span>五步实操：有了素材之后，怎么跟 AI 对话</h2>
+
+      <p class="chapter-lead">这是全教程最核心的一章。五步走完，知识库就建成了。每一步都给出可直接照抄的对话话术（右侧橙色标记为 AI 的典型回应要点）。</p>
+
+      <h3 class="section-title">Step 1 · 收集素材，放入 raw/</h3>
+      <p>把你领域内的文档集中起来——格式不限（Markdown / Word / PDF / 网页另存），数量建议<b>先从 5–10 篇开始</b>。不必整理格式、不必统一命名，<b>原样</b>放进 4.3 建好的那个文件夹（如果你已照 4.3 操作，这一步其实已经完成）。粗糙没有关系：接下来 KBDemo 案例的原始文档连表格都是压坏的。</p>
+
+      <div class="chat">
+        <div class="chat-label">对话话术 · Step 1（也可以自己手动拖文件）</div>
+        <div class="chat-turn user"><div class="chat-who">你</div><div class="chat-say">我在 D:\lling\KBDemo 里有 6 篇网约车定价的文档，在根目录下。帮我建一个 raw 文件夹把它们移进去，再建好 schema 和 wiki 的目录骨架。</div></div>
+        <div class="chat-turn ai"><div class="chat-who">AI</div><div class="chat-say">已创建 raw / schema / wiki 三层目录，6 篇文档移入 raw（保留原文件名）。⚠️ 提示：原始文档从此视为只读真相层。<span class="say-note">关键点：素材不必先整理。整理本身就是 AI 的编译工作。</span></div></div>
+      </div>
+
+      <h3 class="section-title">Step 2 · 生成操作契约（schema 三件套）</h3>
+      <p>契约是给 AI 立规矩的：什么算一个"实体"（指标？概念？项目？）、每页必须写什么、命名和标注规范是什么。<b>不用自己写</b>——让 AI 根据你的素材领域起草，你只做确认。</p>
+
+      <div class="chat">
+        <div class="chat-label">对话话术 · Step 2</div>
+        <div class="chat-turn user"><div class="chat-who">你</div><div class="chat-say">参考网上的 LLM Wiki 三层架构（raw 只读真相层 / schema 操作契约层 / wiki 编译产物层），为这个知识库起草 schema 三件套：AGENTS 写摄入、查询、体检、冲突处理四个协议；ontology 定义指标、概念、实体等类型；conventions 写命名、frontmatter、链接和标注规范。按网约车定价领域来。</div></div>
+        <div class="chat-turn ai"><div class="chat-who">AI</div><div class="chat-say">已生成 AGENTS.md（四协议 + 七条禁止行为）、ontology.md（6 类实体 + 8 类关系）、conventions.md。请重点确认两处：① raw 只读铁律；② 指标页的"口径状态"强制标注规则。<span class="say-note">关键点：契约不用一步到位，用着不顺手随时让 AI 提议修改。</span></div></div>
+      </div>
+
+      <h3 class="section-title">Step 3 · 说一句"摄入"，AI 开始编译</h3>
+      <p>这是见证奇迹的一步。AI 会读完全部原文，生成摘要页、抽取实体建主题页、建立双链、登记待核实项、更新 index 和 log——一次跑完整个 Ingest 协议。</p>
+
+      <div class="chat">
+        <div class="chat-label">对话话术 · Step 3</div>
+        <div class="chat-turn user"><div class="chat-who">你</div><div class="chat-say">按 schema 里的 Ingest 协议，把 raw 里的 6 篇文档编译进知识库。</div></div>
+        <div class="chat-turn ai"><div class="chat-who">AI</div><div class="chat-say">编译完成，报告如下——新增 24 页（中枢 3 + 摘要 6 + 指标 7 + 概念 7 + 实体 1）；新增链接约 90 条；发现 7 组待核实项已登记 open-questions（含 2 张历史转写损坏的表格、1 处原文自相矛盾的口径）。<span class="say-note">关键点：编译报告是审阅入口——AI 必须报告"新增 N 页 / 更新 M 页 / 新增 K 链接 / 待核实 J 项"，这是契约规定的动作。</span></div></div>
+      </div>
+
+      <h3 class="section-title">Step 4 · 审阅编译报告，裁决待核实项</h3>
+      <p>打开 Obsidian 检查三样东西：<b>index 总目录</b>（结构是否符合预期）、<b>抽几篇主题页</b>（事实是否准确、口径状态是否如实）、<b>open-questions</b>（AI 发现的矛盾和缺口）。矛盾项由你裁决，AI 执行并留痕——这一步是"人是裁决者"的体现，也是知识库可信度的来源。</p>
+
+      <div class="chat">
+        <div class="chat-label">对话话术 · Step 4</div>
+        <div class="chat-turn user"><div class="chat-who">你</div><div class="chat-say">open-questions 里 G2 那个"剔除预约单未剔除预约单"的矛盾口径，我去查了源文档，结论是：单均应答时长不剔除预约单。按冲突处理协议更新，旧值留痕。</div></div>
+        <div class="chat-turn ai"><div class="chat-who">AI</div><div class="chat-say">已更新为"不剔除预约单"，旧口径移入该页"历史沿革"并标注 valid_until；G2 标记 ✅ 已裁决；log 已追加本次变更记录。<span class="say-note">关键点：裁决闭环 = 更新 + 留痕 + 关闭问题项，三件事一次说清。</span></div></div>
+      </div>
+
+      <h3 class="section-title">Step 5 · 日常使用：查询、回填、增量摄入</h3>
+      <p>建成后进入常态循环。三个高频动作，各一句话：</p>
+      <div class="table-wrap"><div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>动作</th><th>你说</th><th>AI 做</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>查询</b></td><td>"实付 TR 和应付 TR 有什么区别？什么场景用哪个？"</td><td>直读 TR 页作答，附口径边界（"应付看未补贴结构，实付看实际分账"），标注出处</td></tr>
+            <tr><td><b>增量摄入</b></td><td>"raw 里新增了 2 篇实验报告，摄入一下"</td><td>只对新增文档执行 Ingest：生成摘要、增量更新已有主题页、登记新待核实项</td></tr>
+            <tr><td><b>体检</b></td><td>"给知识库做一次 Lint"</td><td>检查孤儿页 / 死链 / 过期内容 / 未溯源项并报告，只标注不删除</td></tr>
+          </tbody>
+        </table>
+      </div></div>
+      <p>当一次问答产生了库里没有的好结论，AI 会主动问"要不要回填？"——回答"回填"，复利飞轮又转了一圈。</p>
+    </section>
+
+    <!-- 六、实战案例 -->
+    <section id="ch6" class="chapter">
+      <h2 class="chapter-title"><span class="num">六</span>实战案例：KBDemo 从 0 到 1 全过程复盘</h2>
+
+      <p class="chapter-lead">以下是一次真实搭建的完整记录：6 篇话术粗糙、格式混乱的网约车定价文档，如何变成一个 33 文件、可查询可溯源的知识库。</p>
+
+      <h3 class="section-title">6.1 起点：素材有多粗糙</h3>
+      <p>6 篇原始文档（约 75KB）来自不同作者、不同时期，问题典型到可以作为反面教材：</p>
+      <ul class="todo-list">
+        <li>格式不统一：4 篇 frontmatter 缺 <code>---</code> 包裹（Obsidian 里会被当成正文）、编号混用"1、"和"1."、句末分号、中英文间距随机；</li>
+        <li>20 多张表格全部被压平成散行文本，无法阅读；</li>
+        <li>两张城市清单在历史转写中列结构损坏（快车 / 专车数据交错平铺）；</li>
+        <li>一处口径自相矛盾（"剔除预约单未剔除预约单"）、一处引用链接缺失；</li>
+        <li>同一概念多种叫法：TR / 抽成 / 抽成率 / Take Rate 混用，双链指向四分五裂。</li>
+      </ul>
+
+      <h3 class="section-title">6.2 两次对话，两个阶段</h3>
+      <p>整个搭建实际只发生两次大的协作：第一阶段<b>统一格式</b>（先把 6 篇文档重写为一致结构），第二阶段<b>编译成库</b>（按三层架构重建）。成果数据：</p>
+
+      <div class="kpi-row">
+        <div class="kpi"><div class="k-num">6 → 33</div><div class="k-cap">文件数：6 篇原文 → 三层 33 文件</div></div>
+        <div class="kpi"><div class="k-num">24</div><div class="k-cap">wiki 编译页（指标 7 · 概念 7 · 摘要 6 · 实体 1 · 中枢 3）</div></div>
+        <div class="kpi"><div class="k-num">~90</div><div class="k-cap">新增双向链接</div></div>
+        <div class="kpi"><div class="k-num">7 组</div><div class="k-cap">待核实项登记（含 2 张损坏表、1 处矛盾口径）</div></div>
+      </div>
+
+      <h3 class="section-title">6.3 编译产物长什么样：以"TR"页为例</h3>
+      <p>"抽成率"在 5 篇原文中反复出现、口径各异。编译后，全库只有一个 TR 页，长这样：</p>
+      <div class="tree">
+<span class="t-head">wiki/metrics/TR.md</span><br>
+&nbsp;&nbsp;frontmatter：<span class="t-gold">type: metric</span> · <span class="t-gold">aligned: 多口径并存</span> · <span class="t-gold">aliases: [抽成, 抽成率, Take Rate, 抽成规则]</span> · sources → 5 篇 raw 原文<br>
+&nbsp;&nbsp;正文骨架：<br>
+&nbsp;&nbsp;├── 一句话定义（引用块导语：应付 / 实付双口径 + 监管红线 27%）<br>
+&nbsp;&nbsp;├── 计算方式（公式代码块：账单应付TR / 账单实付TR / 监管口径）<br>
+&nbsp;&nbsp;├── <span class="t-gold">口径辨析表</span>（应付 TR vs 实付 TR：看未补贴结构还是实际分账）<br>
+&nbsp;&nbsp;├── 口径状态（✅ 已确认项 + ⚠️ 命名待统一项，标注 as_of 时点）<br>
+&nbsp;&nbsp;├── 使用约束（不能只看均值；压力迁移 ≠ 风险消失；负 TR 的机制解释）<br>
+&nbsp;&nbsp;└── 相关（链接到 GMV / 毛利 / C补率 / 口径层级）
+      </div>
+      <p>两个值得注意的设计：<b>aliases 机制</b>让原文中 `[[抽成]]`、`[[抽成规则]]` 等不同叫法全部自动解析到这一个页面，不建重定向空页；<b>口径辨析表</b>把原文分散在 5 处的应付 / 实付区别收敛成一张对照表——从此任何关于抽成的提问，AI 都先给口径、再给答案。</p>
+
+      <h3 class="section-title">6.4 待核实项：知识库诚实的一面</h3>
+      <p>编译不是把粗糙变"完美"，而是把粗糙<b>显性化</b>。open-questions 里登记的 7 组问题（附录表损坏、口径矛盾、7 项数据资产缺失、9 个前向死链……）在原状态下是隐形的——你不知道哪句话不可信；编译后它们集中可见、逐一待裁决。这是"可溯源"真正的含义：不只是能找到出处，还包括<b>知道哪些结论还不能用</b>。</p>
+    </section>
+
+    <!-- 七、注意事项 -->
+    <section id="ch7" class="chapter">
+      <h2 class="chapter-title"><span class="num">七</span>注意事项与避坑清单</h2>
+
+      <p class="chapter-lead">七条铁律，全部来自实战踩坑。前四条写进了 schema 契约，AI 会自我约束；后三条需要人守住。</p>
+
+      <div class="table-wrap"><div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>#</th><th>规则</th><th>为什么</th><th>谁守住</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td><b>raw 只读</b>：原件放入后永不修改、永不删除</td><td>真相层一旦被改动，所有历史结论的溯源链断裂，整库可信度崩塌</td><td>AI 契约 + 人自律</td></tr>
+            <tr><td>2</td><td><b>不静默覆盖</b>：新旧事实冲突时标注、留痕、等人裁决</td><td>静默覆盖 = 用 AI 的猜测替掉你的事实，且你毫无察觉</td><td>AI 契约</td></tr>
+            <tr><td>3</td><td><b>宁少而精</b>：只建会被 3 篇以上文档引用的页面</td><td>页面泛滥 → 维护成本爆炸 → 知识库烂尾（最常见的死法）</td><td>AI 契约 + 人审阅</td></tr>
+            <tr><td>4</td><td><b>状态如实标注</b>：待核实就标 ⚠️，不能确认就别写成确定</td><td>AI 引用时自动带上边界，避免"把猜测当结论"输出</td><td>AI 契约</td></tr>
+            <tr><td>5</td><td><b>动手前备份</b>：让 AI 做大规模重构前，先整库复制一份</td><td>任何批量操作都有出错概率，备份是最便宜的保险</td><td>人</td></tr>
+            <tr><td>6</td><td><b>敏感内容不入库</b>：密码、密钥、个人隐私、未公开财务数据一律不进 raw</td><td>知识库会被 AI 全文读取、可能在对话中被引用，密级上只进"可沉淀"的内容</td><td>人</td></tr>
+            <tr><td>7</td><td><b>时态要显式</b>：进度、数值、清单类事实带 as_of 时点</td><td>"抽成上限 27%"是有生效时间的政策，不带时点的知识会悄悄过期</td><td>契约 + 人裁决</td></tr>
+          </tbody>
+        </table>
+      </div></div>
+
+      <h3 class="section-title">7.1 规模治理：知识库的天花板</h3>
+      <p>LLM Wiki 的已知天花板约 10 万 token（AI 无法一次读完全库）。对策是分阈值治理：5 万 token 内 index 完整罗列；5–10 万改为分域子索引；10 万以上启动 index 层 + 详情层分层加载，AI 先读目录再按需加载。个人知识库通常离天花板很远，但<b>每次体检时让 AI 报告当前 token 量</b>应当成为习惯。</p>
+    </section>
+
+    <!-- 八、应用场景 -->
+    <section id="ch8" class="chapter">
+      <h2 class="chapter-title"><span class="num">八</span>能用来做什么：六类典型场景</h2>
+
+      <p class="chapter-lead">知识库建好后，价值出现在每一次"需要用知识的时刻"。按使用频率从高到低：</p>
+
+      <div class="table-wrap"><div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>场景</th><th>没有知识库时</th><th>有知识库后</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><b>日常业务问答</b></td><td>问 AI 只能得到通用答案，不知道你业务的口径</td><td>"负 TR 怎么解释？"——AI 基于你的库回答：C 补压低乘客实付 + B 补抬高司机实收的机制，附出处</td></tr>
+            <tr><td><b>新人上手 / 交接</b></td><td>靠口口相传，3 个月才敢独立干活</td><td>把新人放进 AI 对话里：读 index → 顺主题页 → 按图索骥，上手周期压缩到 1/3</td></tr>
+            <tr><td><b>跨团队口径对齐</b></td><td>会上各说各话，同一个指标三种算法</td><td>把 TR 页、口径层级页甩进群里："应付 / 实付 TR 的区别在这"，讨论从"定义之争"直接跳到"决策"</td></tr>
+            <tr><td><b>汇报与写作溯源</b></td><td>PPT 里的数字自己都说不清出处</td><td>每个结论可回溯到 raw 原文，经得起追问</td></tr>
+            <tr><td><b>沉淀个人方法论</b></td><td>经验散落在历史文档里，越攒越乱</td><td>项目复盘、决策理由按 Ingest 流程入库，随用随查，离职换岗也可整体带走（它只是个文件夹）</td></tr>
+            <tr><td><b>给其他 AI 系统供知识</b></td><td>自建 AI 应用苦于没有干净的知识源</td><td>知识库即"企业知识底座"的最小可用版：schema 契约可直接作为 AI 系统提示词，wiki 层即检索语料</td></tr>
+          </tbody>
+        </table>
+      </div></div>
+    </section>
+
+    <!-- 九、优点与成本 -->
+    <section id="ch9" class="chapter">
+      <h2 class="chapter-title"><span class="num">九</span>优点与投入成本</h2>
+
+      <h3 class="section-title">9.1 相比其他方案的优点</h3>
+      <div class="table-wrap"><div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>维度</th><th>文件夹 + 网盘</th><th>笔记软件</th><th>本方案（LLM Wiki）</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>AI 可用性</td><td>差（散乱无法消费）</td><td>中（格式好些但仍靠 RAG 检索）</td><td><b>优：编译产物专为 AI 设计</b></td></tr>
+            <tr><td>可溯源</td><td>无</td><td>弱</td><td><b>强：sources 字段 + raw 只读层</b></td></tr>
+            <tr><td>矛盾处理</td><td>靠人脑记忆</td><td>靠人眼发现</td><td><b>自动标注 + 集中登记 + 裁决留痕</b></td></tr>
+            <tr><td>迁移性</td><td>高</td><td>中（ proprietary 格式）</td><td><b>高：纯 Markdown 文件夹，永不锁定</b></td></tr>
+            <tr><td>维护成本</td><td>低但等于放弃整理</td><td>高（全手工）</td><td><b>低：AI 承担全部整理与更新</b></td></tr>
+            <tr><td>复利效应</td><td>无</td><td>弱</td><td><b>查询即完善，越用越准</b></td></tr>
+          </tbody>
+        </table>
+      </div></div>
+
+      <h3 class="section-title">9.2 投入成本：实话实说</h3>
+      <div class="table-wrap"><div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>项</th><th>成本</th><th>说明</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>首次搭建</td><td>2–4 小时（人）</td><td>主要是收集素材 + 审阅 AI 编译结果；AI 编译本身只需几分钟</td></tr>
+            <tr><td>增量维护</td><td>每次约 5–10 分钟</td><td>新文档丢进 raw → 说一句"摄入" → 扫一眼编译报告</td></tr>
+            <tr><td>周期体检</td><td>每月一次，约 10 分钟</td><td>说一句"Lint 一下"，看报告处理异常项</td></tr>
+            <tr><td>软件费用</td><td>0</td><td>Obsidian 个人免费；AI 助手用已有授权即可</td></tr>
+            <tr><td>学习曲线</td><td>半天</td><td>概念只有三个：三层架构、四协议、标注符号；其余交给 AI</td></tr>
+          </tbody>
+        </table>
+      </div></div>
+      <blockquote>本质上，你是用一次 2–4 小时的投入，雇佣了一个永不离职、记忆可审计、越用越懂你的知识管家。</blockquote>
+    </section>
+
+    <!-- 附：FAQ -->
+    <section id="faq" class="chapter">
+      <h2 class="chapter-title"><span class="num">附</span>常见问题（FAQ）</h2>
+
+      <div class="faq-item">
+        <div class="faq-q"><span class="faq-no">Q1</span>我的文档很乱、格式很差，要不要先自己整理好再建知识库？</div>
+        <div class="faq-a">
+          <p>不要。整理本身就是编译工作的一部分，AI 比你更适合干这个：统一格式、还原表格、规范化命名都是 Ingest 协议的内置动作。你只需要做两件事：把文档原样放进 raw、审阅编译报告。KBDemo 案例的原始文档表格全部压坏、口径自相矛盾，照样编译成了结构化知识库——而且正因为编译过程会"显性化"这些问题，乱素材反而更能体现价值。</p>
+          <p class="faq-ref">对应正文：五章 Step 1；6.1；6.4</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q"><span class="faq-no">Q2</span>为什么不直接把所有文档丢给 AI / 用 RAG 知识库产品，要搞三层架构这么复杂？</div>
+        <div class="faq-a">
+          <p>区别在"可信"二字。直接丢文档 = RAG 检索范式：每次都临时翻原文，AI 无法发现文档间的矛盾，答案无法保证一致性，更无法解释出处。三层架构带来三样 RAG 给不了的东西：① 溯源——每个结论能回溯到具体原文（sources 字段）；② 一致性——同一事实全库只维护一处，多叫法经 aliases 收敛；③ 诚实——矛盾被标注而不是被随机采信。而且它并不复杂：三个文件夹、三份契约文件，AI 一次生成，之后你只是说"摄入"和"查询"。</p>
+          <p class="faq-ref">对应正文：2.1；2.2；三章</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q"><span class="faq-no">Q3</span>AI 编译会不会出错、编造内容？怎么保证质量？</div>
+        <div class="faq-a">
+          <p>会出错，所以整套流程为"容错"设计，而不是假设 AI 万无一失。四道防线：① schema 契约里有七条禁止行为（禁止编造来源、禁止静默覆盖、禁止无溯源建页……），AI 动手前必读；② 编译报告强制汇报"新增 N 页 / 待核实 J 项"，异常项集中登记 open-questions 而不是藏起来；③ 状态标注体系让"待核实"内容与"已确认"内容在库内显式区分；④ 你作为裁决者审阅报告、裁决矛盾——机器干体力活，人把关事实。实际经验中，AI 的主要错误类型是"忠实保留了原文的错"（如 KBDemo 的矛盾口径），这恰恰是它帮你发现的问题而不是它制造的问题。</p>
+          <p class="faq-ref">对应正文：2.2；7 章铁律 2、4</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q"><span class="faq-no">Q4</span>素材持续增加，知识库会不会越来越大直到失控？</div>
+        <div class="faq-a">
+          <p>有治理机制，不会无限失控。三道闸门：① 抽取粒度约束——只建被 3 篇以上文档引用的页面，一次性名词内联在摘要页里（这是知识库最常见的死因，契约里明确禁止页面泛滥）；② 规模阈值治理——5 万 token 内正常罗列，超过后 index 自动分层，AI 先读目录再按需加载详情；③ 每月 Lint 体检——报告孤儿页、死链、过期内容、当前 token 量，把失控消灭在萌芽。个人和中小团队知识库通常在数千 token 量级，离天花板很远。</p>
+          <p class="faq-ref">对应正文：7.1；schema 抽取粒度</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q"><span class="faq-no">Q5</span>我已经有一堆 Notion / 语雀 / 飞书文档，怎么迁移？</div>
+        <div class="faq-a">
+          <p>好消息：这套架构对"内容从哪来"完全不挑。迁移路径：① 把现有文档批量导出为 Markdown（主流平台都支持）；② 原样放入 raw（不必清理格式，导出的 frontmatter、链接即使坏了也不影响——raw 只读且 AI 编译时会重新组织）；③ 跑一次 Ingest。注意两点：raw 层建议保留导出痕迹（文件名不改），便于日后回溯；原平台里的附件（图片等）如果导出丢失，登记进 open-questions 待补。本质上，迁移 = 一次普通的摄入。</p>
+          <p class="faq-ref">对应正文：五章 Step 1、Step 3</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q"><span class="faq-no">Q6</span>工作内容放进知识库，安全吗？</div>
+        <div class="faq-a">
+          <p>分两层回答。存储层：知识库是纯本地文件夹，不依赖任何云服务，Obsidian 也只做本地渲染——数据不出你的电脑。使用层：AI 助手会读取库内容，所以选型时优先用公司已授权的 AI 工具（见 4.2 选型提醒）；同时契约里明确禁止把密码、密钥、个人隐私、未公开财务数据写入 wiki，你在准备 raw 素材时也要做同样的把关。一句话：把"可沉淀的工作知识"入库，把"涉密内容"留在权限系统里。</p>
+          <p class="faq-ref">对应正文：4.2；7 章铁律 6</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- =============================================================
+     页脚
+     ============================================================= -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="mark">KB</span>
+      <span><strong>个人知识库搭建教程</strong> · LLM Wiki 方法论实战</span>
+    </div>
+    <div class="footer-meta">
+      <span>案例：KBDemo 网约车定价知识库</span>
+      <span class="sep">|</span>
+      <span>V1.0 · 2026.09</span>
+    </div>
+  </div>
+</footer>
+
+<!-- 返回顶部按钮 -->
+<button class="back-top" id="backTop" aria-label="返回顶部" title="返回顶部">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="6 14 12 8 18 14"></polyline>
+  </svg>
+</button>
+
+<!-- 交互：滚动高亮 TOC + 返回顶部 -->
+<script>
+  (function() {
+    var tocLinks = document.querySelectorAll('.toc-item a');
+    var sections = [];
+    tocLinks.forEach(function(a) {
+      var id = a.getAttribute('href').slice(1);
+      var sec = document.getElementById(id);
+      if (sec) sections.push({ id: id, el: sec, link: a.parentElement });
+    });
+
+    function onScroll() {
+      var scrollTop = window.scrollY || document.documentElement.scrollTop;
+      var offset = 120;
+      var current = sections[0];
+      for (var i = 0; i < sections.length; i++) {
+        if (sections[i].el.offsetTop - offset <= scrollTop) {
+          current = sections[i];
+        } else { break; }
+      }
+      sections.forEach(function(s) { s.link.classList.remove('active'); });
+      if (current) current.link.classList.add('active');
+
+      var backTop = document.getElementById('backTop');
+      if (scrollTop > 480) backTop.classList.add('show');
+      else backTop.classList.remove('show');
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    document.getElementById('backTop').addEventListener('click', function() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  })();
+</script>
+
+</body>
+</html>
