@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="图数据库技术选型研究报告：企业做知识图谱或本体工程知识库时，如何从 RDF/OWL 与属性图（LPG）第一性问题出发，用八维模型评估 20+ 产品，并落到场景映射、PoC 清单、许可陷阱与三阶段落地路径。">
+<title>图数据库技术选型研究报告 · 知识图谱与本体工程知识库</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  :root {
+    --accent: #0b57d0;
+    --accent-deep: #08419e;
+    --accent-soft: #e8f0fe;
+    --ink: #1f2430;
+    --muted: #5c6472;
+    --dim: #8a93a3;
+    --line: #dfe4ec;
+    --line-strong: #c6cfdb;
+    --bg: #ffffff;
+    --bg-soft: #f5f7fb;
+    --green: #1a7f37;
+    --green-soft: #e6f4ea;
+    --amber: #9a5b00;
+    --amber-soft: #fef3e0;
+    --red: #b3261e;
+    --red-soft: #fce9e7;
+    --violet: #5e35b1;
+    --violet-soft: #f1eafc;
+    --teal: #0a7c75;
+    --teal-soft: #e1f4f2;
+    --mono: "SFMono-Regular", "Cascadia Code", Consolas, "Roboto Mono", monospace;
+    --font: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    --radius: 12px;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 400 15px/1.75 var(--font);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 28px; }
+  .mono { font-family: var(--mono); }
+
+  /* ===== Hero ===== */
+  header.hero { background: linear-gradient(180deg, #eef3fb 0%, #ffffff 100%); border-bottom: 1px solid var(--line); }
+  .hero-inner { padding: 46px 0 36px; }
+  .kicker { color: var(--accent); font: 700 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; margin: 0 0 14px; }
+  h1 { margin: 0; font-size: 34px; line-height: 1.2; letter-spacing: -.01em; }
+  h1 .sub { display: block; margin-top: 6px; color: var(--muted); font-size: 19px; font-weight: 500; }
+  .lead { margin: 18px 0 0; max-width: 940px; font-size: 15.5px; color: #333a47; background: var(--bg); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 10px; padding: 14px 18px; }
+  .lead strong { color: var(--accent); }
+  .doc-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .doc-meta span { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--bg); color: var(--muted); font-size: 12.5px; white-space: nowrap; }
+  .conclusions { margin-top: 22px; background: var(--bg); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+  .conclusions .ttl { color: var(--accent); font: 800 11.5px/1 var(--mono); letter-spacing: .12em; margin: 0 0 10px; }
+  .conclusions ol { margin: 0; padding-left: 22px; color: #2a3140; }
+  .conclusions ol li { margin: 7px 0; font-size: 14.5px; }
+  .conclusions ol li b { color: var(--accent); }
+
+  /* ===== TOC ===== */
+  nav.toc { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.94); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); }
+  .toc-inner { display: flex; align-items: center; gap: 6px; overflow-x: auto; padding: 8px 28px; }
+  .toc-label { flex: 0 0 auto; color: var(--dim); font: 700 12px/1 var(--mono); letter-spacing: .08em; margin-right: 6px; }
+  .toc-inner a { flex: 0 0 auto; font-size: 13px; color: var(--muted); padding: 5px 10px; border-radius: 999px; }
+  .toc-inner a:hover { background: var(--accent-soft); color: var(--accent); text-decoration: none; }
+  .toc-inner a b { color: var(--accent); font-family: var(--mono); margin-right: 3px; }
+
+  /* ===== Sections ===== */
+  main { padding-bottom: 90px; }
+  section { margin: 56px 0 0; scroll-margin-top: 64px; }
+  .sec-head { display: flex; align-items: baseline; gap: 14px; margin: 0 0 6px; }
+  .sec-no { color: var(--accent); font: 800 30px/1 var(--mono); letter-spacing: -.03em; }
+  section > h2 { margin: 0; font-size: 24px; line-height: 1.3; letter-spacing: -.01em; }
+  .sec-lead { color: var(--muted); max-width: 940px; margin: 6px 0 18px; }
+
+  .callout, .warnbox, .riskbox, .okbox, .violetbox, .tealbox { border-radius: 10px; padding: 13px 16px; font-size: 14px; margin: 14px 0; }
+  .callout { background: var(--accent-soft); border-left: 4px solid var(--accent); }
+  .okbox { background: var(--green-soft); border-left: 4px solid var(--green); }
+  .warnbox { background: var(--amber-soft); border-left: 4px solid var(--amber); }
+  .riskbox { background: var(--red-soft); border-left: 4px solid var(--red); }
+  .violetbox { background: var(--violet-soft); border-left: 4px solid var(--violet); }
+  .tealbox { background: var(--teal-soft); border-left: 4px solid var(--teal); }
+  .callout .tt, .warnbox .tt, .riskbox .tt, .okbox .tt, .violetbox .tt, .tealbox .tt { font: 800 11px/1 var(--mono); letter-spacing: .08em; display: block; margin-bottom: 5px; color: var(--accent); }
+  .warnbox .tt { color: var(--amber); }
+  .riskbox .tt { color: var(--red); }
+  .okbox .tt { color: var(--green); }
+  .violetbox .tt { color: var(--violet); }
+  .tealbox .tt { color: var(--teal); }
+
+  h3 { margin: 28px 0 10px; font-size: 18px; letter-spacing: -.005em; }
+  h4 { margin: 16px 0 6px; font-size: 14.5px; }
+  p { margin: 8px 0; }
+  ul.clean { margin: 8px 0; padding: 0; list-style: none; display: grid; gap: 7px; }
+  ul.clean li { padding-left: 18px; position: relative; }
+  ul.clean li::before { content: ""; position: absolute; left: 2px; top: .68em; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); opacity: .75; }
+  ul.dash { margin: 8px 0; padding: 0; list-style: none; display: grid; gap: 7px; }
+  ul.dash li { padding-left: 16px; position: relative; color: #3a4250; }
+  ul.dash li::before { content: "\2014"; position: absolute; left: 0; color: var(--accent); }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { display: inline-flex; align-items: center; padding: 3px 10px; background: var(--bg-soft); border: 1px solid var(--line); border-radius: 999px; color: #46505f; font-family: var(--mono); font-size: 12px; }
+
+  /* ===== Cards / grids ===== */
+  .grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .card { background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 15px 16px; }
+  .card h4 { margin: 0 0 6px; font-size: 14.5px; }
+  .card p { margin: 0; color: var(--muted); font-size: 13.5px; }
+  .card .chip-label { color: var(--accent); font: 800 10.5px/1 var(--mono); letter-spacing: .07em; display: block; margin-bottom: 6px; }
+  .card.vio { border-color: #ded3f7; }
+  .card.vio .chip-label { color: var(--violet); }
+  .card.amb { border-color: #f0dcb8; }
+  .card.amb .chip-label { color: var(--amber); }
+  .card.tl { border-color: #c7e6e3; }
+  .card.tl .chip-label { color: var(--teal); }
+
+  /* ===== Tables ===== */
+  .tw { overflow-x: auto; margin: 12px 0; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); }
+  table.t { width: 100%; border-collapse: collapse; font-size: 13.5px; background: var(--bg); min-width: 720px; }
+  table.t th, table.t td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.t th { background: var(--bg-soft); color: #2a3140; font-weight: 700; font-size: 12.5px; white-space: nowrap; }
+  table.t tr:last-child td { border-bottom: none; }
+  table.t td.c { text-align: center; }
+  table.t td .chip { display: inline-block; padding: 1px 7px; border-radius: 999px; font-size: 11.5px; font-family: var(--mono); background: var(--accent-soft); color: var(--accent); }
+  table.t td .chip.vio { background: var(--violet-soft); color: var(--violet); }
+  table.t td .chip.amb { background: var(--amber-soft); color: var(--amber); }
+  table.t td .chip.grn { background: var(--green-soft); color: var(--green); }
+  table.t td .chip.red { background: var(--red-soft); color: var(--red); }
+  table.t td .chip.gry { background: #eef1f6; color: #6b7690; }
+  .yes { color: var(--green); font-weight: 700; }
+  .no { color: var(--dim); }
+  .part { color: var(--amber); font-weight: 700; }
+
+  /* ===== Flow diagrams (pure CSS) ===== */
+  .flow { margin: 16px 0; display: grid; gap: 8px; }
+  .frow { display: flex; align-items: stretch; gap: 8px; flex-wrap: wrap; }
+  .fbox { flex: 1 1 0; min-width: 150px; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 11px 13px; font-size: 13px; }
+  .fbox b { display: block; font-size: 13.5px; margin-bottom: 2px; }
+  .fbox span { color: var(--muted); font-size: 12.5px; }
+  .fbox.a { border-color: #bcd3f5; background: #f6f9ff; }
+  .fbox.v { border-color: #ded3f7; background: #faf7ff; }
+  .fbox.g { border-color: #f0dcb8; background: #fffdf7; }
+  .fbox.t { border-color: #c7e6e3; background: #f6fcfb; }
+  .fbox.r { border-color: #f2cfcc; background: #fff8f7; }
+  .fbox.d { border-color: var(--line); background: var(--bg-soft); }
+  .farrow { align-self: center; color: var(--dim); font: 700 15px/1 var(--mono); }
+  .vflow { display: grid; gap: 0; }
+  .vnode { background: var(--bg); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 8px; padding: 10px 14px; font-size: 13.5px; }
+  .vnode b { font-size: 13.5px; }
+  .vnode span { color: var(--muted); font-size: 12.5px; display: block; }
+  .vnode.n1 { border-left-color: #0b57d0; }
+  .vnode.n2 { border-left-color: #2e6bc7; }
+  .vnode.n3 { border-left-color: var(--violet); }
+  .vnode.n4 { border-left-color: var(--teal); }
+  .vnode.n5 { border-left-color: var(--green); }
+  .vlink { width: 2px; height: 12px; background: var(--line-strong); margin-left: 18px; }
+
+  /* ===== FAQ / appendix ===== */
+  details.app { border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; margin: 10px 0; background: var(--bg); }
+  details.app > summary { cursor: pointer; font-weight: 700; font-size: 14.5px; color: #2a3140; }
+  details.app[open] > summary { margin-bottom: 8px; }
+  details.app ol, details.app ul { padding-left: 22px; margin: 8px 0; }
+  details.app ol li, details.app ul li { margin: 6px 0; font-size: 13.5px; color: #3a4250; }
+  .ref li { font-size: 13px; color: #3a4250; margin: 6px 0; word-break: break-word; }
+
+  /* ===== Footer / back-top ===== */
+  footer { border-top: 1px solid var(--line); background: var(--bg-soft); margin-top: 60px; }
+  .footer-inner { padding: 26px 0; color: var(--muted); font-size: 13px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .back-top { position: fixed; right: 22px; bottom: 22px; width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line); background: var(--bg); color: var(--accent); display: none; place-items: center; cursor: pointer; box-shadow: 0 4px 14px rgba(11,37,69,.12); z-index: 60; }
+  .back-top.show { display: grid; }
+
+  @media (max-width: 900px) {
+    .grid3, .grid4 { grid-template-columns: repeat(2, 1fr); }
+    h1 { font-size: 27px; }
+    h1 .sub { font-size: 16px; }
+  }
+  @media (max-width: 620px) {
+    .wrap { padding: 0 16px; }
+    .grid2, .grid3, .grid4 { grid-template-columns: 1fr; }
+    section > h2 { font-size: 20px; }
+    .sec-no { font-size: 24px; }
+    table.t { font-size: 12.5px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap hero-inner">
+    <p class="kicker">Technical Selection Research / Graph Database</p>
+    <h1>图数据库技术选型研究报告
+      <span class="sub">企业做知识图谱 / 本体工程知识库时，到底该怎么选</span>
+    </h1>
+    <div class="lead">
+      本报告不回答「哪个图数据库最好」，只回答一个问题：<strong>给定你的本体形态、查询负载和数据规模，应该选哪一类、哪一款、以及什么时候不该选。</strong>
+      全篇按「先定模型 → 再定能力 → 再看产品 → 最后看触发点」的顺序展开，覆盖 20+ 主流产品与 2024–2026 年的标准、许可与市场变化，
+      并给出可直接执行的 PoC 验收清单与三阶段落地路径。
+    </div>
+    <div class="doc-meta">
+      <span>版本 v1.0</span>
+      <span>2026-09-11</span>
+      <span>面向：同程旅行 · 公共业务研发中心</span>
+      <span>调研范围：20+ 产品 / 2024–2026 公开资料</span>
+      <span>口径：厂商自报数字均标注来源性质</span>
+    </div>
+
+    <div class="conclusions">
+      <p class="ttl">// 结论先行 · 7 条核心判断</p>
+      <ol>
+        <li><b>先选模型，再选产品。</b>「本体要不要形式化推理」这一刀，把候选池从 20+ 砍到 3–5 个。RDF/OWL 与属性图（LPG）不是同一道题的两个选项，混用会付出一次采购周期的代价。</li>
+        <li><b>多数企业知识库应该选 LPG。</b>只有需要 OWL 形式化推理、合规可证明、或已持有行业标准本体（金融 FIBO、医药 SNOMED 等）时，才值得付 RDF 的代价。GraphRAG 时代的主流路径是「属性图 + 向量 + 全文」三路混合。</li>
+        <li><b>2026 年的分水岭是「混合检索是否原生」，不是「图遍历有多快」。</b>厂商公布的百倍性能数字多不可比；能把图、向量、全文写进同一条查询的产品，才是 AI 时代的知识底座。</li>
+        <li><b>规模不要提前买。</b>面向本体工程的知识库（万级到百万级边）用单机开源版可支撑 2 年以上。分布式集群是有触发条件的选项，不是起点。</li>
+        <li><b>时态是本体工程知识库被低估的刚需。</b>「谁在什么时候负责什么」天然是带有效期的边。原生双时态产品，或在 LPG 上自建 <span class="mono">valid_from / valid_until</span>，比事后补审计便宜一个数量级。</li>
+        <li><b>70% 的成本不在数据库，在治理。</b>owner 制度、实体消解、Ontology 演进、权限边界决定知识库生死；数据库选型只占其中约 30%。</li>
+        <li><b>给本团队的结论：</b>以开源属性图（Neo4j Community / ArcadeDB 一类）单机起步做 PoC → 引入时态边与 Agent Memory → 向量旁挂 → 由「规模 / 权限 / 信创」任一触发点再决定是否上分布式或企业版。<b>不要一上来采购企业版。</b></li>
+      </ol>
+    </div>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="wrap toc-inner">
+    <span class="toc-label">CONTENTS</span>
+    <a href="#ch1"><b>01</b>问题界定</a>
+    <a href="#ch2"><b>02</b>第一性问题</a>
+    <a href="#ch3"><b>03</b>评估模型</a>
+    <a href="#ch4"><b>04</b>产品全景</a>
+    <a href="#ch5"><b>05</b>场景映射</a>
+    <a href="#ch6"><b>06</b>落地建议</a>
+    <a href="#ch7"><b>07</b>决策树 PoC</a>
+    <a href="#ch8"><b>08</b>成本风险</a>
+    <a href="#ch9"><b>09</b>趋势判断</a>
+    <a href="#app"><b>A</b>附录</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ============ 01 ============ -->
+  <section id="ch1">
+    <div class="sec-head"><span class="sec-no">01</span><h2>问题界定：你到底需不需要图数据库</h2></div>
+    <p class="sec-lead">选型的第一步不是列候选产品，而是确认「图」这个形态在你的查询负载里占多少比重。这一步做错，后面所有工作都是沉没成本。</p>
+
+    <h3>1.1 四类查询负载，只有一类真正需要图</h3>
+    <div class="tw">
+      <table class="t">
+        <thead><tr><th>负载类型</th><th>典型问题</th><th>更合适的技术</th><th>图数据库加分</th></tr></thead>
+        <tbody>
+          <tr><td><b>多跳关系推理</b></td><td>「A 和 B 是什么关系」「这个指标口径变更影响了哪些看板」「受过期证书影响的服务有哪些」</td><td>图遍历（原生邻接）</td><td class="yes">显著</td></tr>
+          <tr><td><b>精确事实查询</b></td><td>「X 的负责人是谁」「这个项目的牵头团队」</td><td>关系库主键 / 索引</td><td class="no">基本没有</td></tr>
+          <tr><td><b>语义相似检索</b></td><td>「有没有类似的案例 / 历史工单」</td><td>向量库</td><td class="no">不适用</td></tr>
+          <tr><td><b>全局聚合与社群发现</b></td><td>「这几个业务域怎么聚类」「中心度最高的系统是哪个」</td><td>图计算 OLAP（GDS / 图算法）</td><td class="part">明显</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><b>判断口径：</b>审计你 top 50 高价值问题，统计其中「需要跨 2 跳以上关系才能回答」的比例。低于 20%，先别上图；高于 40%，图数据库就是刚需。</p>
+
+    <h3>1.2 四种应当先排除的反模式</h3>
+    <div class="grid2">
+      <div class="card r"><span class="chip-label">反模式 A</span><h4>文档问答为主</h4><p>问题 90% 是「这份材料里怎么写的」。向量库或 LLM Wiki 就够，上图只会增加抽取成本和维护面。</p></div>
+      <div class="card r"><span class="chip-label">反模式 B</span><h4>实时数据入图</h4><p>价格、库存、订单状态应走 Function Call 直连 OLTP。写进图库既拖慢也污染知识层。</p></div>
+      <div class="card r"><span class="chip-label">反模式 C</span><h4>关系浅且规模小</h4><p>关系深度不超过 2 跳、实体少于百万级时，关系库的 join 与索引更省事、更便宜。</p></div>
+      <div class="card r"><span class="chip-label">反模式 D</span><h4>没有 owner 与更新机制</h4><p>知识库的成败 30% 在技术、70% 在运营。没有责任人和审核流程，换任何数据库都会迅速腐化。</p></div>
+    </div>
+
+    <h3>1.3 代价意识：GraphRAG 不是免费的</h3>
+    <div class="tw">
+      <table class="t">
+        <thead><tr><th>维度</th><th>公开数据</th><th>对选型的含义</th></tr></thead>
+        <tbody>
+          <tr><td>索引成本</td><td>完整 GraphRAG 抽取的 LLM 调用量约为基线 RAG 的 <b>3–5 倍</b></td><td>抽取管道要和数据库解耦，可重建、可增量</td></tr>
+          <tr><td>收益场景</td><td>微软 GraphRAG 论文：综合型问题准确率 <b>72% → 91%</b>；纯向量在多跳问题上准确率会掉到 <b>30–40%</b></td><td>收益集中在多跳与跨文档综合，不是普涨</td></tr>
+          <tr><td>降本方向</td><td>LazyGraphRAG（2025-06 起进入 Microsoft Discovery）宣称对比向量 RAG / RAPTOR / LightRAG / 标准 GraphRAG 达 <b>96/96</b> 胜出</td><td>「惰性索引」正在成为商业产品标配，选型时看厂商跟进度</td></tr>
+          <tr><td>致命门槛</td><td>实体消解准确率低于 <b>85%</b> 时，图会「自信地」生成错误关系</td><td>比数仓坏数据更危险——错误是推出来的，且同样笃定</td></tr>
+          <tr><td>市场节奏</td><td>业内测算 2026 年约 <b>85%</b> 企业将采用「向量 + 图」混合；但真正走出试点的知识图谱项目仍少于 <b>15%</b></td><td>别拿行业渗透率当自己的可行性证明</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="warnbox"><span class="tt">注意口径</span>上表中「85% 采用率」为厂商与研究机构测算，非实测量；「3–5 倍成本」「72%→91%」来自公开论文与厂商材料，可作为量级参考，不可作为验收承诺。</div>
+  </section>
+
+  <!-- ============ 02 ============ -->
+  <section id="ch2">
+    <div class="sec-head"><span class="sec-no">02</span><h2>第一性问题：RDF/OWL 还是属性图（LPG）</h2></div>
+    <p class="sec-lead">这是整份报告最重要的一章。选错模型，后面的产品对比全部作废——因为 RDF 与 LPG 的候选池几乎不重叠。</p>
+
+    <h3>2.1 两派的本质差别</h3>
+    <div class="flow">
+      <div class="frow">
+        <div class="fbox a"><b>RDF / OWL 语义库</b><span>主谓宾三元组 + 本体（TBox/ABox）。模式层是一等公民，原生带推理与约束。查询用 W3C 标准 SPARQL。</span></div>
+        <div class="farrow">VS</div>
+        <div class="fbox v"><b>LPG 属性图</b><span>节点 + 有向边 + 属性。关系是一等公民，schema 可选、更贴近业务建模。查询用 Cypher / ISO GQL。</span></div>
+      </div>
+    </div>
+
+    <h3>2.2 十维对比</h3>
+    <div class="tw">
+      <table class="t">
+        <thead><tr><th>维度</th><th>RDF / OWL 语义库</th><th>LPG 属性图</th></tr></thead>
+        <tbody>
+          <tr><td>数据模型</td><td>三元组 / 四元组，URI 全局标识，天然可合并跨源数据</td><td>节点 + 关系 + 属性，可嵌套、可携带大量业务字段</td></tr>
+          <tr><td>模式层</td><td>本体即一等公民，schema 与实例分离（TBox / ABox）</td><td>schema 可选；约束通常落在应用层或 DB 约束</td></tr>
+          <tr><td>查询语言</td><td>SPARQL 1.1 / 1.2（W3C 标准）</td><td>Cypher · ISO GQL（39075:2024）· Gremlin · GSQL</td></tr>
+          <tr><td>推理能力</td><td>OWL 2 DL / RL 原生推理（Stardog / GraphDB / AllegroGraph）</td><td>无标准推理；靠图算法、规则引擎或应用层补齐</td></tr>
+          <tr><td>约束验证</td><td>SHACL 一等公民，事务期可校验</td><td>应用层校验，或数据库自身的属性/唯一性约束</td></tr>
+          <tr><td>时态能力</td><td>部分产品原生双时态（XTDB / TerminusDB / Fluree）</td><td>普遍需自建 valid_from / valid_until（Graphiti 模式）</td></tr>
+          <tr><td>生态与人才</td><td>医药、金融、出版、学术；人才窄、招聘难</td><td>生态最大，开发者存量最广，上手快</td></tr>
+          <tr><td>深链性能</td><td>一般（推理与物化有开销，需调优）</td><td>强（原生邻接，多跳优势明显）</td></tr>
+          <tr><td>许可与 TCO</td><td>主流商业库价格高（Stardog / GraphDB 企业版量级 <span class="mono">$50k+/年</span>）</td><td>开源选项多，可从零成本单机起步</td></tr>
+          <tr><td>最佳场景</td><td>合规可证明、跨源数据融合、行业标准本体驱动</td><td>知识库 + GraphRAG、风控网络、数据血缘、Agent Memory</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>2.3 决策规则：四个问题定方向</h3>
+    <div class="tw">
+      <table class="t">
+        <thead><tr><th>#</th><th>问题</th><th>若为「是」</th></tr></thead>
+        <tbody>
+          <tr><td class="c">1</td><td>需要本体层面的<b>形式化推理</b>（从已存事实推出未显式存储的事实）或一致性检查？</td><td>认真评估 RDF / OWL</td></tr>
+          <tr><td class="c">2</td><td>有<b>法规要求可证明的推理链</b>（监管审计、合规判定需展示推导路径）？</td><td>认真评估 RDF / OWL</td></tr>
+          <tr><td class="c">3</td><td>已持有或必须对齐<b>行业标准本体 / 受控词表</b>（FIBO、SNOMED CT、DCAT、PROV-O 等）？</td><td>认真评估 RDF / OWL</td></tr>
+          <tr><td class="c">4</td><td>需要对外发布 <b>SPARQL 端点</b>或链接数据（IRI 可解引用）？</td><td>认真评估 RDF / OWL</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="okbox"><span class="tt">判定</span><b>四问全否 → 选 LPG。</b>任一为「是」→ 进入 RDF 短名单（Stardog / GraphDB / AllegroGraph / Fluree），并接受更高的许可成本与更窄的人才池。</div>
+
+    <h3>2.4 三种中间态：不必非黑即白</h3>
+    <div class="grid3">
+      <div class="card"><span class="chip-label">中间态 A</span><h4>LPG + 语义层插件</h4><p>如 Neo4j 的 neosemantics（n10s），换取 RDF 导入导出与 SPARQL 互操作，但<b>拿不到原生推理</b>。适合「要互操作、不要推理」。</p></div>
+      <div class="card tl"><span class="chip-label">中间态 B</span><h4>RDF + 虚拟图</h4><p>如 Stardog virtual graphs、R2RML 映射，把关系库当图查而不搬迁数据。适合已有多源异构库、不愿建第二份数据。</p></div>
+      <div class="card vio"><span class="chip-label">中间态 C</span><h4>分类型混合建模</h4><p>阿里 OpenBG 做法：类目属性走 RDF/OWL，场景人群走 SKOS，商品品牌关系走属性图。<b>不必用一种模型装全部知识</b>，代价是两套治理。</p></div>
+    </div>
+    <div class="violetbox"><span class="tt">给本体工程知识库的提醒</span>「本体」不等于「必须用 RDF」。本体工程的核心产出是<b>可校验的业务语义层</b>；用 LPG + 强 schema 约束 + 应用层校验，同样能承载本体工程的治理目标，而且开发与运维成本低得多。RDF 的价值在<b>推理与标准互操作</b>，不在「更本体」。</div>
+  </section>
+
+  <!-- ============ 03 ============ -->
+  <section id="ch3">
+    <div class="sec-head"><span class="sec-no">03</span><h2>八维评估模型：把「感觉好」变成「可打分」</h2></div>
+    <p class="sec-lead">同一款产品在不同场景下得分完全不同。下表是一套可调权重的打分框架，用于横向比选与向决策层解释取舍。</p>
+
+    <div class="tw">
+      <table class="t">
+        <thead><tr><th>#</th><th>维度</th><th>权重</th><th>关键问题</th><th>高分区特征</th></tr></thead>
+        <tbody>
+          <tr><td class="c">1</td><td>建模与本体表达力</td><td class="c">12%</td><td>能否表达我的实体/关系约束？schema 变更成本多高？</td><td>支持命名空间、继承、基数约束；schema 演进不需重灌数据</td></tr>
+          <tr><td class="c">2</td><td>查询语言与标准就绪度</td><td class="c">12%</td><td>是否 GQL 就绪？技能可迁移吗？</td><td>支持 Cypher / openCypher 核心语法，公开 GQL 一致性路线图</td></tr>
+          <tr><td class="c">3</td><td>推理与约束</td><td class="c">10%</td><td>我需要推理还是只要校验？</td><td>原生 OWL 2 推理，或原生 SHACL / 事务期约束校验</td></tr>
+          <tr><td class="c">4</td><td><b>时态与版本 / 审计</b></td><td class="c">13%</td><td>能回答「某时点的状态是什么」吗？历史可回滚吗？</td><td>原生双时态或原生 valid-time 边；分支 / 差异 / 合并</td></tr>
+          <tr><td class="c">5</td><td><b>权限与多租户</b></td><td class="c">13%</td><td>权限在哪一层过滤？属性级脱敏做得到吗？</td><td>节点 / 边 / 属性级策略在<b>查询引擎内</b>强制执行 + 审计日志</td></tr>
+          <tr><td class="c">6</td><td>AI 原生能力</td><td class="c">15%</td><td>图 + 向量 + 全文能否一条查询完成？有 MCP 吗？</td><td>原生向量索引；混合检索单查询；官方 GraphRAG / MCP 集成</td></tr>
+          <tr><td class="c">7</td><td>规模与性能</td><td class="c">10%</td><td>3 年数据量 × 3 倍余量下是否仍满足延迟？</td><td>有官方审计基准（LDBC）结果，或可自测复现</td></tr>
+          <tr><td class="c">8</td><td>许可、TCO 与合规</td><td class="c">15%</td><td>许可允许嵌入/再分发吗？信创要求满足吗？</td><td>Apache 2.0 类宽松许可；国产 CPU / OS 适配；价格透明</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout"><span class="tt">按场景调权重</span>面向<b>本体工程知识库</b>，建议把「建模表达力 + 时态 + 权限」提到 45% 以上，把「规模性能」压到 8% 以下——因为这类知识库的瓶颈通常不在吞吐，而在语义一致性与治理。做<b>风控 / 资金网络</b>时才反过来，把规模性能提到 30%。</div>
+  </section>
+
+  <!-- ============ 04 ============ -->
+  <section id="ch4">
+    <div class="sec-head"><span class="sec-no">04</span><h2>产品全景：20+ 款，分四类看</h2></div>
+    <p class="sec-lead">按「模型 + 形态」分四类，先定位类别，再在类别内选。表中「规模定位」为公开资料中的常见适用区间，不代表硬上限。</p>
+
+    <h3>4.1 LPG · 开源与国产主力</h3>
+    <div class="tw">
+      <table class="t">
+        <thead><tr><th>产品</th><th>出品方</th><th>查询语言</th><th>许可</th><th>规模定位</th><th>原生向量</th><th>时态</th><th>一句话定位</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>Neo4j</b> <span class="chip">事实标准</span></td><td>Neo4j, Inc.（美）</td><td>Cypher（GQL 就绪）</td><td><span class="chip amb">社区版 GPLv3</span><span class="chip gry">企业版商业</span></td><td>单机强 / 分布式需企业版或 Infinigraph</td><td class="yes">是（HNSW）</td><td>需自建</td><td>生态、工具链、教程与人才存量第一，验证想法首选</td>
+          </tr>
+          <tr>
+            <td><b>NebulaGraph</b></td><td>vesoft / 杭州悦数（中）</td><td>nGQL（兼容 openCypher）</td><td><span class="chip grn">Apache 2.0</span></td><td>千亿点 / 万亿边，原生分布式</td><td class="yes">是（v5.2 单查询混合）</td><td>有限</td><td>国内互联网大规模关系分析主力，多跳性能与水平扩展见长</td>
+          </tr>
+          <tr>
+            <td><b>Apache HugeGraph</b> <span class="chip grn">Apache TLP</span></td><td>百度安全捐赠（中）</td><td>Gremlin + Cypher</td><td><span class="chip grn">Apache 2.0</span></td><td>千亿级点边</td><td class="part">HugeGraph-AI 融合</td><td>需自建</td><td>2026-02 晋升 Apache 顶级项目，图 + 图计算 + 图 AI 全栈，中文文档友好</td>
+          </tr>
+          <tr>
+            <td><b>TuGraph</b></td><td>蚂蚁集团（中）</td><td>openCypher</td><td><span class="chip grn">Apache 2.0</span></td><td>金融级，亿级至百亿</td><td class="part">图 + AI 框架集成</td><td>需自建</td><td>支付宝内部生产验证；国产 CPU / OS 适配完整，信创首选之一</td>
+          </tr>
+          <tr>
+            <td><b>Galaxybase</b></td><td>创邻科技（中）</td><td>类 Cypher / API</td><td><span class="chip amb">免费版 + 商业</span></td><td>万亿点边（公开案例 5 万亿）</td><td class="part">GraphRAG 方案</td><td>需自建</td><td>原生分布式 HTAP；2022 LDBC SNB 官方审计刷新纪录；金融 / 电网 / 公安案例多</td>
+          </tr>
+          <tr>
+            <td><b>Memgraph</b></td><td>Memgraph（英）</td><td>Cypher</td><td><span class="chip amb">BSL 1.1（非 OSI）</span></td><td>内存内工作集，亚毫秒</td><td class="part">MAGE 扩展</td><td>需自建</td><td>实时流式图分析（Kafka / Pulsar）；公开案例中有大型机构从 Neo4j 迁移</td>
+          </tr>
+          <tr>
+            <td><b>FalkorDB</b></td><td>FalkorDB（以色列）</td><td>openCypher</td><td><span class="chip red">SSPL</span></td><td>低延迟图查询，中小规模</td><td class="yes">是（HNSW）</td><td>需自建</td><td>RedisGraph 的正统后继，GraphBLAS 稀疏矩阵执行；GraphRAG SDK</td>
+          </tr>
+          <tr>
+            <td><b>JanusGraph</b></td><td>Linux 基金会</td><td>Gremlin</td><td><span class="chip grn">Apache 2.0</span></td><td>依赖外部 KV（Cassandra / HBase）</td><td class="no">否</td><td>需自建</td><td>存储可插拔的老牌选择；<b>计算不下推，多跳性能是公认短板</b></td></tr>
+          <tr>
+            <td><b>Dgraph</b></td><td>Hypermode（美）</td><td>DQL / GraphQL</td><td><span class="chip grn">Apache 2.0</span></td><td>分布式，中等规模</td><td class="part">有限</td><td>需自建</td><td>GraphQL 原生；热度较峰值回落，选型前需确认维护活跃度</td></tr>
+          <tr>
+            <td><b>StellarDB</b> / <b>华为云 GES</b></td><td>星环科技 / 华为云（中）</td><td>类 Cypher / Gremlin</td><td><span class="chip red">商业</span></td><td>万亿级</td><td class="part">厂商路线图</td><td>需自建</td><td>国内托管与信创市场的主要玩家；华为云 GES 为 2024 年国内图数据库市场份额第一</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="riskbox"><span class="tt">开源内核与商业版的代差</span>NebulaGraph 官网已发布商业版 v5.2（宣称多跳路径查询提速 100×、单查询内混合图 + 向量 + 全文），而其 GitHub 内核仓库的最新 release 标注仍为 v3.8.0（2024-05）；HugeGraph 同样存在社区版与企业版的能力分层。<b>选型时必须以「开源分支的实际能力边界」为准，而不是官网首页的能力清单。</b></div>
+
+    <h3>4.2 RDF / OWL 语义库（本体推理派）</h3>
+    <div class="tw">
+      <table class="t">
+        <thead><tr><th>产品</th><th>出品方</th><th>查询 / 推理</th><th>许可与门槛</th><th>一句话定位</th></tr></thead>
+        <tbody>
+          <tr><td><b>Stardog</b></td><td>Stardog（美）</td><td>SPARQL 1.1 + OWL 2 查询期推理 + SHACL + 虚拟图</td><td>纯商业；量级 <span class="mono">$50k+/年</span>；Free 版为一年期可续商业许可</td><td>本体密集型企业知识图谱最完整的选择：推理、联邦、脱敏、策略一体化</td></tr>
+          <tr><td><b>Ontotext GraphDB</b></td><td>Graphwise（Ontotext + Semantic Web Company 合并后）</td><td>SPARQL + RDFS/OWL 建模 + SHACL</td><td>Free 版自 11.0 起需<b>申请无费许可</b>，仅本地、单核、<b>限 2 并发查询 / 5 仓库</b>，无 LDAP/HA；企业版为集群与安全层</td><td>推理与聚类强，RDF 工作流的稳妥选择；注意 RBAC 与联邦在付费扩展中</td></tr>
+          <tr><td><b>AllegroGraph</b></td><td>Franz Inc.（美）</td><td>SPARQL 1.2 + OWL 推理 + SHACL + Prolog 规则</td><td>纯商业</td><td>政府、国防、生命科学长期部署；原生含向量存储与 GraphRAG 层</td></tr>
+          <tr><td><b>Apache Jena</b></td><td>Apache 基金会</td><td>SPARQL + RDFS/OWL 工具链 + SHACL</td><td><span class="chip grn">Apache 2.0</span></td><td>自建语义应用的开放工具箱，适合作为 ETL / 校验层而非生产图库</td></tr>
+          <tr><td><b>Amazon Neptune</b></td><td>AWS</td><td>同时支持 SPARQL（RDF）与 Gremlin / openCypher（LPG）</td><td>按量计费托管</td><td>唯一在同一数据上同时回答三种语言的托管服务；RDF 侧<b>仅 RDFS 推理，非完整 OWL 2</b></td></tr>
+          <tr><td><b>Fluree</b></td><td>Fluree, PBC（美）</td><td>SPARQL 1.1 + JSON-LD 查询；OWL 2 RL / RDFS 推理 + Datalog</td><td>BSL 1.1，<b>每个版本首发 3 年后转 Apache 2.0</b></td><td>可验证知识图谱：签名事务 + 内容寻址 + 三级权限在查询引擎内执行 + 原生 BM25/HNSW</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>4.3 时态与版本原生（本体工程最相关的一组）</h3>
+    <div class="grid3">
+      <div class="card vio"><span class="chip-label">Bitemporal</span><h4>XTDB</h4><p>同时保存<b>事务时间</b>与<b>有效时间</b>，Datalog 图查询，支持按任意历史时点查询，可为隐私合规做数据驱逐。适合「必须回答：你当时知道什么、什么时候知道的」。</p></div>
+      <div class="card vio"><span class="chip-label">Git for data</span><h4>TerminusDB v12</h4><p>Apache 2.0（DFRNT 接手维护）。提交 / 差异 / 推送 / 合并 / 时光倒流查询，WOQL Datalog + 闭世界 RDF；v12 加入任意精度小数与 ISO8601 Allen 区间代数。</p></div>
+      <div class="card vio"><span class="chip-label">Verifiable</span><h4>FlureeDB</h4><p>事务可签名（JWS / 可验证凭证），提交链内容寻址、防篡改。策略本身是 RDF、随数据版本化并可查询。同一二进制内含 MCP server。</p></div>
+      <div class="card amb"><span class="chip-label">LPG 侧方案</span><h4>Graphiti 模式</h4><p>Neo4j 之上给每条边加 <span class="mono">valid_from / valid_until / superseded_by</span>，实现「Agent Memory + 时态过滤」。这是最贴近落地、成本最低的时态路线。</p></div>
+      <div class="card amb"><span class="chip-label">注意</span><h4>时态不是数据库特性而是建模决策</h4><p>多数 LPG 产品不内置时态语义。若不从一开始就在边上加时间窗，后期补齐要重洗全图。</p></div>
+      <div class="card tl"><span class="chip-label">对照</span><h4>知识库现状</h4><p>本团队 lynnKB 目前在 Markdown 层用「带 <span class="mono">as_of</span> + 进度历史追加」模拟时态边——这套约定正好可直接映射为图上的时间窗字段。</p></div>
+    </div>
+
+    <h3>4.4 云数仓内置图 &amp; 嵌入式 / 多模</h3>
+    <div class="tw">
+      <table class="t">
+        <thead><tr><th>产品</th><th>形态</th><th>关键点</th><th>适用判断</th></tr></thead>
+        <tbody>
+          <tr><td><b>BigQuery Graph</b></td><td>云数仓内置（2026-04 公测）</td><td>ISO GQL；属性图是<b>逻辑视图</b>，不搬数据、不复制存储；US / EU 多区域</td><td>数据已在 BigQuery、不想再引入一套系统时的首选</td></tr>
+          <tr><td><b>Spanner Graph</b></td><td>云原生数据库内置</td><td>GQL + SQL/PGQ，与关系数据同引擎</td><td>需要强一致 + 图查询的在线业务</td></tr>
+          <tr><td><b>Microsoft Fabric Graph</b></td><td>云数据平台内置</td><td>Azure 原生，与治理 / LLM 集成</td><td>微软栈企业</td></tr>
+          <tr><td><b>Oracle 23ai Property Graph</b></td><td>关系库内置</td><td>SQL/PGQ 标准；图与关系同库</td><td>已有 Oracle 存量、图需求中等</td></tr>
+          <tr><td><b>PostgreSQL + Apache AGE</b></td><td>关系库扩展</td><td>在 Postgres 上加 Cypher；Apache 孵化项目</td><td>图需求「够用即可」、团队 Postgres 熟练</td></tr>
+          <tr><td><b>DuckPGQ</b></td><td>分析库扩展</td><td>DuckDB 上的 SQL/PGQ；本地分析场景成本极低</td><td>离线分析、单机探索；不适合并发在线服务</td></tr>
+          <tr><td><b>ArcadeDB</b></td><td>嵌入式 / 服务端</td><td><span class="chip grn">Apache 2.0</span> 无数据量上限；5 种查询语言 + 6 种数据模型；内置 MCP server</td><td>想要宽松许可 + 多模 + 可嵌入的替代选项</td></tr>
+          <tr><td><b>ArangoDB</b></td><td>多模服务端</td><td>AQL 统一图 / 文档 / KV；社区版有 100GB 上限；3.12 起移除 Pregel</td><td>一库多用、不想维护多个系统</td></tr>
+          <tr><td><b>Kuzu</b> <span class="chip red">已归档</span></td><td>嵌入式（MIT）</td><td>2025-10-10 仓库归档（v0.11.3 为末版），据 2026 年欧盟 DMA 申报文件，Apple 已于 2025-10-09 同意收购其公司；社区已分叉</td><td><b>原推荐已失效</b>：存量部署可锁定 0.11.3，新项目建议转向分叉或其他嵌入式方案</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>4.5 国产化 / 信创专表</h3>
+    <p>若项目有信创或国产化要求，候选池会显著收窄。以下为公开资料中的国产主要玩家（IDC《中国图数据库市场份额 2024》前五为：华为云 11.7%、杭州悦数、创邻科技、星环科技、蚂蚁集团，合计 25.4%）。</p>
+    <div class="tw">
+      <table class="t">
+        <thead><tr><th>产品</th><th>信创适配（公开信息）</th><th>验证强度</th><th>一句话判断</th></tr></thead>
+        <tbody>
+          <tr><td><b>TuGraph</b>（蚂蚁）</td><td>鲲鹏 / 飞腾 / 海光 / 兆芯 / 龙芯 + 麒麟 / 统信 / 红旗等</td><td>支付宝内部生产 + 国产 ARM 平台 LDBC 跑分</td><td>信创 + 金融级强一致场景的首选之一</td></tr>
+          <tr><td><b>Galaxybase</b>（创邻）</td><td>同上，且核心代码自研，通过工信部软件源代码溯源评估</td><td>2022 LDBC SNB 官方审计吞吐与平均查询性能纪录；5 万亿点边公开案例</td><td>最看重「官方审计成绩 + 大规模实证」时的选择</td></tr>
+          <tr><td><b>Apache HugeGraph</b>（百度）</td><td>国产开源，Apache TLP 治理</td><td>百度内部大规模应用；2026-02 毕业为顶级项目</td><td>要开源可控 + 社区治理成熟，且接受自助运维</td></tr>
+          <tr><td><b>NebulaGraph</b>（悦数）</td><td>国产开源，Apache 2.0</td><td>国内互联网大规模落地案例多</td><td>超大规模 + 分布式原生 + 开源自持</td></tr>
+          <tr><td><b>星环 StellarDB</b> / <b>华为云 GES</b></td><td>厂商全栈信创适配</td><td>国内市场份额领先（GES）</td><td>要托管服务与厂商兜底、预算充足</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="warnbox"><span class="tt">口径提示</span>国产产品的性能数字多来自厂商自测或平台方公布，部分有 LDBC 审计（如 Galaxybase 2022 SNB），部分未审计。<b>采购前要求厂商提供可复现的、与你的查询模式匹配的基准数据，并写入验收条款。</b></div>
+  </section>
+
+  <!-- ============ 05 ============ -->
+  <section id="ch5">
+    <div class="sec-head"><span class="sec-no">05</span><h2>场景 → 选型映射</h2></div>
+    <p class="sec-lead">把前四章收成一张可查询的对照表。场景按「本体形态 + 查询负载 + 规模」三维定位。</p>
+
+    <div class="tw">
+      <table class="t">
+        <thead><tr><th>场景</th><th>首选</th><th>备选</th><th>不建议</th><th>核心理由</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>① 本体工程知识库</b><span class="mono" style="color:#8a93a3;display:block;font-size:11.5px">需形式化推理 / 合规证明</span></td>
+            <td>Stardog</td><td>GraphDB · AllegroGraph · Fluree</td><td>纯 LPG 单打</td><td>OWL 推理与 SHACL 是硬需求，LPG 需大量应用层补丁</td>
+          </tr>
+          <tr>
+            <td><b>② 企业知识库 + GraphRAG</b><span class="mono" style="color:#8a93a3;display:block;font-size:11.5px">主流场景</span></td>
+            <td>Neo4j（+ 向量）</td><td>NebulaGraph v5.2 · HugeGraph-AI · Fluree</td><td>纯 RDF（开发成本高）</td><td>生态、GraphRAG 集成、原生向量三者齐备；混合检索是 2026 基线</td>
+          </tr>
+          <tr>
+            <td><b>③ Agent Memory / 时态记忆</b></td>
+            <td>Neo4j + Graphiti 模式</td><td>XTDB · TerminusDB</td><td>无时态设计的任意图库</td><td>「谁在何时负责什么」必须带时间窗，否则历史不可审计</td>
+          </tr>
+          <tr>
+            <td><b>④ 大规模风控 / 资金网络</b></td>
+            <td>NebulaGraph · TuGraph</td><td>TigerGraph · Galaxybase · HugeGraph</td><td>Neo4j 社区版单机</td><td>千亿级点边 + 高并发深链，需原生分布式</td>
+          </tr>
+          <tr>
+            <td><b>⑤ 数据血缘 / 影响分析</b></td>
+            <td>Neo4j</td><td>HugeGraph · JanusGraph（存量）</td><td>纯向量方案</td><td>多跳影响面推演是典型的图遍历负载，规模通常在单机可控范围</td>
+          </tr>
+          <tr>
+            <td><b>⑥ 已有云数仓，不想加系统</b></td>
+            <td>BigQuery Graph · Spanner Graph</td><td>Fabric Graph · Oracle 23ai · PostgreSQL + AGE</td><td>为此单独建一套分布式图集群</td><td>逻辑视图零搬迁；轻量图谱需求不必新增运维面</td>
+          </tr>
+          <tr>
+            <td><b>⑦ 单机 / 嵌入式 / 个人知识库演进</b></td>
+            <td>Neo4j Community 单机</td><td>ArcadeDB · DuckPGQ</td><td>Kuzu（已归档，仅存量锁定）</td><td>零成本起步、Cypher 技能可迁移；Kuzu 原方案需改道</td>
+          </tr>
+          <tr>
+            <td><b>⑧ 强审计 / 合规 / 可验证</b></td>
+            <td>Fluree · XTDB</td><td>TerminusDB · Stardog</td><td>靠外部日志补审计的图库</td><td>审计轨迹应在引擎内、可查询、防篡改，而非旁挂</td>
+          </tr>
+          <tr>
+            <td><b>⑨ 国产化 / 信创要求</b></td>
+            <td>TuGraph</td><td>Galaxybase · HugeGraph · NebulaGraph · GES</td><td>Neo4j / Stardog 等境外商业</td><td>需完整的国产 CPU / OS 适配与本地支持</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout"><span class="tt">读表方法</span>「首选」是默认最优解，「备选」是同等可行但在某一维度上要付代价的选择。「不建议」栏不是「不能用」，而是「会付出与其收益不成比例的代价」。</div>
+  </section>
+
+  <!-- ============ 06 ============ -->
+  <section id="ch6">
+    <div class="sec-head"><span class="sec-no">06</span><h2>落地建议：面向公共业务研发中心的路径</h2></div>
+    <p class="sec-lead">本章把通用方法收敛到本团队的实际情况。核心判断：<b>当前阶段不宜重资产自建，应做「轻底座 + 强治理 + 可迁移」。</b></p>
+
+    <h3>6.1 现状诊断</h3>
+    <div class="tw">
+      <table class="t">
+        <thead><tr><th>维度</th><th>现状</th><th>对选型的约束</th></tr></thead>
+        <tbody>
+          <tr><td>知识底座</td><td>LLM Wiki（Markdown + Obsidian），raw 只读真相层 / wiki 编译层 / schema 契约层三层结构已成型</td><td>图库是<b>第二阶段</b>的事，不是起点；现在引入会打断知识积累节奏</td></tr>
+          <tr><td>本体资产</td><td>schema/ontology 已定义 9 类实体、13 类关系，且刻意对齐 Semantic Graph 范式、预留了导图接口</td><td>已具备「直接导入图库」的模型基础，无需重做建模</td></tr>
+          <tr><td>时态约定</td><td>AGENTS 契约要求 OKR / 项目状态 / 指标数值带 <span class="mono">as_of</span>，冲突时追加「进度历史」而非覆盖</td><td>这套约定可 1:1 映射为图上的时间窗字段，是天然优势</td></tr>
+          <tr><td>数据禀赋</td><td>握有集团全量公共数据（流量 / 会员 / 营销 / 业绩）、社媒抓取与多渠道触达</td><td>数据不缺，缺的是语义统一——正是本体工程要解决的问题</td></tr>
+          <tr><td>组织约束</td><td>业务决策权在业务方，团队为「参谋部」角色；无独立知识工程编制</td><td><b>不能靠大规模专职团队驱动</b>，必须选低运维、可自助维护的方案</td></tr>
+          <tr><td>资源约束</td><td>无专职 DBA / 图工程师编制</td><td>拒绝需要集群调优、分片设计的分布式方案作为起点</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>6.2 三阶段演进路径</h3>
+    <div class="vflow">
+      <div class="vnode n1"><b>P0 · 0–1 个月｜不引入新数据库</b><span>把 schema/ontology 从文档升级为机器可读形态（TTL / JSON），脚本导出 Wiki 三元组快照；同时建立 <b>50–200 条 Golden QA 评测集</b>——没有评测集，后面所有验证都无法判断好坏。</span></div>
+      <div class="vlink"></div>
+      <div class="vnode n2"><b>P1 · 1–3 个月｜单机 PoC</b><span>Neo4j Community 单机（GPLv3，零许可成本）或 ArcadeDB（Apache 2.0，无数据量上限）。导入 Wiki 实体关系，跑通多跳查询、Ontology 合规校验、时态查询三个场景。目标：<b>覆盖 Top 50 高频问题</b>。</span></div>
+      <div class="vlink"></div>
+      <div class="vnode n3"><b>P2 · 3–9 个月｜时态 + 混合检索</b><span>按 Graphiti 模式给边加 <span class="mono">valid_from / valid_until</span>；向量走 Neo4j 原生 HNSW 或旁挂 Qdrant / Milvus；加 Query Router 实现「图遍历 / 向量 / 结构化」三路路由。这一步产出的是<b>可向业务方演示的能力</b>。</span></div>
+      <div class="vlink"></div>
+      <div class="vnode n4"><b>P3 · 9–18 个月｜企业化（触发式）</b><span>仅当「规模 &gt; 1 亿边 / 需要五层权限与审计 / 出现信创要求」任一触发时，才评估分布式集群或企业版（Neo4j Enterprise、NebulaGraph、TuGraph）。<b>未触发不动。</b></span></div>
+      <div class="vlink"></div>
+      <div class="vnode n5"><b>贯穿全程｜治理 &gt; 技术</b><span>知识域 owner 制度、实体消解规则、Ontology 变更评审、评测集回归。这四项占据 70% 成本，也决定项目能否活过第二年。</span></div>
+    </div>
+
+    <h3>6.3 一句话选型结论与触发条件</h3>
+    <div class="okbox"><span class="tt">主线选择</span><b>以 Neo4j（LPG + Cypher，GQL 就绪）为主线起步，向量旁挂，时态用 Graphiti 模式实现，规模与权限需求触发后再迁移或升级。</b>理由是：Cypher 技能与 GQL 标准收敛、生态与人才存量最大、GraphRAG 集成最成熟、社区版零成本可验证——而本阶段的瓶颈在语义治理，不在引擎性能。</div>
+    <div class="tw">
+      <table class="t">
+        <thead><tr><th>触发条件</th><th>切换到</th><th>为什么现在不切</th></tr></thead>
+        <tbody>
+          <tr><td>边规模持续超过 1 亿 / 单机延迟不达标</td><td>NebulaGraph · HugeGraph（分布式）</td><td>当前数据量在单机舒适区，分布式带来的是纯运维成本</td></tr>
+          <tr><td>出现信创 / 国产化硬要求</td><td>TuGraph · Galaxybase</td><td>无此要求时，Cypher 生态与人才优势更值钱</td></tr>
+          <tr><td>需要 OWL 形式化推理 / 合规可证明</td><td>Stardog · GraphDB</td><td>当前本体是「约束 + 校验」需求，不是「推理」需求</td></tr>
+          <tr><td>合规审计要求「可验证、防篡改」</td><td>Fluree · XTDB</td><td>Markdown 层的 as_of + 进度历史已能覆盖当前审计诉求</td></tr>
+          <tr><td>需要五层权限 + 多租户 + 审计日志</td><td>Neo4j Enterprise · 或自建权限代理</td><td>当前使用者范围可控，权限可在应用层先兜住</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>6.4 向上汇报的口径建议</h3>
+    <ul class="clean">
+      <li><b>别谈数据库，谈能力。</b>对决策层的话术不是「我们选 Neo4j 还是 NebulaGraph」，而是「用最小成本把知识库从<b>不可查</b>变成<b>可查、可审、可复用</b>」。</li>
+      <li><b>本期只承诺 PoC 里程碑</b>：3 个月内、覆盖 Top 50 高频问题、零许可采购。</li>
+      <li><b>价值口径用「建议采纳率 × 采纳后增量收益」</b>，而不是「图数据库性能提升多少」——后者不是本团队的收益语言。</li>
+      <li><b>把「不买」讲成决策。</b>明确说明为何当前不采购企业版（成本、试用周期、供应商锁定风险），比含糊其辞更能建立专业信任。</li>
+    </ul>
+  </section>
+
+  <!-- ============ 07 ============ -->
+  <section id="ch7">
+    <div class="sec-head"><span class="sec-no">07</span><h2>决策树与 PoC 验收清单</h2></div>
+    <p class="sec-lead">上半部分是选型顺序，下半部分是验证方法。这一段可以直接拿去开评审会。</p>
+
+    <h3>7.1 选型决策树</h3>
+    <div class="flow">
+      <div class="fbox a" style="flex:none"><b>Q1 需要形式化推理或合规可证明吗？</b><span>推理 ≠ 约束。要从已存事实推出未存事实，或需展示推导链 → RDF/OWL 路线</span></div>
+      <div class="farrow">↓ 否</div>
+      <div class="fbox v" style="flex:none"><b>Q2 需要原生时态 / 版本 / 可验证审计吗？</b><span>需要 → XTDB（双时态）/ TerminusDB（git-for-data）/ Fluree（可验证）；否则 → LPG + 自建时间窗</span></div>
+      <div class="farrow">↓ 否</div>
+      <div class="fbox t" style="flex:none"><b>Q3 3 年后的边规模在哪一档？</b><span>&lt; 1 亿 → 单机开源即可；1 亿–1000 亿 → 原生分布式（NebulaGraph / TuGraph / HugeGraph）；再往上 → 厂商级方案 + 专项压测</span></div>
+      <div class="farrow">↓ 已定档</div>
+      <div class="fbox g" style="flex:none"><b>Q4 数据是否已在云数仓 / 是否有信创要求？</b><span>已在云数仓且不想加系统 → BigQuery Graph / Spanner Graph / AGE；有信创 → TuGraph / Galaxybase / GES</span></div>
+      <div class="farrow">↓ 无上述约束</div>
+      <div class="fbox d" style="flex:none"><b>Q5 团队技能与生态偏好？</b><span>Cypher 存量最大、GraphRAG 集成熟 → Neo4j；要宽松许可 + 多模 + 可嵌入 → ArcadeDB；要亚毫秒内存态 → Memgraph</span></div>
+    </div>
+
+    <h3>7.2 PoC 必须测的 12 项</h3>
+    <div class="tw">
+      <table class="t">
+        <thead><tr><th>#</th><th>测试项</th><th>方法</th><th>建议验收阈值</th></tr></thead>
+        <tbody>
+          <tr><td class="c">1</td><td>批量导入</td><td>10 万节点 / 100 万边</td><td>全量导入 &lt; 10 分钟</td></tr>
+          <tr><td class="c">2</td><td>多跳查询</td><td>2 / 3 / 5 跳路径查询，取 P95</td><td>2 跳 &lt; 300ms；5 跳 &lt; 1s</td></tr>
+          <tr><td class="c">3</td><td>超级节点</td><td>构造度 &gt; 10 万的节点并查询其邻域</td><td>不出现数量级退化，可限定返回集</td></tr>
+          <tr><td class="c">4</td><td>并发读写</td><td>50 并发混合读写 5 分钟</td><td>无失败请求，P95 稳定</td></tr>
+          <tr><td class="c">5</td><td>Ontology 合规校验</td><td>投递违反约束的三元组</td><td>拦截率 100%，进入人工审核队列</td></tr>
+          <tr><td class="c">6</td><td>时态查询</td><td>按指定历史时点回溯关系状态</td><td>结果正确，过期事实自动过滤</td></tr>
+          <tr><td class="c">7</td><td>权限注入</td><td>节点 / 边 / 属性级过滤</td><td>过滤在库内完成，不依赖 LLM 判断</td></tr>
+          <tr><td class="c">8</td><td>向量召回</td><td>对照人工标注计算 top-k 召回</td><td>与既有向量库持平或更优</td></tr>
+          <tr><td class="c">9</td><td>GraphRAG 端到端</td><td>抽取 → 入库 → 问答全链路</td><td>答案准确率与幻觉率对比基线 RAG 有可测改善</td></tr>
+          <tr><td class="c">10</td><td>备份与恢复</td><td>备份后模拟故障恢复</td><td>社区版无在线备份的，要写清运维方案</td></tr>
+          <tr><td class="c">11</td><td>升级路径</td><td>社区版 → 企业版，或跨大版本</td><td>有明确迁移文档，数据格式不破坏</td></tr>
+          <tr><td class="c">12</td><td>中文全文检索</td><td>中文分词 + 关键词召回</td><td>分词质量可接受，或有外部方案</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>7.3 数据集与基准</h3>
+    <ul class="dash">
+      <li><b>社区标准</b>：LDBC SNB（社交网络交互负载）、LSQB（子图模式匹配）、LDBC Graphalytics（图算法）。注意只有<b>官方审计</b>的结果才具可比性。</li>
+      <li><b>自有数据</b>：500–1000 篇真实业务文档 + 50–200 条 Golden QA。自有数据决定 PoC 是否可信。</li>
+      <li><b>口径提醒</b>：TigerGraph 的「40–337×」特指 2 跳路径查询且为厂商自报；FalkorDB「P99 &lt; 140ms」、ArcadeDB「PageRank 0.48s」同为自测口径。这些数字可用于判断技术路线，不能用于采购验收。</li>
+    </ul>
+  </section>
+
+  <!-- ============ 08 ============ -->
+  <section id="ch8">
+    <div class="sec-head"><span class="sec-no">08</span><h2>成本、许可与风险</h2></div>
+    <p class="sec-lead">本章是选型中最容易翻车的部分。产品的技术能力可以从文档读到，许可与隐形成本只能从这里读到。</p>
+
+    <h3>8.1 TCO 拆解（中小规模、3 年视角）</h3>
+    <div class="tw">
+      <table class="t">
+        <thead><tr><th>成本项</th><th>零成本起步方案</th><th>企业化方案</th><th>容易被忽略的点</th></tr></thead>
+        <tbody>
+          <tr><td>软件许可</td><td>0（Neo4j Community / ArcadeDB / HugeGraph 开源版）</td><td>AuraDB 专业版 <span class="mono">$65/GB/月</span> 起；自建企业版列表价量级 <span class="mono">$36k/core/年</span>，批量折扣常见 40–70%</td><td>社区版无集群、无在线备份、无 RBAC、无 LDAP；这些能力才是企业版真正在卖的东西</td></tr>
+          <tr><td>基础设施</td><td>单机 16C / 64G 可支撑千万级边</td><td>3 节点集群 + 监控 + 备份存储</td><td>内存态产品（Memgraph / FalkorDB）在规模上升后内存成本陡增</td></tr>
+          <tr><td>人力</td><td>1 名兼职知识工程师 + 现有算法同学</td><td>专职图工程师 + DBA</td><td>Cypher / 本体建模培训是真实成本项；招聘难度高于 SQL</td></tr>
+          <tr><td>治理</td><td colspan="2" class="c"><b>约占 70%</b>：owner 制度、实体消解规则、Ontology 变更评审、评测集维护与回归</td><td>这一项没做，前面三项全部白花</td></tr>
+          <tr><td>外部服务</td><td>开源工具链</td><td>实体消解工具 / 人工审核 / 厂商支持合同</td><td>实体消解精度决定图是否可信，是隐藏的持续投入</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>8.2 许可陷阱清单</h3>
+    <div class="riskbox"><span class="tt">逐条核对</span>
+      <ul class="clean" style="margin:6px 0 0">
+        <li><b>Neo4j 社区版是 GPLv3，不是 Apache 2.0。</b>大量对比表写错。若要嵌入产品并再分发，GPLv3 的传染性必须评估；企业版许可正由美国第九巡回法院审理。</li>
+        <li><b>开源 ≠ 生产可用。</b>Neo4j Community 无集群、无在线备份、无 RBAC / LDAP——四项生产必需能力全部缺失。</li>
+        <li><b>GraphDB Free 11.0 起需申请无费许可</b>，且限制为本地部署、单核、<b>2 并发查询 / 5 仓库</b>，无 LDAP / Kerberos / OAuth / 细粒度权限 / HA 集群；RBAC 与联邦位于付费扩展中。</li>
+        <li><b>Memgraph（BSL 1.1）与 FalkorDB（SSPL）不是 OSI 认可的开源许可</b>，用于商业分发前需法务确认。</li>
+        <li><b>Fluree 为 BSL 1.1，按版本首发满 3 年后转 Apache 2.0</b>——是「延后开源」模式，需评估你的使用场景是否落在限制范围内。</li>
+        <li><b>供应商退出风险真实存在：</b>Kuzu 于 2025-10 归档（Apple 收购其公司）、RedisGraph 于 2025-01 停服。选任何非头部产品，都要预留<b>退出预案</b>（导出格式、Cypher 核心语法兼容性）。</li>
+        <li><b>开源内核与商业版存在代差。</b>NebulaGraph 企业版 v5.2 与 GitHub 内核 release 版本不一致；HugeGraph 亦有社区 / 企业分层。选型必须以开源分支实测为准。</li>
+      </ul>
+    </div>
+
+    <h3>8.3 七个会翻车的技术点</h3>
+    <div class="grid2">
+      <div class="card r"><span class="chip-label">01 致命</span><h4>实体消解精度不足</h4><p>准确率低于 85% 时，图会主动推出并笃定地呈现错误关系——比数仓坏数据更危险，因为它看起来同样可信。</p></div>
+      <div class="card r"><span class="chip-label">02 常见</span><h4>基准失真</h4><p>2 跳 vs 5 跳、厂商调优 vs 默认配置、官方审计 vs 自测。三个变量任一不同，结论就不可比。</p></div>
+      <div class="card r"><span class="chip-label">03 架构</span><h4>把 RDF 和 LPG 当可互换</h4><p>两种模型的查询工作流差异巨大，上线后再换意味着重建整个检索层。</p></div>
+      <div class="card amb"><span class="chip-label">04 性能</span><h4>超级节点</h4><p>度数十万的节点会让邻域遍历爆炸。需要限定返回集、采样（如 SAMPLE 子句）或切分策略。</p></div>
+      <div class="card amb"><span class="chip-label">05 治理</span><h4>事后补权限</h4><p>权限模型必须与 Ontology 同期设计。上线后再补，成本是设计期的数倍，且极易出安全事故。</p></div>
+      <div class="card amb"><span class="chip-label">06 审计</span><h4>忽视时态</h4><p>不从一开始在边上加时间窗，历史状态无法回溯，审计需求出现时只能重灌全图。</p></div>
+      <div class="card amb"><span class="chip-label">07 演进</span><h4>Schema 刚性</h4><p>强 schema 产品（如 Kùzu 式声明式节点/关系表）在分析场景是优势，在探索式摄取场景是持续摩擦。</p></div>
+      <div class="card tl"><span class="chip-label">08 组织</span><h4>无 owner 无评测集</h4><p>知识库 70% 的成败在运营机制。没有明确责任人与回归评测，任何引擎都会在半年内腐化。</p></div>
+    </div>
+
+    <h3>8.4 三条采购原则</h3>
+    <ol class="clean">
+      <li><b>先试后买。</b>用 AuraDB Free / 社区版 / 免费版做起，3 个月 PoC 跑完 §7.2 的 12 项再谈合同。</li>
+      <li><b>保持可迁移。</b>把 APOC / GDS / 时态扩展等厂商专有调用藏在薄抽象层后；索引 DDL 放进迁移脚本而不是应用代码。核心 MATCH / CREATE / MERGE / WHERE / RETURN 语法跨 openCypher 引擎可移植，专有部分不可移植。</li>
+      <li><b>只买触发点。</b>规模、权限、合规任一触发才升级。为「未来可能的十亿节点」提前采购，是这类项目最常见的浪费。</li>
+    </ol>
+  </section>
+
+  <!-- ============ 09 ============ -->
+  <section id="ch9">
+    <div class="sec-head"><span class="sec-no">09</span><h2>趋势判断：2026–2028</h2></div>
+    <p class="sec-lead">选型不只看今天的产品清单，还要看未来 18 个月哪些能力会变成基线、哪些产品会掉队。</p>
+
+    <div class="grid2">
+      <div class="card a" style="border-color:#bcd3f5"><span class="chip-label">趋势 01 · 标准</span><h4>GQL 成为默认查询语言</h4><p>ISO/IEC 39075:2024 于 2024 年 4 月发布，是第一门继 SQL 之后的 ISO 数据库查询语言；Cor 1:2026 已出，第 2 版委员会草案在编（意见征集已于 2026-01 结束）。Neo4j 的 Cypher 25 已引入 GQL 一致特性，主流厂商陆续跟进；Gremlin 与 GSQL 属独立语言族，无直接迁移路径。选新库先看 GQL 就绪度。</p></div>
+      <div class="card a" style="border-color:#bcd3f5"><span class="chip-label">趋势 02 · 能力</span><h4>「图 + 向量」融合成为基线</h4><p>Neo4j 原生 HNSW 向量索引、NebulaGraph v5.2 宣称单查询内完成图 + 向量 + 全文混合、HugeGraph-AI 融合向量检索、FalkorDB 与 Fluree 均原生内置。2026 年的判断标准不再是「支持不支持向量」，而是「能否在一条查询里同时用图约束和向量相似度」。</p></div>
+      <div class="card tl"><span class="chip-label">趋势 03 · 竞争</span><h4>云数仓内置图挤压中低端</h4><p>BigQuery Graph 2026-04 公测（ISO GQL，属性图即逻辑视图，零数据搬迁）、Spanner Graph、Fabric Graph、Oracle 23ai SQL/PGQ、PostgreSQL + AGE、DuckPGQ——「轻量图谱」越来越不需要专门引入一套数据库。纯图数据库的市场会被推向深链性能与语义治理两个高端。</p></div>
+      <div class="card vio"><span class="chip-label">趋势 04 · 差异化</span><h4>时态与可验证成为新卖点</h4><p>XTDB 的双时态、TerminusDB 的 git-for-data、Fluree 的可验证凭证与引擎内策略——在 AI 要为自己的回答负责的时代，「这个结论基于哪个时点的哪些事实、是谁写入的」正在从加分项变成必需品。</p></div>
+      <div class="card amb"><span class="chip-label">趋势 05 · 工具链</span><h4>本体工具链回暖</h4><p>OWL / SHACL / 受控词表从学术走进工程；Stardog、Graphwise、AllegroGraph 与行业标准本体（FIBO、SNOMED CT、DCAT、PROV-O）重新被企业采购提及，主要驱动力是合规与可解释性。</p></div>
+      <div class="card r" style="border-color:#f2cfcc"><span class="chip-label">趋势 06 · 风险</span><h4>整合与退出风险上升</h4><p>Kuzu 归档（Apple 收购）、RedisGraph 停服、Ontotext 与 Semantic Web Company 合并为 Graphwise。市场在向头部集中，中小产品的「由谁维护」要写进尽调清单——这直接决定你三年后是否要重做一遍。</p></div>
+    </div>
+
+    <div class="violetbox" style="margin-top:18px"><span class="tt">一句话总结趋势</span>未来的图数据库竞争不在「谁遍历得更快」，而在<b>三件事</b>：能不能一条查询完成混合检索、能不能把权限与审计做进引擎、能不能让本体（业务语义）成为可演进的资产。前两件是产品能力，第三件只有你自己能做。</div>
+  </section>
+
+  <!-- ============ 附录 ============ -->
+  <section id="app">
+    <div class="sec-head"><span class="sec-no">A</span><h2>附录</h2></div>
+
+    <details class="app" open>
+      <summary>A · 术语速查</summary>
+      <div class="tw">
+        <table class="t">
+          <tbody>
+            <tr><td style="white-space:nowrap"><b>LPG</b></td><td>Labeled Property Graph，带标签的属性图。节点与边均为一等公民、可携带属性。</td></tr>
+            <tr><td><b>RDF</b></td><td>Resource Description Framework，主谓宾三元组模型，W3C 标准。</td></tr>
+            <tr><td><b>OWL</b></td><td>Web Ontology Language，本体语言，支持形式化推理（DL / RL 等子集）。</td></tr>
+            <tr><td><b>SHACL</b></td><td>Shapes Constraint Language，对 RDF 图做形状与基数约束校验的 W3C 标准。</td></tr>
+            <tr><td><b>SPARQL</b></td><td>RDF 图的 W3C 标准查询语言，1.1 / 1.2 版本。</td></tr>
+            <tr><td><b>Cypher / openCypher</b></td><td>Neo4j 提出的声明式图查询语言，2015 年开放为 openCypher。</td></tr>
+            <tr><td><b>GQL</b></td><td>ISO/IEC 39075:2024，首个继 SQL 之后的 ISO 数据库查询语言，面向属性图。</td></tr>
+            <tr><td><b>TBox / ABox</b></td><td>本体中的术语公理集（模式）与断言公理集（实例）。</td></tr>
+            <tr><td><b>实体消解</b></td><td>Entity Resolution，判定不同来源的多个指称是否指向同一真实实体。</td></tr>
+            <tr><td><b>双时态</b></td><td>Bitemporal，同时记录「事实生效时间」与「数据库知晓该事实的时间」。</td></tr>
+            <tr><td><b>GraphRAG</b></td><td>用知识图谱增强检索生成，补齐向量检索在多跳推理上的短板。</td></tr>
+            <tr><td><b>LDBC</b></td><td>Linked Data Benchmark Council，图数据领域的标准化基准组织（SNB / LSQB / Graphalytics）。</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+    <details class="app">
+      <summary>B · 一页速查：这 20 款分别什么时候选</summary>
+      <ul class="dash">
+        <li><b>要生态、要人才、要 GraphRAG 集成，规模不大</b> → Neo4j（注意社区版是 GPLv3 且无集群 / 无 RBAC）</li>
+        <li><b>千亿点边、原生分布式、要国产开源</b> → NebulaGraph / HugeGraph / TuGraph</li>
+        <li><b>有信创硬要求 + 金融级一致</b> → TuGraph / Galaxybase</li>
+        <li><b>要 OWL 形式化推理、合规可证明</b> → Stardog / GraphDB / AllegroGraph</li>
+        <li><b>要可验证、防篡改、权限在引擎内</b> → Fluree</li>
+        <li><b>要双时态、回答「你当时知道什么」</b> → XTDB</li>
+        <li><b>要 git-for-data、分支合并、时光倒流</b> → TerminusDB</li>
+        <li><b>数据已在云数仓、不想加系统</b> → BigQuery Graph / Spanner Graph / Fabric Graph / PostgreSQL + AGE</li>
+        <li><b>要宽松许可 + 多模 + 可嵌入</b> → ArcadeDB</li>
+        <li><b>要亚毫秒内存态 + 流式接入</b> → Memgraph（BSL）/ FalkorDB（SSPL）</li>
+        <li><b>要托管、少运维、愿意付费</b> → Neo4j AuraDB / Amazon Neptune / 华为云 GES / TigerGraph Savanna</li>
+        <li><b>要真实业务基准背书</b> → 查 LDBC 官方审计名单（如 Galaxybase 2022 SNB），而非官网宣传页</li>
+      </ul>
+    </details>
+
+    <details class="app">
+      <summary>C · 内部依据（本次调研引用的既有资产）</summary>
+      <ol>
+        <li>lynnKB · <span class="mono">wiki/concepts/Ontology.md</span> —— 本体三要素（实体类型 / 关系类型 / 约束规则）、Palantir 启示、9 类实体 13 类关系的本体契约。</li>
+        <li>lynnKB · <span class="mono">wiki/concepts/Semantic Graph.md</span> —— 三元组最小可验证单元、时态感知边、三路混合检索、五层权限模型、Graphiti 代表性实现。</li>
+        <li>lynnKB · <span class="mono">raw/methodology/企业级知识库搭建架构v1.1.md</span> —— 五代方法论演进对比、分层知识架构（L0 SQL / L1 向量 / L2 图 / L3 文档）、选型决策树、四阶段演进路径。</li>
+        <li>工作区 · <span class="mono">本体工程全景调研笔记.html</span> · <span class="mono">本体工程企业落地实战.html</span> —— 本体工程四波浪潮、头部公司实践、本体六步法（范围界定 → 概念抽取 → 形式化 → 验证 → 落地 → 演化）与工具链。</li>
+        <li>工作区 · <span class="mono">企业知识库调研报告-商务版.html</span> —— 阿里 OpenBG 分类型混合建模（RDF/OWL + SKOS + 属性图 + Rule）、Palantir 对象 / 关系 / Function / Action 分层、评测包与运行记录结构。</li>
+      </ol>
+    </details>
+
+    <details class="app">
+      <summary>D · 外部参考来源</summary>
+      <ol class="ref">
+        <li>ISO/IEC 39075:2024 GQL 标准及第 2 版编制状态 —— <a href="https://www.iso.org/standard/89917.html" target="_blank" rel="noreferrer">iso.org</a></li>
+        <li>Neo4j 定价与版本能力对比（Community / AuraDB / Enterprise）—— <a href="https://neo4j.com/pricing" target="_blank" rel="noreferrer">neo4j.com/pricing</a></li>
+        <li>Neo4j 社区版许可与 AuraDB 价格口径评述（2026） —— <a href="https://shortlisted.tools/products/neo4j" target="_blank" rel="noreferrer">shortlisted.tools</a></li>
+        <li>企业知识图谱平台横向比较 2026（Neo4j / Neptune / Stardog / GraphDB / TigerGraph） —— <a href="https://futureagi.com/blog/enterprise-knowledge-graph-platforms-2026" target="_blank" rel="noreferrer">futureagi.com</a></li>
+        <li>知识图谱工具对比：特征、定价与用例 —— <a href="https://atlan.com/know/ai-agent/knowledge-graph/knowledge-graph-tools-compared" target="_blank" rel="noreferrer">atlan.com</a></li>
+        <li>NebulaGraph 官网与企业版 v5.2 能力说明 —— <a href="https://www.nebula-graph.com.cn/" target="_blank" rel="noreferrer">nebula-graph.com.cn</a></li>
+        <li>Apache HugeGraph 晋升 Apache 顶级项目公告 —— <a href="https://anquan.baidu.com/article/2000" target="_blank" rel="noreferrer">anquan.baidu.com</a></li>
+        <li>Galaxybase 产品与 LDBC SNB 成绩（含源代码溯源评估信息） —— <a href="https://galaxybase.com/" target="_blank" rel="noreferrer">galaxybase.com</a></li>
+        <li>IDC《中国图数据库市场份额 2024》要点转述 —— <a href="https://www.sgpjbg.com.cn/news/7067542.html" target="_blank" rel="noreferrer">三个皮匠报告</a></li>
+        <li>Kuzu 归档与 Apple 收购说明 —— <a href="https://github.com/kuzudb/kuzu" target="_blank" rel="noreferrer">github.com/kuzudb/kuzu</a> · <a href="https://www.puppygraph.com/blog/what-is-kuzudb" target="_blank" rel="noreferrer">puppygraph.com</a></li>
+        <li>TerminusDB v12 能力与许可 —— <a href="https://selfhost.directory/project/terminusdb" target="_blank" rel="noreferrer">selfhost.directory</a></li>
+        <li>XTDB 双时态设计说明 —— <a href="http://v1-docs.xtdb.com/concepts/what-is-xtdb/" target="_blank" rel="noreferrer">xtdb.com</a></li>
+        <li>Fluree 可验证知识图谱与引擎内策略执行 —— <a href="https://www.flur.ee/blog/fluree-launches-verifiable-knowledge-graph-database-for-agentic-ai" target="_blank" rel="noreferrer">flur.ee</a></li>
+        <li>BigQuery Graph 公测与 GQL 支持 —— <a href="https://www.vslzai.com/intelligence/bigquery-graph-analytics-setup" target="_blank" rel="noreferrer">vslzai.com</a></li>
+        <li>GraphRAG 成本与收益数据汇总（含 LazyGraphRAG） —— <a href="https://www.trantorinc.com/blog/knowledge-graphs-enterprise-ai" target="_blank" rel="noreferrer">trantorinc.com</a> · <a href="https://databusinesscentral.com/?p=1119/" target="_blank" rel="noreferrer">databusinesscentral.com</a></li>
+        <li>图数据库基准与执行引擎对比（含 LDBC Graphalytics 数据） —— <a href="https://hydradb.com/blog/graph-databases-knowledge-graphs" target="_blank" rel="noreferrer">hydradb.com</a> · <a href="https://gdb-engines.com/compare/established-graph-databases" target="_blank" rel="noreferrer">gdb-engines.com</a></li>
+        <li style="color:#6b7690">说明：以上均为公开可访问来源，用于交叉核对事实与口径；引用不代表对其结论的完全背书。厂商自报的性能数字已在正文中逐处标注。</li>
+      </ol>
+    </details>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap footer-inner">
+    <span>图数据库技术选型研究报告 · v1.0 · 2026-09-11</span>
+    <span>范围：知识图谱 / 本体工程知识库选型 · 20+ 产品 · 厂商自报数字已标注口径</span>
+  </div>
+</footer>
+
+<button class="back-top" id="backTop" aria-label="返回顶部">
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 13V3M8 3L3.5 7.5M8 3l4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+
+<script>
+  (function () {
+    var btn = document.getElementById('backTop');
+    window.addEventListener('scroll', function () {
+      if (window.scrollY > 480) { btn.classList.add('show'); } else { btn.classList.remove('show'); }
+    }, { passive: true });
+    btn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  })();
+</script>
+</body>
+</html>
