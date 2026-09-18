@@ -1,0 +1,987 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="认识AI绘画工具，学习AI绘画咒语">
+<title>AI 绘画趣味课</title>
+<style>
+  :root{
+    /* 糖果主题 */
+    --c-yellow:#ffd24c;
+    --c-yellow-soft:#fff5d6;
+    --c-mint:#5cd3a8;
+    --c-mint-soft:#def8ed;
+    --c-sky:#74c0fc;
+    --c-sky-soft:#dff0ff;
+    --c-pink:#ff8aa8;
+    --c-pink-soft:#ffe3eb;
+    --c-orange:#ffa66a;
+    --c-orange-soft:#ffe8d6;
+    --c-purple:#a78bfa;
+    --c-purple-soft:#ece5ff;
+    --ink:#2c2a4a;
+    --muted:#6b6a85;
+    --dim:#9a99b0;
+    --line:#eee7d8;
+    --line-strong:#e0d5c2;
+    --bg:#fffaf0;
+    --bg-card:#ffffff;
+    --warn:#ff6b6b;
+    --warn-soft:#ffe2e2;
+    --radius:18px;
+    --radius-sm:12px;
+    --shadow:0 6px 18px rgba(180,140,40,.08);
+    --shadow-strong:0 10px 28px rgba(180,140,40,.14);
+    --font:"PingFang SC","Microsoft YaHei UI","Microsoft YaHei","Hiragino Sans GB",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16.5px;line-height:1.85;-webkit-font-smoothing:antialiased}
+  body{padding-bottom:60px}
+  a{color:#cc8b1a;text-decoration:none;border-bottom:1px dashed #f0c878}
+  a:hover{border-bottom-style:solid}
+  /* 阅读进度条 */
+  #progress{position:fixed;top:0;left:0;height:6px;width:0;background:linear-gradient(90deg,var(--c-yellow),var(--c-orange),var(--c-pink));z-index:99;transition:width .1s linear;border-radius:0 6px 6px 0}
+  /* HERO */
+  .hero{
+    background:linear-gradient(135deg,#fff5d6 0%,#dff0ff 50%,#ffe3eb 100%);
+    padding:48px 32px 40px;
+    text-align:center;
+    border-bottom:4px dashed var(--c-yellow);
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";position:absolute;inset:0;
+    background-image:
+      radial-gradient(circle at 12% 20%,rgba(255,210,76,.18) 0 14px,transparent 15px),
+      radial-gradient(circle at 88% 30%,rgba(116,192,252,.18) 0 12px,transparent 13px),
+      radial-gradient(circle at 20% 80%,rgba(255,138,168,.18) 0 10px,transparent 11px),
+      radial-gradient(circle at 78% 78%,rgba(92,211,168,.20) 0 16px,transparent 17px);
+    pointer-events:none;
+  }
+  .hero-inner{position:relative;max-width:880px;margin:0 auto}
+  .hero-emoji{font-size:56px;letter-spacing:6px;margin-bottom:6px}
+  .hero h1{
+    font-size:42px;font-weight:800;margin:6px 0 8px;
+    background:linear-gradient(120deg,#ff8a3d,#ff5d8f 55%,#9d6cff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:1px;
+  }
+  .hero .sub{font-size:18px;color:var(--muted);margin:0 auto 14px;max-width:640px}
+  .hero .badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+  .badge{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:6px 14px;border-radius:999px;background:#ffffffcc;border:2px solid var(--c-yellow);
+    font-size:14px;color:#8a6a14;font-weight:600;
+    box-shadow:var(--shadow);
+  }
+  .badge.b-mint{border-color:var(--c-mint);color:#1f7d5e}
+  .badge.b-sky{border-color:var(--c-sky);color:#1e6396}
+  .badge.b-pink{border-color:var(--c-pink);color:#a02c52}
+  /* 课程速览 */
+  .quicklook{
+    max-width:1080px;margin:24px auto 0;padding:0 24px;
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;
+  }
+  .quick-card{
+    background:#fff;border:2px solid var(--line);border-radius:var(--radius);
+    padding:14px 16px;display:flex;align-items:center;gap:10px;
+    box-shadow:var(--shadow);
+  }
+  .quick-card .ic{font-size:26px}
+  .quick-card .tx{font-size:14.5px;color:var(--muted)}
+  .quick-card .tx b{display:block;color:var(--ink);font-size:15.5px;margin-bottom:2px}
+  /* 主容器 */
+  main{max-width:920px;margin:0 auto;padding:18px 22px}
+  /* 章节 */
+  .sec{
+    background:var(--bg-card);
+    border-radius:var(--radius);
+    padding:28px 30px;
+    margin:22px 0;
+    box-shadow:var(--shadow);
+    border:2px solid var(--line);
+    position:relative;
+  }
+  .sec-head{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+  .sec-num{
+    flex:0 0 56px;height:56px;border-radius:18px;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:22px;color:#fff;
+    box-shadow:0 4px 10px rgba(0,0,0,.10);
+  }
+  .sec-num.s1{background:linear-gradient(135deg,#ffd24c,#ff9a3d)}
+  .sec-num.s2{background:linear-gradient(135deg,#74c0fc,#5cd3a8)}
+  .sec-num.s3{background:linear-gradient(135deg,#ff8aa8,#ff5d8f)}
+  .sec-num.s4{background:linear-gradient(135deg,#a78bfa,#ff8aa8)}
+  .sec-num.s5{background:linear-gradient(135deg,#5cd3a8,#74c0fc)}
+  .sec-num.s6{background:linear-gradient(135deg,#ffa66a,#ff8aa8)}
+  .sec-num.s7{background:linear-gradient(135deg,#74c0fc,#a78bfa)}
+  .sec-num.s8{background:linear-gradient(135deg,#5cd3a8,#ffd24c)}
+  .sec-num.s9{background:linear-gradient(135deg,#ff8aa8,#a78bfa)}
+  .sec-num.s10{background:linear-gradient(135deg,#a78bfa,#74c0fc)}
+  .sec-num.s11{background:linear-gradient(135deg,#ffa66a,#ffd24c)}
+  .sec-num.s12{background:linear-gradient(135deg,#5cd3a8,#a78bfa)}
+  .sec h2{margin:0;font-size:26px;letter-spacing:.5px}
+  .sec h3{font-size:20px;margin:22px 0 10px;color:var(--ink);padding-left:10px;border-left:5px solid var(--c-yellow)}
+  .sec h4{font-size:16.5px;margin:18px 0 6px;color:#5a4a14;background:var(--c-yellow-soft);display:inline-block;padding:3px 10px;border-radius:8px}
+  .sec p{margin:10px 0;color:#3a3850}
+  .sec ul,.sec ol{padding-left:22px;margin:10px 0}
+  .sec li{margin:6px 0}
+  /* 提示卡 */
+  .tip{
+    border-radius:var(--radius);padding:14px 18px;margin:14px 0;
+    background:var(--c-mint-soft);border:2px solid var(--c-mint);
+    position:relative;padding-left:54px;
+  }
+  .tip::before{content:"💡";position:absolute;left:14px;top:14px;font-size:24px;line-height:1}
+  .tip b{color:#1f7d5e}
+  .warn{
+    border-radius:var(--radius);padding:14px 18px;margin:14px 0;
+    background:var(--warn-soft);border:2px solid var(--warn);
+    position:relative;padding-left:54px;
+  }
+  .warn::before{content:"⚠️";position:absolute;left:14px;top:14px;font-size:22px;line-height:1}
+  .warn b{color:#b03a3a}
+  .star{
+    border-radius:var(--radius);padding:14px 18px;margin:14px 0;
+    background:var(--c-yellow-soft);border:2px solid var(--c-yellow);
+    position:relative;padding-left:54px;
+  }
+  .star::before{content:"⭐";position:absolute;left:14px;top:14px;font-size:22px;line-height:1}
+  .star b{color:#8a6a14}
+  .sky{
+    border-radius:var(--radius);padding:14px 18px;margin:14px 0;
+    background:var(--c-sky-soft);border:2px solid var(--c-sky);
+    position:relative;padding-left:54px;
+  }
+  .sky::before{content:"🌈";position:absolute;left:14px;top:14px;font-size:22px;line-height:1}
+  .sky b{color:#1e6396}
+  /* 代码框（提示词示例） */
+  .prompt{
+    background:#1f1d2e;color:#ffd7a8;
+    border-radius:var(--radius);padding:16px 18px;margin:14px 0;
+    font-family:"SFMono-Regular","Cascadia Code",Consolas,"Roboto Mono","PingFang SC",monospace;
+    font-size:15px;line-height:1.7;
+    box-shadow:var(--shadow-strong);
+    border:2px solid #2d2a44;
+    word-break:break-word;
+  }
+  .prompt .tag{display:inline-block;background:#ffb86c;color:#2c2a4a;border-radius:6px;padding:1px 7px;margin-right:4px;font-size:12px;font-weight:700}
+  .prompt .en{color:#a0e7e5}
+  .prompt .note{display:block;margin-top:8px;color:#9c99b8;font-size:13px}
+  /* 表格 */
+  .tbl-wrap{overflow-x:auto;border-radius:var(--radius);box-shadow:var(--shadow);margin:14px 0}
+  table.t{width:100%;border-collapse:collapse;background:#fff;font-size:14.5px}
+  table.t th,table.t td{padding:11px 14px;text-align:left;border-bottom:1.5px solid var(--line)}
+  table.t th{background:var(--c-yellow-soft);color:#5a4a14;font-weight:700}
+  table.t tr:last-child td{border-bottom:none}
+  table.t td:first-child{font-weight:600;color:var(--ink)}
+  /* 工具卡 */
+  .toolgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:14px 0}
+  .toolcard{
+    border-radius:var(--radius);padding:16px;background:#fff;border:2px solid var(--line);
+    display:flex;flex-direction:column;gap:6px;
+    transition:transform .15s ease,box-shadow .15s ease;
+  }
+  .toolcard:hover{transform:translateY(-3px);box-shadow:var(--shadow-strong)}
+  .toolcard .name{font-size:17px;font-weight:800;display:flex;align-items:center;gap:8px}
+  .toolcard .who{font-size:12.5px;color:var(--muted);margin-bottom:4px}
+  .toolcard .stars{color:#f5a623;font-size:14px;letter-spacing:1px}
+  .toolcard .tag-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .toolcard .tag-row span{font-size:12px;padding:2px 8px;border-radius:8px;background:var(--c-mint-soft);color:#1f7d5e;font-weight:600}
+  .toolcard .tag-row span.fee{background:var(--c-yellow-soft);color:#8a6a14}
+  .toolcard .tag-row span.hard{background:var(--c-pink-soft);color:#a02c52}
+  /* 公式卡 */
+  .formula{
+    background:linear-gradient(120deg,#fff5d6,#ffe3eb);
+    border:3px dashed var(--c-orange);
+    border-radius:var(--radius);padding:18px 22px;margin:14px 0;
+    text-align:center;font-size:18px;font-weight:700;color:var(--ink);
+    box-shadow:var(--shadow);
+  }
+  .formula .sep{color:var(--c-orange);margin:0 6px}
+  .formula .lbl{font-size:13px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px;letter-spacing:1px}
+  /* 实战卡 */
+  .case{
+    background:#fff;border-radius:var(--radius);padding:18px 22px;
+    border:2px solid var(--line);margin:14px 0;box-shadow:var(--shadow);
+    position:relative;padding-left:74px;
+  }
+  .case::before{
+    content:attr(data-num);position:absolute;left:18px;top:18px;
+    width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--c-mint),var(--c-sky));
+    color:#fff;font-weight:800;font-size:18px;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 8px rgba(0,0,0,.10);
+  }
+  .case h4{background:transparent;padding:0;color:var(--ink);font-size:17px;display:block;margin:0 0 6px}
+  .case p{margin:6px 0}
+  .case .pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+  .case .pair .ok{background:var(--c-mint-soft);border:1.5px solid var(--c-mint);border-radius:10px;padding:10px 14px;font-size:14px}
+  .case .pair .bad{background:var(--warn-soft);border:1.5px solid var(--warn);border-radius:10px;padding:10px 14px;font-size:14px}
+  .case .pair .ok::before{content:"✅ 好 ";font-weight:800;color:#1f7d5e}
+  .case .pair .bad::before{content:"🙅 不要 ";font-weight:800;color:#b03a3a}
+  @media(max-width:560px){.case .pair{grid-template-columns:1fr}}
+  /* 闯关 */
+  .quests{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:14px 0}
+  .quest{
+    background:#fff;border:2px solid var(--c-yellow);border-radius:var(--radius);
+    padding:14px 16px;box-shadow:var(--shadow);
+    display:flex;flex-direction:column;gap:6px;
+  }
+  .quest .level{font-size:12px;font-weight:800;color:#8a6a14;background:var(--c-yellow-soft);border-radius:8px;padding:2px 8px;align-self:flex-start}
+  .quest h5{margin:6px 0 2px;font-size:16px}
+  .quest .reward{font-size:13px;color:var(--muted);margin-top:4px}
+  .quest .reward b{color:#cc8b1a}
+  /* 五件套 */
+  .five{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0}
+  @media(max-width:720px){.five{grid-template-columns:repeat(2,1fr)}}
+  .five .pip{
+    border-radius:14px;padding:12px;background:#fff;border:2px solid var(--line);
+    text-align:center;font-size:14px;display:flex;flex-direction:column;gap:4px;
+    box-shadow:var(--shadow);
+  }
+  .five .pip .ic{font-size:28px}
+  .five .pip .nm{font-weight:800;color:var(--ink);font-size:15px}
+  .five .pip .en{color:var(--dim);font-size:12px;font-family:monospace}
+  /* 页脚 */
+  .foot{
+    max-width:920px;margin:36px auto 0;padding:22px;
+    text-align:center;color:var(--muted);font-size:13.5px;background:#fff;
+    border-radius:var(--radius);border:2px dashed var(--line-strong);
+  }
+  .foot .stamp{
+    display:inline-block;margin:6px 4px;padding:4px 10px;border-radius:999px;
+    background:var(--c-mint-soft);color:#1f7d5e;font-weight:600;font-size:12.5px;
+  }
+  /* 返回顶部 */
+  #backtop{
+    position:fixed;right:22px;bottom:22px;width:48px;height:48px;border-radius:50%;
+    background:linear-gradient(135deg,var(--c-yellow),var(--c-orange));color:#fff;
+    border:none;cursor:pointer;font-size:22px;box-shadow:0 6px 16px rgba(255,154,61,.4);
+    display:none;align-items:center;justify-content:center;transition:transform .2s ease;
+    z-index:50;
+  }
+  #backtop:hover{transform:translateY(-3px) scale(1.05)}
+  /* 移动端 */
+  @media(max-width:560px){
+    .hero{padding:32px 18px}
+    .hero h1{font-size:30px}
+    .hero .sub{font-size:15.5px}
+    main{padding:12px}
+    .sec{padding:20px 16px;border-radius:14px}
+    .sec h2{font-size:22px}
+    .sec h3{font-size:17px}
+    .sec-num{flex-basis:46px;height:46px;font-size:18px;border-radius:14px}
+    .quicklook{grid-template-columns:1fr 1fr}
+  }
+  /* 打印 */
+  @media print{
+    #progress,#backtop,.hero::before{display:none !important}
+    body{background:#fff}
+    .sec{break-inside:avoid;box-shadow:none;border:1px solid #ccc;margin:10px 0}
+    .hero{background:#fff7e0;border:none}
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-emoji">🎨 🖌️ ✨</div>
+    <h1>AI 绘画趣味课</h1>
+    <p class="sub">给小学生的零基础入门指南 · 用一段话让 AI 帮你画出全世界 🚀</p>
+    <div class="badges">
+      <span class="badge">🎯 1-6 年级</span>
+      <span class="badge b-mint">🕐 一节课 40 分钟</span>
+      <span class="badge b-sky">🧰 6 个工具任选</span>
+      <span class="badge b-pink">🛡️ 安全第一</span>
+    </div>
+  </div>
+</header>
+
+<div class="quicklook">
+  <div class="quick-card"><div class="ic">📚</div><div class="tx"><b>12 节课</b>从认识 AI 到创意闯关</div></div>
+  <div class="quick-card"><div class="ic">🪄</div><div class="tx"><b>咒语公式</b>主体+场景+风格+细节+情绪</div></div>
+  <div class="quick-card"><div class="ic">🎁</div><div class="tx"><b>3 个实战</b>龙 · 房间 · 独角兽</div></div>
+  <div class="quick-card"><div class="ic">💰</div><div class="tx"><b>0 成本</b>国产工具全程免费</div></div>
+  <div class="quick-card"><div class="ic">👨‍👩‍👧</div><div class="tx"><b>家长陪同</b>推荐一年级起</div></div>
+</div>
+
+<main>
+<section class="sec" id="sec1">
+  <div class="sec-head">
+    <div class="sec-num s1">1</div>
+    <h2>欢迎来到 AI 绘画的世界 🌍</h2>
+  </div>
+
+  <p>小朋友，你有没有想过——<b>如果把你脑子里的画面直接"说"出来，电脑就能帮你画出来</b>，那会是什么样的体验？</p>
+  <p>这就是 <b>AI 绘画</b>（也叫 AI 生图、AIGC、Text-to-Image）。你只需要写一段话（我们叫它"<b>咒语</b>"或"<b>提示词</b>"），AI 就能在几秒钟内帮你画出一张图。</p>
+
+  <div class="formula">
+    <span class="lbl">✨ 一句话理解 AI 绘画 ✨</span>
+    你说出想画什么<span class="sep">→</span>AI 听懂<span class="sep">→</span>电脑生成一张图
+  </div>
+
+  <h3>AI 绘画可以做什么？</h3>
+  <ul>
+    <li>🐉 画不存在的动物：会飞的猫、彩虹色的小恐龙</li>
+    <li>🏰 画想象中的场景：糖果城堡、太空学校</li>
+    <li>👧 把脑海里的角色画下来：我的宠物、我的家</li>
+    <li>📚 画课文插图：把古诗变成一张画</li>
+    <li>🎂 设计贺卡、生日礼物、班级海报</li>
+  </ul>
+
+  <div class="star">
+    <b>本节课你会学到：</b>
+    <ol>
+      <li>认识 6 个国产 AI 绘画工具（全部免费！）</li>
+      <li>写出会让 AI 听懂你的"咒语"（提示词）</li>
+      <li>跟着 3 个实战案例画出自己的作品</li>
+      <li>学会一些修图小技巧</li>
+      <li>记住安全小课堂（重要！）</li>
+    </ol>
+  </div>
+
+  <div class="tip">
+    <b>老师提示：</b>每个孩子用一台平板或电脑最方便。<br>
+    如果只能大屏演示，请准备好<b>"小老师轮流报咒语，全班一起看结果"</b>的互动流程。
+  </div>
+</section>
+
+<section class="sec" id="sec2">
+  <div class="sec-head">
+    <div class="sec-num s2">2</div>
+    <h2>AI 真的能"听懂"我们说话吗？🤖</h2>
+  </div>
+
+  <p>在开始画之前，我们先认识一下 AI 绘画背后的"大脑"。它的学名叫做 <b>扩散模型（Diffusion Model）</b>，但今天我们用一个更有趣的说法来解释它——</p>
+
+  <div class="sky">
+    <b>"反向涂鸦"的魔法 ✨</b><br>
+    AI 想象自己面前是一张<b>全是雪花点点的电视屏幕</b>（我们叫它"噪声"）。<br>
+    它根据你的咒语，<b>一点点把雪花擦掉</b>，让画面慢慢变清楚。<br>
+    就像老师撕掉一沓草稿纸，最后一张就是你的成品！
+  </div>
+
+  <h3>一段小历史</h3>
+  <p>其实 AI 画画这件事已经发展 10 多年了。我们快速过一下：</p>
+  <ul>
+    <li>🕰️ <b>2015 年</b>：Google 推出 <b>DeepDream</b>，第一台"会做梦"的 AI，画面像万花筒。</li>
+    <li>🕰️ <b>2021 年</b>：OpenAI 推出 <b>DALL·E</b>，第一次能"听话画出猫"。</li>
+    <li>🕰️ <b>2022 年</b>：<b>Stable Diffusion</b> 开源，全世界都可以用 AI 画图。</li>
+    <li>🕰️ <b>2023-2024 年</b>：国产工具大爆发——豆包、即梦、通义万相、文心一格陆续上线。</li>
+    <li>🕰️ <b>2026 年</b>：国产 AI 绘画已经"卷"到全世界最强水平，画一张图只要 6-12 秒。</li>
+  </ul>
+
+  <div class="tip">
+    <b>为什么 2026 年小学生也能用？</b>因为国产大厂（豆包、即梦、通义万相、文心一格、腾讯元宝、海艺）都开放了<b>免费入口</b>，每天能画几十张到不限制，对小朋友非常友好。
+  </div>
+</section>
+
+<section class="sec" id="sec3">
+  <div class="sec-head">
+    <div class="sec-num s3">3</div>
+    <h2>选你的小画笔 🖌️ · 6 个国产 AI 绘画工具</h2>
+  </div>
+
+  <p>AI 绘画工具就像不同品牌的彩色铅笔——每个都有自己的"手感"。下面 6 个工具全部支持中文，<b>全部有免费额度</b>，非常适合小学生上手：</p>
+
+  <div class="toolgrid">
+    <div class="toolcard">
+      <div class="name">🥔 豆包绘画</div>
+      <div class="who">字节跳动 · 全免费</div>
+      <div class="stars">★★★★★</div>
+      <div class="tag-row">
+        <span>零门槛</span><span>对话式</span><span class="fee">完全免费</span>
+      </div>
+      <p style="font-size:13px;margin:6px 0 0">直接在豆包 App 里说"帮我画一只恐龙"，几秒出图。最适合<b>完全没碰过 AI 绘画的小朋友</b>。</p>
+    </div>
+
+    <div class="toolcard">
+      <div class="name">🌟 即梦 AI</div>
+      <div class="who">字节跳动 · 每日送积分</div>
+      <div class="stars">★★★★★</div>
+      <div class="tag-row">
+        <span>出图快</span><span>风格多</span><span class="fee">日免费 100+</span>
+      </div>
+      <p style="font-size:13px;margin:6px 0 0">画质最强，新手老手都能用，下限高上限够。推荐作为<b>主力工具</b>。</p>
+    </div>
+
+    <div class="toolcard">
+      <div class="name">☁️ 通义万相</div>
+      <div class="who">阿里巴巴 · 国风最强</div>
+      <div class="stars">★★★★</div>
+      <div class="tag-row">
+        <span>国风</span><span>工笔</span><span class="fee">新用户 50 张</span>
+      </div>
+      <p style="font-size:13px;margin:6px 0 0">画古诗、画成语、画山水画最在行。写"水墨""工笔""敦煌"效果惊艳。</p>
+    </div>
+
+    <div class="toolcard">
+      <div class="name">🐻 文心一格</div>
+      <div class="who">百度 · 风格库最全</div>
+      <div class="stars">★★★★</div>
+      <div class="tag-row">
+        <span>预设多</span><span>老牌</span><span class="fee">签到攒积分</span>
+      </div>
+      <p style="font-size:13px;margin:6px 0 0">动漫、插画、赛博朋克、油画……预设风格直接点选，<b>不想写复杂咒语也能出图</b>。</p>
+    </div>
+
+    <div class="toolcard">
+      <div class="name">💬 腾讯元宝</div>
+      <div class="who">腾讯 · 微信生态</div>
+      <div class="stars">★★★★</div>
+      <div class="tag-row">
+        <span>微信</span><span>永久免费</span><span class="fee">无限制</span>
+      </div>
+      <p style="font-size:13px;margin:6px 0 0">混元大模型，画完一键发微信。家长最容易上手的入口。</p>
+    </div>
+
+    <div class="toolcard">
+      <div class="name">🎬 海艺 AI</div>
+      <div class="who">小厂 · 模型最多</div>
+      <div class="stars">★★★★</div>
+      <div class="tag-row">
+        <span>80 万+ 模型</span><span>风格全</span><span class="fee">日免费</span>
+      </div>
+      <p style="font-size:13px;margin:6px 0 0">喜欢玩不同风格的可以试试，<b>古风、二次元、写实</b>通通都有。</p>
+    </div>
+  </div>
+
+  <div class="tip">
+    <b>老师建议选哪两个？</b>
+    <ul>
+      <li><b>主力</b>：即梦 AI 或 通义万相（一个出作品，一个出国风）</li>
+      <li><b>备用</b>：豆包（试提示词最快）</li>
+      <li>如果只能选一个：<b>闭眼选即梦 AI</b>。</li>
+    </ul>
+  </div>
+
+  <h3>怎么打开？</h3>
+  <p>大部分工具是<b>网页版 + 手机 App</b>两条路。下面给你一份"登录直达"清单：</p>
+  <div class="tbl-wrap">
+    <table class="t">
+      <thead><tr><th>工具</th><th>网页入口</th><th>手机 App</th></tr></thead>
+      <tbody>
+        <tr><td>即梦 AI</td><td>jimeng.jianying.com</td><td>剪映 App 内"AI 玩法"</td></tr>
+        <tr><td>豆包</td><td>doubao.com</td><td>豆包 App</td></tr>
+        <tr><td>通义万相</td><td>tongyi.aliyun.com/wanxiang</td><td>通义 App</td></tr>
+        <tr><td>文心一格</td><td>yige.baidu.com</td><td>百度 App</td></tr>
+        <tr><td>腾讯元宝</td><td>yuanbao.tencent.com</td><td>腾讯元宝 App</td></tr>
+        <tr><td>海艺 AI</td><td>haiyi.com</td><td>海艺 AI App</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="warn">
+    <b>账号安全：</b>注册时<b>不要用自己的真实姓名</b>做用户名；<b>不要填家庭住址和学校全称</b>。可以用"小老虎 2026"这样的网名。
+  </div>
+</section>
+
+<section class="sec" id="sec4">
+  <div class="sec-head">
+    <div class="sec-num s4">4</div>
+    <h2>咒语入门 · 什么是"提示词"？🪄</h2>
+  </div>
+
+  <p>现在我们要开始学最重要的部分——<b>写咒语（提示词 / Prompt）</b>。</p>
+
+  <div class="formula">
+    <span class="lbl">✨ 一句话理解 ✨</span>
+    咒语（提示词）<span class="sep">=</span>你告诉 AI "请帮我画..."
+  </div>
+
+  <p>咒语可以很短，也可以很长。下面用同一只"<b>猫</b>"来对比：</p>
+
+  <div class="prompt">
+    <span class="tag">短咒语</span>
+    一只猫。
+    <span class="note">→ AI：随便画一只白猫，背景简单。可能是张"普通"的图。</span>
+  </div>
+
+  <div class="prompt">
+    <span class="tag">长咒语（推荐）</span>
+    <span class="en">A cute orange tabby kitten wearing a tiny wizard hat, sitting on a stack of old books in a cozy library, soft warm lighting, storybook illustration style, dreamy mood, high detail.</span>
+    <span class="note">→ 中文意思：一只戴着小巫师帽的橘色小猫，坐在图书馆的书堆上，柔和的暖光，童话绘本插画风，梦幻氛围，高细节。
+    <br>→ AI：会画出一张<b>像童话书插图一样</b>的、有故事感的图。</span>
+  </div>
+
+  <div class="star">
+    <b>咒语三大原则：</b>
+    <ol>
+      <li><b>具体</b> —— 比"画一个动物"更好的是"画一只橙色的小猫"</li>
+      <li><b>有画面感</b> —— 加上颜色、地点、动作、风格</li>
+      <li><b>有顺序</b> —— 最想突出的内容写在最前面（AI 会更重视）</li>
+    </ol>
+  </div>
+
+  <div class="tip">
+    <b>小学英文小提示：</b>虽然所有国产工具都支持中文，但很多风格关键词用英文更"地道"，比如：<span class="en">cartoon style, watercolor, Studio Ghibli, cyberpunk, 8k, masterpiece</span>。不会拼也没关系——可以让豆包"帮你翻译成英文咒语"。
+  </div>
+</section>
+
+<section class="sec" id="sec5">
+  <div class="sec-head">
+    <div class="sec-num s5">5</div>
+    <h2>咒语五件套 🧩 · 把画面讲清楚</h2>
+  </div>
+
+  <p>一个好的咒语通常包含<b>五件套</b>，就像写作文要有"时间、地点、人物、事件、感受"一样：</p>
+
+  <div class="five">
+    <div class="pip"><div class="ic">🐾</div><div class="nm">主体</div><div class="en">Subject</div></div>
+    <div class="pip"><div class="ic">🏃</div><div class="nm">动作</div><div class="en">Action</div></div>
+    <div class="pip"><div class="ic">🌳</div><div class="nm">场景</div><div class="en">Setting</div></div>
+    <div class="pip"><div class="ic">🎨</div><div class="nm">风格</div><div class="en">Style</div></div>
+    <div class="pip"><div class="ic">😊</div><div class="nm">情绪</div><div class="en">Mood</div></div>
+  </div>
+
+  <h3>公式</h3>
+  <div class="formula">
+    <span class="lbl">万能咒语公式</span>
+    <b>主体</b><span class="sep">+</span><b>动作</b><span class="sep">+</span><b>场景</b><span class="sep">+</span><b>风格</b><span class="sep">+</span><b>情绪</b>
+  </div>
+
+  <h3>每一件分别什么意思？</h3>
+  <div class="tbl-wrap">
+    <table class="t">
+      <thead><tr><th>件套</th><th>作用</th><th>例子</th></tr></thead>
+      <tbody>
+        <tr><td>🐾 主体</td><td>画面里最显眼的"主角"</td><td>小猫、外星人、机器人、城堡</td></tr>
+        <tr><td>🏃 动作</td><td>主角在做什么</td><td>在飞、在跳舞、戴眼镜、笑</td></tr>
+        <tr><td>🌳 场景</td><td>它在哪里</td><td>森林、海底、月球、教室</td></tr>
+        <tr><td>🎨 风格</td><td>用什么"画法"画</td><td>卡通、水彩、漫画、油画</td></tr>
+        <tr><td>😊 情绪</td><td>画面是什么感觉</td><td>开心、神秘、温暖、搞笑</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>套上公式举个例子</h3>
+  <div class="prompt">
+    <span class="tag">举例</span>
+    <span class="en">A baby dragon (主体) breathing rainbow smoke (动作) on top of a candy mountain (场景), cartoon style (风格), happy and magical (情绪).</span>
+    <span class="note">→ 一只小龙在糖果山顶喷彩虹烟，开心又魔幻的卡通风格。
+    <br>→ 你可以照着这个结构，填上自己想画的内容。</span>
+  </div>
+
+  <div class="tip">
+    <b>不会写英文怎么办？</b>先写中文，再让豆包帮你翻译成英文咒语。例如对豆包说："帮我把'一只戴着小巫师帽的橘色小猫坐在书堆上，童话插画风'翻译成 AI 绘画英文提示词。"
+  </div>
+</section>
+
+<section class="sec" id="sec6">
+  <div class="sec-head">
+    <div class="sec-num s6">6</div>
+    <h2>咒语工作室 · 进阶小工具 🛠️</h2>
+  </div>
+
+  <p>除了"五件套"，AI 绘画还有几个常用的小按钮 / 小工具，能让你画得更好：</p>
+
+  <h3>① 负面提示词（Negative Prompt）</h3>
+  <p>告诉 AI <b>"不要画什么"</b>。比如："不要画成人脸"、"不要画恐怖风格"。<br>
+  这个功能在即梦、文心一格、海艺 AI 里都能用。豆包和腾讯元宝不直接支持，可以直接说在咒语里："请画得可爱一些，不要恐怖"。</p>
+
+  <h3>② 画面比例（Aspect Ratio）</h3>
+  <div class="tbl-wrap">
+    <table class="t">
+      <thead><tr><th>比例</th><th>形状</th><th>适合画什么</th></tr></thead>
+      <tbody>
+        <tr><td>1:1</td><td>正方形 ⬛</td><td>头像、表情包、社交分享</td></tr>
+        <tr><td>3:4</td><td>竖版 📱</td><td>海报、漫画页</td></tr>
+        <tr><td>4:3</td><td>横版 🖼️</td><td>风景、班级合影</td></tr>
+        <tr><td>16:9</td><td>超宽屏 🎬</td><td>电脑壁纸、电影分镜</td></tr>
+        <tr><td>9:16</td><td>竖屏 📱</td><td>手机壁纸、短视频封面</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>③ 分辨率与"魔法后缀"</h3>
+  <p>想画面更精致，可以在咒语末尾加这些"魔法词"：</p>
+  <div class="prompt">
+    <span class="tag">画质加分词</span>
+    <span class="en">high detail, masterpiece, best quality, 8k, sharp focus, intricate details</span>
+    <span class="note">→ 高细节、杰作、最佳画质、8K、对焦清晰、精致细节。<br>→ 加上 1-2 个就行，加太多反而会让画面"乱"。</span>
+  </div>
+
+  <h3>④ 风格关键词速查表</h3>
+  <div class="tbl-wrap">
+    <table class="t">
+      <thead><tr><th>风格名</th><th>英文咒语</th><th>画出来像...</th></tr></thead>
+      <tbody>
+        <tr><td>水彩画</td><td>watercolor painting</td><td>像美术课的水彩作品</td></tr>
+        <tr><td>油画</td><td>oil painting</td><td>像博物馆里的古典画</td></tr>
+        <tr><td>卡通</td><td>cartoon style</td><td>像动画片</td></tr>
+        <tr><td>吉卜力</td><td>Studio Ghibli</td><td>像宫崎骏的电影</td></tr>
+        <tr><td>像素风</td><td>pixel art</td><td>像老游戏机画面</td></tr>
+        <tr><td>漫画 / 二次元</td><td>anime style, manga</td><td>像日本漫画</td></tr>
+        <tr><td>国风水墨</td><td>Chinese ink wash painting</td><td>像山水画</td></tr>
+        <tr><td>3D 渲染</td><td>3D render, Pixar style</td><td>像皮克斯动画</td></tr>
+        <tr><td>赛博朋克</td><td>cyberpunk style</td><td>像科幻电影</td></tr>
+        <tr><td>简笔画</td><td>simple line drawing</td><td>像美术本里的简笔画</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="star">
+    <b>小白起步三件套（直接抄作业）：</b>
+    <ol>
+      <li>主体 + 动作 + 场景</li>
+      <li>加一个风格关键词（<span class="en">cartoon style</span> 或 <span class="en">watercolor</span>）</li>
+      <li>加一句情绪词（<span class="en">happy and warm</span>）</li>
+    </ol>
+    三个东西一拼，就是一张很棒的小学生作品。
+  </div>
+</section>
+
+<section class="sec" id="sec7">
+  <div class="sec-head">
+    <div class="sec-num s7">7</div>
+    <h2>实战 1 · 画一只威风凛凛的龙 🐉</h2>
+  </div>
+
+  <p>这是我们的第一个实战。我们一步一步来：</p>
+
+  <div class="case" data-num="1">
+    <h4>第 1 步：想主体</h4>
+    <p>今天的主角是"<b>龙</b>"。一只什么样的龙？我们来填表：</p>
+    <div class="tbl-wrap"><table class="t">
+      <tbody>
+        <tr><td>颜色</td><td>天蓝色</td></tr>
+        <tr><td>大小</td><td>小 baby 龙</td></tr>
+        <tr><td>动作</td><td>在天上飞</td></tr>
+        <tr><td>场景</td><td>云朵之上</td></tr>
+        <tr><td>风格</td><td>童话绘本</td></tr>
+        <tr><td>情绪</td><td>勇敢又可爱</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="case" data-num="2">
+    <h4>第 2 步：套上五件套公式</h4>
+    <p>主体 + 动作 + 场景 + 风格 + 情绪 =</p>
+    <div class="prompt">
+      <span class="tag">咒语 v1</span>
+      <span class="en">A baby sky-blue dragon, flying among fluffy white clouds, cute and brave, children's storybook illustration style, warm sunlight, happy mood, high detail.</span>
+      <span class="note">→ 一只天蓝色的小龙，在松软的白云间飞翔，可爱又勇敢，童话绘本插画风，温暖的阳光，开心氛围，高细节。</span>
+    </div>
+  </div>
+
+  <div class="case" data-num="3">
+    <h4>第 3 步：点生成，看看 AI 画了什么</h4>
+    <p>点完生成按钮，等 8-12 秒。AI 会给你 4 张图，挑你最满意的一张！</p>
+    <div class="tip">
+      <b>挑图小技巧：</b>AI 第一次画的常常不是最完美的。<b>选一张构图最好的</b>，后面我们再用"图生图"继续改进。
+    </div>
+  </div>
+
+  <div class="case" data-num="4">
+    <h4>第 4 步：不满意？调一调再画</h4>
+    <p>如果龙看起来太凶，或者没有云，把咒语改一改：</p>
+    <div class="pair">
+      <div class="ok">
+        <b>画得太凶</b> → 在咒语里加 <span class="en">cute, friendly, storybook</span>
+      </div>
+      <div class="bad">
+        <b>直接说"画可爱点"</b>太模糊 → 要具体写出可爱长什么样
+      </div>
+    </div>
+    <div class="pair">
+      <div class="ok">
+        <b>没看到云</b> → 把 <span class="en">fluffy white clouds</span> 写在更前面
+      </div>
+      <div class="bad">
+        <b>让 AI 重画 10 次</b> → 不如改一句咒语重画 1 次
+      </div>
+    </div>
+  </div>
+
+  <div class="case" data-num="5">
+    <h4>第 5 步：保存你的第一张作品</h4>
+    <p>点下载按钮，把图存到电脑或手机相册。给自己的作品起个名字，比如《我的天空之龙》！</p>
+    <div class="tip">
+      <b>老师建议：</b>可以让学生把作品上传到一个共享文件夹（钉钉群/班级相册），<b>不要发到公开互联网</b>。
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="sec8">
+  <div class="sec-head">
+    <div class="sec-num s8">8</div>
+    <h2>实战 2 · 画我的小房间 🏠</h2>
+  </div>
+
+  <p>这次的练习更有意思——画"自己的房间"。先想 30 秒，再开始写咒语。</p>
+
+  <h3>填空式咒语模板（直接抄）</h3>
+  <div class="prompt">
+    <span class="tag">房间模板</span>
+    <span class="en">A cozy (1) [颜色] bedroom, with a (2) [床/书桌/书架] in the corner, (3) [窗户/灯/海报] on the wall, soft (4) [早上/晚上] light coming through the window, (5) [风格] style, warm and peaceful mood, high detail.</span>
+    <span class="note">→ 1 填房间主色 2 填主要家具 3 填装饰物 4 填时间 5 填风格</span>
+  </div>
+
+  <h3>两个范例</h3>
+  <div class="prompt">
+    <span class="tag">范例 A · 安静书桌</span>
+    <span class="en">A cozy mint-green bedroom, with a wooden desk and many books in the corner, a planet poster on the wall, soft morning light coming through the window, watercolor style, warm and peaceful mood, high detail.</span>
+    <span class="note">→ 薄荷绿的小房间，角落里有木书桌和很多书，墙上贴星球海报，柔和的早晨阳光，水彩画风，温暖又平静。</span>
+  </div>
+
+  <div class="prompt">
+    <span class="tag">范例 B · 太空卧室</span>
+    <span class="en">A space-themed blue bedroom, with a rocket-shaped bed and stars painted on the ceiling, a telescope by the window, soft moonlight, Studio Ghibli style, dreamy and magical mood, high detail.</span>
+    <span class="note">→ 太空主题的蓝色卧室，火箭形状的床和画着星星的天花板，窗边的望远镜，柔和的月光，吉卜力动画风，梦幻又魔幻。</span>
+  </div>
+
+  <div class="tip">
+    <b>讨论环节：</b>让大家把咒语念出来，听听谁的描述最"具体"。<br>
+    有同学可能会说"我的房间有恐龙抱枕"——这就很好！<b>越具体、越私人，AI 画得越好玩。</b>
+  </div>
+
+  <div class="warn">
+    <b>注意隐私：</b>不要让 AI 画你家<b>真实房间的样子</b>（窗户位置、家具品牌可能被识别）。我们要画"想象中的房间"，不要画"长得很像我家"的房间。
+  </div>
+</section>
+
+<section class="sec" id="sec9">
+  <div class="sec-head">
+    <div class="sec-num s9">9</div>
+    <h2>实战 3 · 画一只会飞的独角兽 🦄</h2>
+  </div>
+
+  <p>最后一个实战我们玩点刺激的——<b>把两种不常见的东西拼在一起</b>。这是 AI 绘画最擅长的事！</p>
+
+  <h3>组合魔法 · "X 骑在 Y 上"</h3>
+  <div class="prompt">
+    <span class="tag">咒语</span>
+    <span class="en">A tiny astronaut riding a flying unicorn through cotton-candy clouds at sunset, rainbow mane and tail, sparkles everywhere, pastel colors, Studio Ghibli anime style, dreamy and magical mood, masterpiece, high detail.</span>
+    <span class="note">→ 一位小宇航员骑着飞行的独角兽穿过棉花糖云海，彩虹鬃毛和尾巴，到处是闪光，柔和粉彩，吉卜力动画风，梦幻又魔幻，杰作级，高细节。</span>
+  </div>
+
+  <h3>咒语拆解</h3>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>位置</th><th>五件套</th><th>内容</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>主体（双重）</td><td>小宇航员 + 飞行的独角兽</td></tr>
+      <tr><td>2</td><td>动作</td><td>骑着穿过</td></tr>
+      <tr><td>3</td><td>场景</td><td>棉花糖云海 + 日落</td></tr>
+      <tr><td>4</td><td>风格</td><td>吉卜力动画 + 粉彩</td></tr>
+      <tr><td>5</td><td>情绪</td><td>梦幻 + 魔幻</td></tr>
+      <tr><td>+</td><td>魔法词</td><td>masterpiece, high detail</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="sky">
+    <b>创意挑战：</b>试试用"骑"或"飞"或"吃"的组合，自己拼一种新东西：<br>
+    👨‍🍳 厨师骑着恐龙 / 🐱 会飞的鱼 / 🌚 月亮做的蛋糕 / 🐘 大象形状的气球<br>
+    把你想到的组合告诉 AI，看它能画出什么惊喜！
+  </div>
+
+  <div class="tip">
+    <b>家长辅导技巧：</b>如果孩子想不出组合，可以问：<br>
+    "如果你<b>最爱的玩具</b>和<b>最爱的动物</b>合在一起，会是什么样？"
+  </div>
+</section>
+
+<section class="sec" id="sec10">
+  <div class="sec-head">
+    <div class="sec-num s10">10</div>
+    <h2>修图小技巧 🛠️ · 让图更好玩</h2>
+  </div>
+
+  <p>AI 第一次画的图通常不是最完美的。我们有三个超能力可以再加工：</p>
+
+  <div class="tbl-wrap">
+    <table class="t">
+      <thead><tr><th>技能</th><th>能做什么</th><th>适合什么场景</th><th>哪些工具有</th></tr></thead>
+      <tbody>
+        <tr><td>🖌️ 局部重绘</td><td>只改画面里的某一块（比如把猫脸改可爱）</td><td>整体不错，但有局部不满意</td><td>即梦、海艺、SD</td></tr>
+        <tr><td>🪄 图生图</td><td>上传一张图，让 AI 重新画一张风格相近的</td><td>想要同一张图的不同画风</td><td>即梦、通义万相、豆包</td></tr>
+        <tr><td>📐 扩图 / 平移</td><td>把竖图变横图、把图变大</td><td>想做壁纸、海报</td><td>即梦、文心一格、SD</td></tr>
+        <tr><td>🚫 消除笔</td><td>把不想要的东西擦掉</td><td>画面里有多余的路人、文字</td><td>即梦、通义万相</td></tr>
+        <tr><td>🎬 图生视频</td><td>让静态图动起来 5 秒</td><td>讲故事、做小短片</td><td>可灵、即梦</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>技巧 1 · 局部重绘画猫脸</h3>
+  <div class="prompt">
+    <span class="tag">操作步骤</span>
+    1. 上传你之前画的猫。<br>
+    2. 用画笔把猫脸圈出来。<br>
+    3. 在圈里写咒语：<span class="en">a cute smiling cat face, big eyes, pink nose, friendly</span>。<br>
+    4. 点生成 → 只改脸，其他不变。
+  </div>
+
+  <h3>技巧 2 · 同款变三种风格</h3>
+  <div class="prompt">
+    <span class="tag">图生图咒语</span>
+    把同一只龙分别写成：水彩画 / 油画 / 像素风 / 折纸风，对比一下超有意思。
+    <span class="en">Watercolor style: a baby blue dragon, ...</span>
+    <span class="en">Oil painting style: a baby blue dragon, ...</span>
+    <span class="en">Pixel art: a baby blue dragon, ...</span>
+  </div>
+
+  <div class="sky">
+    <b>玩法扩展：</b>把自己画的水彩画 + 同学的画合在一起，让 AI 把两张图变成一张"双主角"插画。这就是<b>"联合创作"</b>。
+  </div>
+
+  <div class="tip">
+    <b>家长提示：</b>如果孩子想上传自己的照片转风格（比如把自己变成动漫角色），请先<b>把照片脸部下半部分挡住</b>或者<b>直接用 AI 生成的图</b>，避免真照片被传到云端。
+  </div>
+</section>
+
+<section class="sec" id="sec11">
+  <div class="sec-head">
+    <div class="sec-num s11">11</div>
+    <h2>创意闯关 ✨ · 课后作业</h2>
+  </div>
+
+  <p>学完前面 10 节，是时候自己闯一闯了！选 2-3 个作业去完成，做完发给老师或者家长点评：</p>
+
+  <div class="quests">
+    <div class="quest">
+      <div class="level">⭐ 一颗星</div>
+      <h5>第 1 关 · 我的家人</h5>
+      <p>用"五件套"画<b>你的家人</b>（不写真实样子，只画想象中的卡通形象）。</p>
+      <div class="reward">奖励：🎁 老师给一颗"咒语小能手"贴纸</div>
+    </div>
+
+    <div class="quest">
+      <div class="level">⭐⭐ 两颗星</div>
+      <h5>第 2 关 · 课文插画师</h5>
+      <p>选一首你学过的古诗，给它配一张 AI 插画。<br>比如《静夜思》《草》《咏鹅》。</p>
+      <div class="reward">奖励：🏆 班级公众号刊发</div>
+    </div>
+
+    <div class="quest">
+      <div class="level">⭐⭐⭐ 三颗星</div>
+      <h5>第 3 关 · 故事封面设计</h5>
+      <p>自己写一个 100 字的小故事开头，给它做一个 AI 封面，写上书名。</p>
+      <div class="reward">奖励：🎨 入选班级画展</div>
+    </div>
+
+    <div class="quest">
+      <div class="level">⭐⭐⭐⭐ 四颗星</div>
+      <h5>第 4 关 · 同一主角三种画风</h5>
+      <p>创造一个"原创角色"（小怪兽、外星公主），分别用<b>水彩、油画、像素风</b>各画一张，做一张对比图。</p>
+      <div class="reward">奖励：📚 加入"班级角色库"</div>
+    </div>
+
+    <div class="quest">
+      <div class="level">⭐⭐⭐⭐⭐ 五颗星</div>
+      <h5>第 5 关 · 班级共创绘本</h5>
+      <p>和 3-4 个同学一起，每人画 1-2 页，合起来做成一个<b>4 页电子绘本</b>。</p>
+      <div class="reward">奖励：🏅 入选校级艺术节</div>
+    </div>
+
+    <div class="quest">
+      <div class="level">🎁 隐藏关</div>
+      <h5>第 6 关 · 帮助爸妈</h5>
+      <p>帮爸爸妈妈用 AI 画一张生日贺卡或者节日海报，送给他们。</p>
+      <div class="reward">奖励：❤️ 家人最暖的感谢</div>
+    </div>
+  </div>
+
+  <h3>评奖标准（老师 / 家长参考）</h3>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>维度</th><th>看什么</th><th>满分</th></tr></thead>
+    <tbody>
+      <tr><td>创意</td><td>是不是别人没想到的组合</td><td>30 分</td></tr>
+      <tr><td>咒语</td><td>五件套是否齐全、是否具体</td><td>30 分</td></tr>
+      <tr><td>完成度</td><td>是否认真调过几次</td><td>20 分</td></tr>
+      <tr><td>故事感</td><td>画面有没有"自己的故事"</td><td>20 分</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="sec" id="sec12">
+  <div class="sec-head">
+    <div class="sec-num s12">12</div>
+    <h2>安全小课堂 🛡️ · 这三件事一定要记住</h2>
+  </div>
+
+  <p>玩 AI 绘画既开心又安全，但要记住<b>三条铁律</b>：</p>
+
+  <h3>🚨 铁律 1 · 不传自己的真实照片</h3>
+  <div class="warn">
+    <b>不要把自己的脸、自己家的照片、同学的真人照片</b>传到 AI 工具里。<br>
+    因为你不知道这些照片被服务器存到了哪里、被谁看过。<br>
+    <b>替代方案</b>：用卡通形象、玩具、或者让 AI 重新生成的虚拟形象代替。
+  </div>
+
+  <h3>🚨 铁律 2 · 不暴露个人信息</h3>
+  <div class="warn">
+    写咒语时不要写：<br>
+    ❌ "我家的窗户朝南"（暴露住址）<br>
+    ❌ "我的学校叫 XX 小学三年级二班"（暴露学校班级）<br>
+    ❌ "我的真名是..."（暴露身份）<br>
+    ✅ 用"一只小老虎"、"一间小学教室"、"一个扎马尾的女孩"代替。
+  </div>
+
+  <h3>🚨 铁律 3 · 不轻信 AI 画的东西</h3>
+  <div class="warn">
+    AI 经常"瞎画"——手指 6 根、眼睛大小不一样、英文写错。<br>
+    AI <b>不是</b>百科全书，它画得好看不等于内容是对的。<br>
+    看到任何 AI 画的图，要问自己："<b>这真的可能吗？</b>"<br>
+    比如 AI 画的"独角兽在天上飞"——这是想象，没问题；<br>
+    AI 画的"某种动物长这样"——要去查真实百科，不要直接信。
+  </div>
+
+  <h3>👨‍👩‍👧 家长 / 老师陪同清单</h3>
+  <div class="tbl-wrap"><table class="t">
+    <thead><tr><th>环节</th><th>建议</th></tr></thead>
+    <tbody>
+      <tr><td>账号注册</td><td>用家长的手机号注册，<b>开启青少年模式</b>（豆包、即梦都有）</td></tr>
+      <tr><td>使用时长</td><td>单次 30 分钟内，每天不超过 1 小时</td></tr>
+      <tr><td>作品保存</td><td>存在<b>本地电脑 / 班级云盘</b>，不要发公开社交平台</td></tr>
+      <tr><td>遇到奇怪内容</td><td>立刻关掉，告诉家长 / 老师</td></tr>
+      <tr><td>作品署名</td><td>鼓励加一句"由 [你的名字] 与 AI 共同创作"</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="star">
+    <b>最后一句：</b>
+    AI 是你<b>最勤劳的小助手</b>，但<b>不是你的大脑</b>。<br>
+    最有意思的部分永远是你脑子里的"那个画面"——<br>
+    AI 只能帮你把它<b>变出来</b>，但想出来的，是你自己 ✨。
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div>📒 这是一份给小学生讲课用的 AI 绘画入门课件</div>
+  <div style="margin-top:6px">
+    <span class="stamp">🎯 零代码</span>
+    <span class="stamp">🛡️ 隐私优先</span>
+    <span class="stamp">🌈 创意无限</span>
+    <span class="stamp">🇨🇳 国产工具为主</span>
+  </div>
+  <div style="margin-top:8px;color:var(--dim);font-size:12px">最后更新：2026 年 9 月 · 内容参考国产主流 AI 绘画工具官方资料与儿童 AI 教育公开经验</div>
+</footer>
+
+<button id="backtop" title="回到顶部">↑</button>
+
+<script>
+(function(){
+  var bar=document.getElementById('progress');
+  var backtop=document.getElementById('backtop');
+  function onScroll(){
+    var h=document.documentElement;
+    var scrolled=(h.scrollTop||document.body.scrollTop);
+    var height=(h.scrollHeight-h.clientHeight);
+    var pct=height>0?Math.min(100,(scrolled/height)*100):0;
+    bar.style.width=pct+'%';
+    backtop.style.display=scrolled>300?'flex':'none';
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+  backtop.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'})});
+})();
+</script>
+
+</body>
+</html>
