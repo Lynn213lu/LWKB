@@ -1,0 +1,1242 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="面向高校师生的互联网、大数据与AI职业讲座" />
+  <title>互联网、大数据与AI：从日常到职场</title>
+  <style>
+    :root {
+      --ink: #27221d;
+      --muted: #6e655c;
+      --line: #e7ddd2;
+      --paper: #ffffff;
+      --cream: #fff8f1;
+      --warm: #c95d3c;
+      --warm-dark: #a7442d;
+      --gold: #e3a553;
+      --gold-soft: #fff0d7;
+      --green: #315f50;
+      --green-soft: #e7f1ec;
+      --clay: #f8e6dd;
+      --blue-soft: #eaf3f4;
+      --shadow: 0 18px 48px rgba(68, 43, 24, 0.08);
+      --content-width: 1200px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { margin: 0; min-height: 100%; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    button { font: inherit; }
+
+    .deck { min-height: 100svh; position: relative; }
+
+    .slide {
+      display: none;
+      width: 100%;
+      min-height: 100svh;
+      height: 100svh;
+      overflow: auto;
+      padding: 42px 76px 56px;
+      background: var(--paper);
+      position: relative;
+    }
+
+    .slide.active { display: flex; animation: reveal 280ms ease-out; }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: var(--warm);
+    }
+
+    @keyframes reveal {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .slide-inner {
+      width: min(100%, var(--content-width));
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100svh - 98px);
+      position: relative;
+    }
+
+    .topline {
+      align-items: center;
+      color: #4f4339;
+      display: flex;
+      font-size: 18px;
+      font-weight: 800;
+      justify-content: space-between;
+      letter-spacing: 0;
+      line-height: 1.25;
+      margin-bottom: 28px;
+      text-transform: uppercase;
+    }
+
+    .eyebrow {
+      align-items: center;
+      color: #9c503b;
+      display: inline-flex;
+      font-size: 17px;
+      font-weight: 800;
+      gap: 9px;
+      line-height: 1;
+    }
+
+    .eyebrow::before { background: var(--warm); content: ""; height: 9px; width: 9px; }
+
+    .section-no { color: #78685b; font-size: 16px; font-variant-numeric: tabular-nums; }
+
+    h1, h2, h3, p { margin: 0; }
+
+    h1 {
+      font-size: 64px;
+      font-weight: 800;
+      letter-spacing: 0;
+      line-height: 1.12;
+    }
+
+    h2 {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: 0;
+      line-height: 1.16;
+      max-width: 980px;
+    }
+
+    h3 { font-size: 19px; line-height: 1.3; }
+
+    .lead {
+      color: #4d453e;
+      font-size: 20px;
+      line-height: 1.65;
+      margin-top: 18px;
+      max-width: 870px;
+    }
+
+    .small-lead {
+      color: #5d544c;
+      font-size: 16px;
+      line-height: 1.6;
+      margin-top: 12px;
+      max-width: 920px;
+    }
+
+    .accent { color: var(--warm-dark); }
+    .green { color: var(--green); }
+
+    .slide-footer {
+      align-items: center;
+      color: #9a8d81;
+      display: flex;
+      font-size: 15px;
+      font-weight: 700;
+      justify-content: space-between;
+      margin-top: auto;
+      padding-top: 20px;
+    }
+
+    .slide-footer::before {
+      background: var(--line);
+      content: "";
+      height: 1px;
+      left: 0;
+      position: absolute;
+      right: 0;
+      bottom: 38px;
+    }
+
+    .slide-footer span { position: relative; }
+
+    .grid { display: grid; gap: 16px; margin-top: 28px; }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 20px;
+    }
+
+    .card.soft { background: var(--cream); border-color: #f4dfcc; }
+    .card.clay { background: #fff8f5; border-color: #f0d5c9; }
+    .card.green-card { background: #f6fbf8; border-color: #d6e7dc; }
+    .card.blue-card { background: #f6fafb; border-color: #d4e6e8; }
+
+    .card .tag, .role-tag {
+      align-items: center;
+      color: var(--warm-dark);
+      display: inline-flex;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 11px;
+    }
+
+    .role-tag { color: var(--green); }
+
+    .card p {
+      color: #5f564e;
+      font-size: 15px;
+      line-height: 1.58;
+      margin-top: 8px;
+    }
+
+    .icon-box {
+      align-items: center;
+      background: var(--gold-soft);
+      border-radius: 6px;
+      color: var(--warm-dark);
+      display: inline-flex;
+      height: 34px;
+      justify-content: center;
+      margin-bottom: 15px;
+      width: 34px;
+    }
+
+    .icon-box.green-box { background: var(--green-soft); color: var(--green); }
+    .icon-box.clay-box { background: var(--clay); color: var(--warm-dark); }
+    .icon-box.blue-box { background: var(--blue-soft); color: #27646e; }
+    .icon-box svg { height: 18px; width: 18px; stroke-width: 2; }
+
+    .list {
+      color: #534b43;
+      display: grid;
+      font-size: 15px;
+      gap: 8px;
+      line-height: 1.55;
+      list-style: none;
+      margin: 12px 0 0;
+      padding: 0;
+    }
+
+    .list li { padding-left: 16px; position: relative; }
+    .list li::before { background: var(--warm); content: ""; height: 5px; left: 0; position: absolute; top: 9px; width: 5px; }
+    .green-list li::before { background: var(--green); }
+
+    .quote {
+      border-left: 4px solid var(--gold);
+      color: #4f463e;
+      font-size: 17px;
+      line-height: 1.65;
+      margin-top: 22px;
+      max-width: 980px;
+      padding: 4px 0 4px 18px;
+    }
+
+    .cover { background: #fffdfb; }
+    .cover::before { background: var(--warm); height: 8px; }
+    .cover-grid { align-items: center; display: grid; flex: 1; gap: 48px; grid-template-columns: 1.02fr 0.98fr; }
+
+    .cover h1 { max-width: 650px; }
+    .cover h1 .line-break { display: block; }
+    .cover-subtitle { color: #625950; font-size: 21px; line-height: 1.6; margin-top: 24px; max-width: 580px; }
+    .cover-meta { align-items: center; color: #817469; display: flex; font-size: 14px; font-weight: 700; gap: 18px; margin-top: 35px; }
+    .cover-meta span + span { border-left: 1px solid var(--line); padding-left: 18px; }
+
+    .cover-art {
+      aspect-ratio: 1.02;
+      background: var(--cream);
+      border: 1px solid #f0dfce;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .cover-art::before, .cover-art::after { content: ""; position: absolute; }
+    .cover-art::before { border: 1px solid #edc38b; height: 250px; left: 104px; top: 100px; transform: rotate(21deg); width: 250px; }
+    .cover-art::after { background: var(--warm); height: 10px; left: 46px; top: 47px; width: 10px; }
+
+    .art-node {
+      align-items: center;
+      background: var(--paper);
+      border: 1px solid #ead7c4;
+      border-radius: 6px;
+      box-shadow: 0 12px 22px rgba(88, 53, 25, 0.07);
+      color: var(--ink);
+      display: flex;
+      font-size: 15px;
+      font-weight: 800;
+      gap: 9px;
+      padding: 13px 16px;
+      position: absolute;
+      z-index: 1;
+    }
+
+    .art-node i { color: var(--warm); height: 18px; width: 18px; }
+    .node-1 { left: 52px; top: 101px; }
+    .node-2 { right: 44px; top: 82px; }
+    .node-3 { left: 52px; bottom: 93px; }
+    .node-4 { right: 35px; bottom: 72px; }
+    .art-center {
+      align-items: center;
+      background: var(--warm-dark);
+      border-radius: 50%;
+      color: white;
+      display: flex;
+      height: 128px;
+      justify-content: center;
+      left: calc(50% - 64px);
+      position: absolute;
+      text-align: center;
+      top: calc(50% - 64px);
+      width: 128px;
+      z-index: 2;
+    }
+
+    .art-center strong { display: block; font-size: 24px; line-height: 1; }
+    .art-center span { display: block; font-size: 13px; margin-top: 8px; }
+
+    .number-banner {
+      align-items: baseline;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      gap: 20px;
+      margin-top: 34px;
+      padding-bottom: 20px;
+    }
+
+    .number-banner b { color: var(--warm); font-size: 54px; line-height: 1; }
+    .number-banner p { color: #655b51; font-size: 16px; line-height: 1.55; max-width: 760px; }
+
+    .agenda-grid { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 30px; }
+    .agenda-item { align-items: start; border: 1px solid var(--line); border-radius: 7px; display: grid; gap: 16px; grid-template-columns: 58px 1fr; min-height: 118px; padding: 17px; }
+    .agenda-item .agenda-index { color: var(--gold); font-size: 32px; font-weight: 800; line-height: 1; }
+    .agenda-item h3 { font-size: 19px; }
+    .agenda-item p { color: var(--muted); font-size: 14px; line-height: 1.5; margin-top: 7px; }
+    .agenda-item:nth-child(2) { background: #fff9f5; border-color: #efd8c9; }
+    .agenda-item:nth-child(3) { background: #f6fbf8; border-color: #d5e5dc; }
+    .agenda-item:nth-child(4) { background: #f6fafb; border-color: #d4e5e7; }
+
+    .day-line { align-items: stretch; display: grid; gap: 12px; grid-template-columns: repeat(5, 1fr); margin-top: 30px; }
+    .day-step { border-top: 3px solid var(--warm); padding: 14px 10px 0 0; }
+    .day-step:nth-child(2) { border-color: var(--gold); }
+    .day-step:nth-child(3) { border-color: var(--green); }
+    .day-step:nth-child(4) { border-color: #63868d; }
+    .day-step:nth-child(5) { border-color: #bc7559; }
+    .day-step b { display: block; font-size: 16px; }
+    .day-step p { color: var(--muted); font-size: 14px; line-height: 1.45; margin-top: 6px; }
+
+    .flow { align-items: stretch; display: grid; gap: 12px; grid-template-columns: repeat(5, 1fr); margin-top: 30px; }
+    .flow-item { background: var(--cream); border: 1px solid #efdfcf; border-radius: 6px; min-height: 148px; padding: 18px 16px; position: relative; }
+    .flow-item:not(:last-child)::after { color: var(--gold); content: "→"; font-size: 24px; font-weight: 700; position: absolute; right: -20px; top: calc(50% - 17px); z-index: 3; }
+    .flow-item .flow-no { color: var(--warm); display: block; font-size: 12px; font-weight: 800; margin-bottom: 14px; }
+    .flow-item b { display: block; font-size: 17px; }
+    .flow-item p { color: var(--muted); font-size: 14px; line-height: 1.45; margin-top: 8px; }
+
+    .pillar { border-top: 4px solid var(--warm); padding: 18px 5px 0; }
+    .pillar:nth-child(2) { border-color: var(--gold); }
+    .pillar:nth-child(3) { border-color: var(--green); }
+    .pillar:nth-child(4) { border-color: #63868d; }
+    .pillar h3 { font-size: 18px; }
+    .pillar p { color: var(--muted); font-size: 14px; line-height: 1.55; margin-top: 8px; }
+
+    .role-map { display: grid; gap: 10px; grid-template-columns: repeat(7, minmax(0, 1fr)); margin-top: 26px; }
+    .role-tile { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; min-height: 122px; padding: 14px; }
+    .role-tile b { display: block; font-size: 15px; }
+    .role-tile span { color: var(--muted); display: block; font-size: 12px; line-height: 1.45; margin-top: 7px; }
+    .role-tile:nth-child(1) { border-top: 4px solid var(--warm); }
+    .role-tile:nth-child(2) { border-top: 4px solid var(--gold); }
+    .role-tile:nth-child(3) { border-top: 4px solid var(--green); }
+    .role-tile:nth-child(4) { border-top: 4px solid #63868d; }
+    .role-tile:nth-child(5) { border-top: 4px solid #c57964; }
+    .role-tile:nth-child(6) { border-top: 4px solid #7d9a79; }
+    .role-tile:nth-child(7) { border-top: 4px solid #a69785; }
+
+    .quiz {
+      background: #fff8f2;
+      border: 1px solid #efd9c8;
+      border-radius: 7px;
+      margin-top: 26px;
+      padding: 18px 20px;
+    }
+
+    .quiz-head { align-items: center; color: var(--warm-dark); display: flex; font-size: 13px; font-weight: 800; gap: 8px; }
+    .quiz-head i { height: 16px; width: 16px; }
+    .quiz-question { color: #332c26; font-size: 17px; font-weight: 700; line-height: 1.5; margin-top: 8px; }
+    .quiz-options { display: grid; gap: 10px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 14px; }
+    .quiz-option {
+      align-items: center;
+      background: white;
+      border: 1px solid #e5d5c6;
+      border-radius: 5px;
+      color: #4d443b;
+      cursor: pointer;
+      display: flex;
+      font-size: 14px;
+      font-weight: 700;
+      gap: 9px;
+      min-height: 42px;
+      padding: 9px 12px;
+      text-align: left;
+      transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+    }
+
+    .quiz-option:hover { border-color: var(--warm); transform: translateY(-1px); }
+    .quiz-option:focus-visible { outline: 3px solid #f3c28f; outline-offset: 2px; }
+    .quiz-option span { align-items: center; background: var(--gold-soft); border-radius: 50%; color: var(--warm-dark); display: inline-flex; flex: 0 0 auto; font-size: 12px; height: 22px; justify-content: center; width: 22px; }
+    .quiz-option.correct { background: #f2faf5; border-color: #8db8a0; color: var(--green); }
+    .quiz-option.incorrect { background: #fff5f1; border-color: #d58a74; color: var(--warm-dark); }
+    .quiz-feedback { color: var(--green); font-size: 14px; font-weight: 700; line-height: 1.5; margin-top: 12px; min-height: 21px; }
+
+    .journey { align-items: center; display: grid; gap: 0; grid-template-columns: 1.05fr 46px 1.05fr 46px 1.05fr; margin-top: 36px; }
+    .journey-stage { border: 1px solid var(--line); border-radius: 7px; min-height: 245px; padding: 22px; }
+    .journey-stage.production { background: #fff8f3; border-color: #efd7c3; }
+    .journey-stage.consume { background: #fbfaf7; border-color: #e8dfce; }
+    .journey-stage.decision { background: #f6fbf8; border-color: #d5e5dc; }
+    .journey-stage .stage-no { color: var(--warm-dark); font-size: 13px; font-weight: 800; }
+    .journey-stage.decision .stage-no { color: var(--green); }
+    .journey-stage h3 { font-size: 23px; margin-top: 10px; }
+    .journey-stage p { color: var(--muted); font-size: 15px; line-height: 1.55; margin-top: 10px; }
+    .journey-stage .mini-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 16px; }
+    .chip { background: white; border: 1px solid #e8ddd2; border-radius: 999px; color: #63594f; font-size: 12px; font-weight: 700; padding: 6px 9px; }
+    .journey-arrow { color: var(--gold); font-size: 28px; font-weight: 800; text-align: center; }
+
+    .detail-split { display: grid; gap: 26px; grid-template-columns: 1.05fr 0.95fr; margin-top: 28px; }
+    .job-block { border-top: 3px solid var(--warm); padding: 16px 0 0; }
+    .job-block + .job-block { margin-top: 20px; }
+    .job-block.green-top { border-color: var(--green); }
+    .job-title-row { align-items: center; display: flex; gap: 12px; justify-content: space-between; }
+    .job-title-row h3 { font-size: 22px; }
+    .department { background: var(--gold-soft); color: var(--warm-dark); font-size: 12px; font-weight: 800; padding: 6px 8px; white-space: nowrap; }
+    .department.green-dept { background: var(--green-soft); color: var(--green); }
+    .job-block p { color: #5f554c; font-size: 15px; line-height: 1.58; margin-top: 10px; }
+
+    .key-callout { align-items: flex-start; background: var(--cream); border-left: 4px solid var(--gold); display: flex; gap: 14px; margin-top: 22px; padding: 14px 16px; }
+    .key-callout i { color: var(--warm-dark); flex: 0 0 auto; height: 19px; margin-top: 2px; width: 19px; }
+    .key-callout p { color: #5d5045; font-size: 14px; line-height: 1.55; }
+
+    .decision-grid { display: grid; gap: 14px; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 26px; }
+    .decision-card { border: 1px solid var(--line); border-radius: 7px; min-height: 230px; padding: 17px; }
+    .decision-card h3 { font-size: 18px; }
+    .decision-card .dept-line { color: var(--warm-dark); font-size: 12px; font-weight: 800; margin-top: 8px; }
+    .decision-card p { color: #5f554c; font-size: 14px; line-height: 1.53; margin-top: 10px; }
+    .decision-card:nth-child(2) .dept-line { color: #9a6a22; }
+    .decision-card:nth-child(3) .dept-line { color: var(--green); }
+    .decision-card:nth-child(4) .dept-line { color: #537a85; }
+
+    .case-layout { display: grid; gap: 34px; grid-template-columns: 0.85fr 1.15fr; margin-top: 28px; }
+    .case-question { background: var(--warm-dark); border-radius: 7px; color: white; min-height: 288px; padding: 28px; }
+    .case-question .case-tag { color: #f9d3a1; font-size: 12px; font-weight: 800; }
+    .case-question h3 { font-size: 28px; line-height: 1.3; margin-top: 16px; }
+    .case-question p { color: #fee9d5; font-size: 15px; line-height: 1.6; margin-top: 15px; }
+    .relay { display: grid; gap: 8px; }
+    .relay-row { align-items: center; border-bottom: 1px solid var(--line); display: grid; gap: 12px; grid-template-columns: 122px 1fr; padding: 8px 0; }
+    .relay-row b { color: var(--warm-dark); font-size: 14px; }
+    .relay-row span { color: #5e554d; font-size: 14px; line-height: 1.4; }
+
+    .fit-grid { display: grid; gap: 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 28px; }
+    .fit-row { align-items: center; border-bottom: 1px solid var(--line); display: grid; gap: 18px; grid-template-columns: 0.9fr 1.1fr; padding: 14px 0; }
+    .fit-row b { font-size: 17px; }
+    .fit-row span { color: var(--muted); font-size: 15px; line-height: 1.45; }
+
+    .chapter-intro { align-items: center; display: grid; flex: 1; gap: 50px; grid-template-columns: 0.82fr 1.18fr; }
+    .chapter-index { color: var(--gold); font-size: 148px; font-weight: 800; letter-spacing: 0; line-height: 0.8; }
+    .chapter-intro h2 { font-size: 49px; }
+    .chapter-intro .lead { font-size: 19px; max-width: 660px; }
+    .four-lane { display: grid; gap: 9px; grid-template-columns: repeat(4, 1fr); margin-top: 26px; }
+    .lane { border-top: 4px solid var(--warm); padding: 12px 4px; }
+    .lane:nth-child(2) { border-color: var(--gold); }
+    .lane:nth-child(3) { border-color: var(--green); }
+    .lane:nth-child(4) { border-color: #63868d; }
+    .lane span { color: var(--muted); display: block; font-size: 12px; font-weight: 700; margin-bottom: 5px; }
+    .lane b { font-size: 15px; }
+
+    .ai-header { align-items: end; display: flex; gap: 26px; justify-content: space-between; }
+    .ai-header .small-lead { margin-bottom: 4px; max-width: 500px; }
+    .work-focus { background: var(--gold-soft); color: var(--warm-dark); font-size: 13px; font-weight: 800; padding: 10px 12px; }
+    .direction-grid { display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 23px; }
+    .direction { border: 1px solid var(--line); border-radius: 6px; min-height: 110px; padding: 14px; }
+    .direction b { display: block; font-size: 16px; }
+    .direction p { color: var(--muted); font-size: 13px; line-height: 1.45; margin-top: 7px; }
+    .direction:nth-child(4) { background: #fff9f5; border-color: #f1dacb; }
+    .direction:nth-child(5) { background: #f6fbf8; border-color: #d5e5dc; }
+    .direction:nth-child(6) { background: #f6fafb; border-color: #d4e5e7; }
+
+    .compare { display: grid; gap: 16px; grid-template-columns: 1fr 80px 1fr; margin-top: 30px; }
+    .compare-side { border: 1px solid var(--line); border-radius: 7px; padding: 22px; }
+    .compare-side.research { background: #fff9f5; border-color: #efd8c9; }
+    .compare-side.application { background: #f6fbf8; border-color: #d5e5dc; }
+    .compare-side h3 { font-size: 23px; }
+    .compare-side p { color: #5f554c; font-size: 15px; line-height: 1.55; margin-top: 10px; }
+    .compare-middle { align-items: center; color: var(--gold); display: flex; font-size: 34px; font-weight: 800; justify-content: center; }
+    .compare-rows { display: grid; gap: 8px; margin-top: 17px; }
+    .compare-rows span { background: white; border: 1px solid #ebe0d5; color: #5d534b; font-size: 13px; font-weight: 700; padding: 9px 10px; }
+
+    .team-chain { align-items: stretch; display: grid; gap: 10px; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 26px; }
+    .team-step { border: 1px solid var(--line); border-radius: 7px; min-height: 180px; padding: 16px; position: relative; }
+    .team-step:not(:last-child)::after { color: var(--gold); content: "→"; font-size: 24px; font-weight: 800; position: absolute; right: -18px; top: calc(50% - 16px); z-index: 1; }
+    .team-step .label { color: var(--warm-dark); font-size: 12px; font-weight: 800; }
+    .team-step h3 { font-size: 18px; margin-top: 9px; }
+    .team-step p { color: var(--muted); font-size: 13px; line-height: 1.5; margin-top: 8px; }
+    .team-step:nth-child(2) .label { color: #956015; }
+    .team-step:nth-child(3) .label { color: var(--green); }
+    .team-step:nth-child(4) .label { color: #537a85; }
+
+    .path-grid { display: grid; gap: 15px; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 32px; }
+    .path-card { border: 1px solid var(--line); border-radius: 7px; min-height: 252px; padding: 19px; }
+    .path-card .path-num { color: var(--gold); font-size: 34px; font-weight: 800; line-height: 1; }
+    .path-card h3 { font-size: 19px; margin-top: 15px; }
+    .path-card p { color: var(--muted); font-size: 14px; line-height: 1.5; margin-top: 9px; }
+    .path-card .path-role { color: var(--warm-dark); font-size: 12px; font-weight: 800; margin-top: 14px; }
+
+    .skill-board { display: grid; gap: 22px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 26px; }
+    .skill-column { border: 1px solid var(--line); border-radius: 7px; padding: 20px; }
+    .skill-column.data-skills { border-top: 5px solid var(--warm); }
+    .skill-column.ai-skills { border-top: 5px solid var(--green); }
+    .skill-column h3 { font-size: 23px; }
+    .skill-row { align-items: start; border-top: 1px solid #eee4da; display: grid; gap: 13px; grid-template-columns: 112px 1fr; margin-top: 13px; padding-top: 13px; }
+    .skill-row b { color: var(--warm-dark); font-size: 14px; }
+    .ai-skills .skill-row b { color: var(--green); }
+    .skill-row span { color: #60564e; font-size: 14px; line-height: 1.5; }
+
+    .project-grid { display: grid; gap: 16px; grid-template-columns: 0.95fr 1.05fr; margin-top: 26px; }
+    .project-card { border: 1px solid var(--line); border-radius: 7px; padding: 21px; }
+    .project-card h3 { font-size: 23px; }
+    .project-example { background: var(--cream); border-left: 4px solid var(--gold); color: #55493e; font-size: 15px; line-height: 1.55; margin-top: 14px; padding: 13px 15px; }
+    .project-steps { counter-reset: project; display: grid; gap: 10px; margin-top: 14px; }
+    .project-steps div { align-items: center; color: #554b42; display: flex; font-size: 14px; font-weight: 700; gap: 10px; }
+    .project-steps div::before { align-items: center; background: var(--gold-soft); border-radius: 50%; color: var(--warm-dark); content: counter(project); counter-increment: project; display: inline-flex; flex: 0 0 auto; font-size: 12px; height: 24px; justify-content: center; width: 24px; }
+
+    .interview-layout { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 26px; }
+    .interview-card { border: 1px solid var(--line); border-radius: 7px; min-height: 275px; padding: 20px; }
+    .interview-card h3 { font-size: 22px; }
+    .formula { display: grid; gap: 7px; grid-template-columns: repeat(4, 1fr); margin-top: 16px; }
+    .formula span { background: var(--cream); color: #6a5646; font-size: 13px; font-weight: 800; padding: 11px 8px; text-align: center; }
+    .formula span:nth-child(2) { background: #fff0d8; }
+    .formula span:nth-child(3) { background: #edf4ef; color: var(--green); }
+    .formula span:nth-child(4) { background: #edf5f6; color: #3e6d75; }
+    .interview-card p { color: var(--muted); font-size: 14px; line-height: 1.55; margin-top: 16px; }
+
+    .action-strip { display: grid; gap: 0; grid-template-columns: repeat(5, 1fr); margin-top: 34px; }
+    .action { border-left: 1px solid var(--line); min-height: 185px; padding: 0 16px; }
+    .action:first-child { border-left: 0; padding-left: 0; }
+    .action .when { color: var(--warm-dark); font-size: 12px; font-weight: 800; }
+    .action h3 { font-size: 18px; margin-top: 11px; }
+    .action p { color: var(--muted); font-size: 14px; line-height: 1.5; margin-top: 8px; }
+    .closing-line { color: var(--warm-dark); font-size: 24px; font-weight: 800; line-height: 1.45; margin-top: 36px; max-width: 1020px; }
+
+    .toolbar {
+      align-items: center;
+      bottom: 22px;
+      display: flex;
+      gap: 8px;
+      position: fixed;
+      right: 28px;
+      z-index: 20;
+    }
+
+    .tool-button {
+      align-items: center;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid #dfd6cc;
+      border-radius: 5px;
+      color: var(--ink);
+      cursor: pointer;
+      display: inline-flex;
+      height: 38px;
+      justify-content: center;
+      position: relative;
+      width: 38px;
+    }
+
+    .tool-button:hover { background: var(--cream); border-color: var(--gold); }
+    .tool-button:focus-visible { outline: 3px solid #f3c28f; outline-offset: 2px; }
+    .tool-button svg { height: 19px; width: 19px; }
+    .tool-button::after { background: var(--ink); border-radius: 4px; color: white; content: attr(data-tooltip); font-size: 12px; left: 50%; opacity: 0; padding: 6px 8px; pointer-events: none; position: absolute; top: -37px; transform: translateX(-50%); transition: opacity 120ms ease; white-space: nowrap; }
+    .tool-button:hover::after { opacity: 1; }
+    .page-count { background: rgba(255,255,255,.96); border: 1px solid #dfd6cc; border-radius: 5px; color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; font-weight: 800; min-width: 72px; padding: 11px 10px; text-align: center; }
+
+    .progress { background: #f2e9df; bottom: 0; height: 4px; left: 0; position: fixed; right: 0; z-index: 22; }
+    .progress > span { background: var(--warm); display: block; height: 100%; transition: width 220ms ease; }
+
+    body.editing .slide-inner[contenteditable="true"] { outline: 2px dashed #d69068; outline-offset: 8px; }
+    body.editing .slide-inner[contenteditable="true"]:focus { outline-color: var(--warm-dark); }
+    body.editing .tool-button#edit { background: var(--warm-dark); border-color: var(--warm-dark); color: white; }
+    body.editing .tool-button#edit::after { background: var(--warm-dark); }
+
+    @media (max-width: 980px) {
+      body { overflow: auto; }
+      .slide { height: auto; min-height: 100svh; padding: 30px 28px 80px; }
+      .slide-inner { min-height: calc(100svh - 110px); }
+      h1 { font-size: 46px; }
+      h2 { font-size: 34px; }
+      .cover-grid, .chapter-intro, .case-layout { grid-template-columns: 1fr; }
+      .cover-art { max-width: 520px; width: 100%; }
+      .grid-4, .decision-grid, .path-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .role-map { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .flow { grid-template-columns: 1fr; }
+      .flow-item:not(:last-child)::after { bottom: -22px; left: calc(50% - 8px); right: auto; top: auto; transform: rotate(90deg); }
+      .journey { grid-template-columns: 1fr; }
+      .journey-arrow { transform: rotate(90deg); }
+      .team-chain { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .team-step:nth-child(2)::after { display: none; }
+      .compare { grid-template-columns: 1fr; }
+      .compare-middle { transform: rotate(90deg); }
+      .toolbar { bottom: 16px; right: 18px; }
+    }
+
+    @media (max-width: 620px) {
+      .slide { padding: 25px 18px 78px; }
+      .topline { margin-bottom: 20px; }
+      h1 { font-size: 38px; }
+      h2, .chapter-intro h2 { font-size: 30px; }
+      .lead, .cover-subtitle { font-size: 17px; }
+      .grid-2, .grid-3, .grid-4, .decision-grid, .path-grid, .skill-board, .project-grid, .interview-layout, .fit-grid { grid-template-columns: 1fr; }
+      .role-map { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .day-line { grid-template-columns: 1fr; }
+      .detail-split { grid-template-columns: 1fr; }
+      .quiz-options { grid-template-columns: 1fr; }
+      .team-chain { grid-template-columns: 1fr; }
+      .team-step:not(:last-child)::after { bottom: -20px; left: calc(50% - 8px); right: auto; top: auto; transform: rotate(90deg); }
+      .team-step { min-height: 0; }
+      .action-strip { grid-template-columns: 1fr; }
+      .action, .action:first-child { border-left: 0; border-top: 1px solid var(--line); min-height: auto; padding: 14px 0; }
+      .action:first-child { border-top: 0; padding-top: 0; }
+      .chapter-index { font-size: 96px; }
+      .slide-footer::before { bottom: 54px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck" id="deck" aria-live="polite">
+    <section class="slide cover active" data-title="封面">
+      <div class="slide-inner">
+        <div class="topline"><span>高校师生讲座</span><span class="section-no">01 / 23</span></div>
+        <div class="cover-grid">
+          <div>
+            <span class="eyebrow">从日常体验，看懂职业地图</span>
+            <h1>互联网、大数据与AI<span class="line-break">从日常到职场</span></h1>
+            <p class="cover-subtitle">一份面向高校师生的行业与求职入门读本。我们从出行、外卖、短视频和旅游这些熟悉的场景出发，看看平台如何运转，也看看自己可以从哪里出发。</p>
+            <div class="cover-meta"><span>互联网平台</span><span>大数据岗位</span><span>AI岗位</span><span>求职准备</span></div>
+          </div>
+          <div class="cover-art" aria-label="互联网、大数据与AI的关联示意图">
+            <div class="art-node node-1"><i data-lucide="smartphone"></i>用户日常</div>
+            <div class="art-node node-2"><i data-lucide="chart-no-axes-combined"></i>数据洞察</div>
+            <div class="art-node node-3"><i data-lucide="briefcase-business"></i>职业方向</div>
+            <div class="art-node node-4"><i data-lucide="bot"></i>AI应用</div>
+            <div class="art-center"><div><strong>平台</strong><span>连接与协作</span></div></div>
+          </div>
+        </div>
+        <div class="slide-footer"><span>互联网、大数据与AI：从日常到职场</span><span>高校师生讲座</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="目录">
+      <div class="slide-inner">
+        <div class="topline"><span>目录 · 从日常到职场</span><span class="section-no">02 / 28</span></div>
+        <span class="eyebrow">四个部分，一张职业地图</span>
+        <h2>从每天的使用体验，走到自己的职业起点</h2>
+        <p class="lead">这场分享不从复杂术语开始，而是从大家熟悉的平台服务出发。先理解行业怎样运转，再认识数据与 AI 如何参与其中，最后把视线收回到自己的能力与求职准备。</p>
+        <div class="agenda-grid">
+          <div class="agenda-item"><span class="agenda-index">01</span><div><h3>互联网平台如何运转</h3><p>理解平台如何连接供需、分配流量、保障履约，以及平台中有哪些岗位共同协作。</p></div></div>
+          <div class="agenda-item"><span class="agenda-index">02</span><div><h3>大数据岗位与链路</h3><p>沿着数据生产加工、消费使用、决策行动的路径，看懂不同数据岗位的分工。</p></div></div>
+          <div class="agenda-item"><span class="agenda-index">03</span><div><h3>AI 岗位如何分工</h3><p>从研究、工程、应用到产品，理解 AI 能力怎样成为真正可用的服务。</p></div></div>
+          <div class="agenda-item"><span class="agenda-index">04</span><div><h3>大学生如何准备</h3><p>从方向选择、基础技能、项目作品到简历面试，形成一份可执行的行动清单。</p></div></div>
+        </div>
+        <div class="slide-footer"><span>先建立全局，再进入每个具体方向</span><span>目录</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="第一部分导览">
+      <div class="slide-inner">
+        <div class="topline"><span>第一部分 · 互联网平台</span><span class="section-no">03 / 28</span></div>
+        <div class="chapter-intro">
+          <div class="chapter-index">01</div>
+          <div>
+            <span class="eyebrow">先看行业如何运转</span>
+            <h2>互联网平台，不只是一个 App</h2>
+            <p class="lead">从打车、外卖、短视频到旅游预订，平台的共同任务是连接需求和供给，并用产品、运营、技术、数据和 AI 让服务持续转动。</p>
+            <div class="four-lane"><div class="lane"><span>看连接</span><b>谁和谁被匹配</b></div><div class="lane"><span>看分配</span><b>流量与机会如何安排</b></div><div class="lane"><span>看履约</span><b>服务怎样真正完成</b></div><div class="lane"><span>看协作</span><b>哪些岗位共同参与</b></div></div>
+          </div>
+        </div>
+        <div class="slide-footer"><span>第一部分导览：从日常服务看懂平台机制</span><span>01 · 平台机制</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="日常中的互联网">
+      <div class="slide-inner">
+        <div class="topline"><span>开场 · 你已身在行业之中</span><span class="section-no">02 / 23</span></div>
+        <span class="eyebrow">一部手机，一条职业线索</span>
+        <h2>你每天都在使用互联网行业的成果</h2>
+        <p class="lead">从早上看路况到晚上订酒店，手机上的每一次点击，都连接着产品、运营、技术、数据、AI、设计和风控等不同岗位。看懂这些日常体验，就是看懂行业的第一步。</p>
+        <div class="day-line">
+          <div class="day-step"><b>出门前</b><p>地图预测路况，帮助避开拥堵。</p></div>
+          <div class="day-step"><b>赶时间</b><p>打车平台匹配司机、路线和价格。</p></div>
+          <div class="day-step"><b>午餐时</b><p>外卖平台连接用户、商家和配送员。</p></div>
+          <div class="day-step"><b>休息时</b><p>短视频平台决定内容如何被推荐。</p></div>
+          <div class="day-step"><b>做计划</b><p>旅游平台聚合机票、酒店、攻略和服务。</p></div>
+        </div>
+        <div class="number-banner"><b>1</b><p>个平台不是一个孤立的 App，而是一套持续运转的连接机制：它既要满足用户需求，也要让商家、司机、创作者等服务供给方获得合理机会。</p></div>
+        <div class="slide-footer"><span>从熟悉的场景进入陌生的行业</span><span>01 · 开场</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="平台服务链路">
+      <div class="slide-inner">
+        <div class="topline"><span>第一部分 · 互联网平台</span><span class="section-no">03 / 23</span></div>
+        <span class="eyebrow">用一份外卖，看懂一套服务</span>
+        <h2>一次下单，背后是一条完整的协作链路</h2>
+        <p class="small-lead">用户看到的可能只是“下单成功”；平台需要完成的却是供需匹配、商品展示、价格计算、履约调度、支付结算与售后保障等一系列动作。</p>
+        <div class="flow">
+          <div class="flow-item"><span class="flow-no">01</span><b>打开与发现</b><p>产品设计入口，推荐和搜索帮助用户找到商家。</p></div>
+          <div class="flow-item"><span class="flow-no">02</span><b>选择与下单</b><p>价格、优惠券、库存、支付等规则一起生效。</p></div>
+          <div class="flow-item"><span class="flow-no">03</span><b>商家与配送</b><p>商家接单，平台调度配送员完成履约。</p></div>
+          <div class="flow-item"><span class="flow-no">04</span><b>评价与售后</b><p>评分、投诉、退款处理保障服务体验。</p></div>
+          <div class="flow-item"><span class="flow-no">05</span><b>数据再优化</b><p>每一步都会留下反馈，成为下一次优化的线索。</p></div>
+        </div>
+        <div class="quote">平台不是简单地把服务“放上网”，而是在不断回答一个问题：怎样让用户更容易获得服务，也让服务提供者更愿意长期参与？</div>
+        <div class="slide-footer"><span>外卖、出行、电商、旅游的逻辑相通</span><span>01 · 平台机制</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="平台四个关键动作">
+      <div class="slide-inner">
+        <div class="topline"><span>第一部分 · 互联网平台</span><span class="section-no">04 / 23</span></div>
+        <span class="eyebrow">平台为什么能持续转动</span>
+        <h2>互联网平台，通常围绕四件事运转</h2>
+        <div class="grid grid-4">
+          <div class="pillar"><h3>连接供需</h3><p>既要有用户，也要有商家、司机、创作者等供给方。只有一边热闹，平台很难长期运转。</p></div>
+          <div class="pillar"><h3>分配流量</h3><p>推荐什么内容、展示哪些商品、如何匹配司机，背后既有产品规则，也有运营和算法。</p></div>
+          <div class="pillar"><h3>保障履约</h3><p>外卖要送得到，酒店不能到店没房，支付不能失败。效率之外，稳定和信任同样重要。</p></div>
+          <div class="pillar"><h3>持续优化</h3><p>点击、下单、取消、评价和投诉会变成反馈，帮助平台发现问题、改进服务。</p></div>
+        </div>
+        <div class="number-banner"><b>循环</b><p>用户使用平台，产生行为与反馈；平台发现问题、调整功能与策略；体验变好后，用户和供给方更愿意留下来。产品、运营、技术、数据和 AI 都在这个循环中发挥作用。</p></div>
+        <div class="slide-footer"><span>连接、分配、履约、优化</span><span>01 · 平台机制</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="平台岗位地图">
+      <div class="slide-inner">
+        <div class="topline"><span>第一部分 · 互联网平台</span><span class="section-no">05 / 23</span></div>
+        <span class="eyebrow">不只有程序员</span>
+        <h2>一个 App 背后，站着一支跨专业的队伍</h2>
+        <p class="small-lead">如果把一个互联网 App 想象成一家超级大餐厅：有人决定菜单，有人搭建厨房，有人招呼客人，有人研究经营数据，也有人让服务变得更智能。</p>
+        <div class="role-map">
+          <div class="role-tile"><b>产品</b><span>用户需要什么？功能怎样设计？</span></div>
+          <div class="role-tile"><b>运营</b><span>如何吸引用户、服务供给方、组织活动？</span></div>
+          <div class="role-tile"><b>技术</b><span>系统能否稳定、快速、安全地运行？</span></div>
+          <div class="role-tile"><b>设计</b><span>页面是否清楚、好用、有一致体验？</span></div>
+          <div class="role-tile"><b>数据</b><span>业务发生了什么，问题在哪里？</span></div>
+          <div class="role-tile"><b>AI</b><span>如何让推荐、客服和流程更智能？</span></div>
+          <div class="role-tile"><b>风控与客服</b><span>如何处理异常、投诉和风险？</span></div>
+        </div>
+        <div class="quiz" data-answer="b" data-correct="答对了。数据团队会通过订单、评分、配送时长、投诉等信息定位体验问题，并为产品、运营提供改进线索。" data-wrong="再想想：谁最直接负责从大量行为记录中发现“配送慢”或“评分下降”的原因？">
+          <div class="quiz-head"><i data-lucide="circle-help"></i>小互动 · 选择题</div>
+          <p class="quiz-question">某商圈的外卖评分持续下降，平台最需要先借助哪类能力判断问题出在哪里？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-choice="a"><span>A</span>只增加广告投放</button>
+            <button class="quiz-option" data-choice="b"><span>B</span>数据分析与问题归因</button>
+            <button class="quiz-option" data-choice="c"><span>C</span>只更换页面配色</button>
+          </div>
+          <div class="quiz-feedback" aria-live="polite"></div>
+        </div>
+        <div class="slide-footer"><span>职业选择，不只看岗位名称，更要看它解决什么问题</span><span>01 · 岗位地图</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="第二部分导览">
+      <div class="slide-inner">
+        <div class="topline"><span>第二部分 · 大数据</span><span class="section-no">08 / 28</span></div>
+        <div class="chapter-intro">
+          <div class="chapter-index">02</div>
+          <div>
+            <span class="eyebrow">沿着一条数据，看懂一组岗位</span>
+            <h2>数据不会自己变成结论</h2>
+            <p class="lead">从一次点击、一次下单到一项经营决策，数据需要先被采集和整理，再被做成工具、被分析使用，最后参与策略与管理选择。</p>
+            <div class="four-lane"><div class="lane"><span>生产加工</span><b>数据开发与数仓</b></div><div class="lane"><span>消费使用</span><b>数据产品与分析</b></div><div class="lane"><span>经营决策</span><b>战略、经营、商业分析</b></div><div class="lane"><span>专项策略</span><b>收益优化与定价</b></div></div>
+          </div>
+        </div>
+        <div class="slide-footer"><span>第二部分导览：从原始记录，到经营动作</span><span>02 · 大数据</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="数据旅行">
+      <div class="slide-inner">
+        <div class="topline"><span>第二部分 · 大数据</span><span class="section-no">06 / 23</span></div>
+        <span class="eyebrow">一杯奶茶，也是一条数据</span>
+        <h2>数据从哪里来，又会走到哪里去？</h2>
+        <p class="lead">下单时间、商品价格、商家位置、配送时长、优惠券、评价……对用户来说是一笔普通消费，对平台来说却是一条刚刚出生的数据。它需要被整理、被使用，最后参与业务决策。</p>
+        <div class="journey">
+          <div class="journey-stage production"><span class="stage-no">第一站</span><h3>生产与加工</h3><p>采集订单、支付、评价等原始记录，清洗并加工为可信、可复用的数据。</p><div class="mini-chips"><span class="chip">采集</span><span class="chip">清洗</span><span class="chip">建模</span></div></div>
+          <div class="journey-arrow">→</div>
+          <div class="journey-stage consume"><span class="stage-no">第二站</span><h3>消费与使用</h3><p>把数据做成报表、看板和工具，让业务、运营和产品团队看得懂、用得上。</p><div class="mini-chips"><span class="chip">指标</span><span class="chip">看板</span><span class="chip">取数</span></div></div>
+          <div class="journey-arrow">→</div>
+          <div class="journey-stage decision"><span class="stage-no">第三站</span><h3>决策与行动</h3><p>发现经营问题，评估策略效果，支持价格、补贴、投入和长期方向的选择。</p><div class="mini-chips"><span class="chip">经营</span><span class="chip">ROI</span><span class="chip">策略</span></div></div>
+        </div>
+        <div class="slide-footer"><span>数据不是躺在表格里，而是参与一场接力</span><span>02 · 大数据</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="数据生产与加工">
+      <div class="slide-inner">
+        <div class="topline"><span>第二部分 · 大数据</span><span class="section-no">07 / 23</span></div>
+        <span class="eyebrow">数据生产与加工层</span>
+        <h2>把“散装信息”整理成可靠的数据资产</h2>
+        <p class="small-lead">这一层更偏技术和数据中台。普通用户未必直接看到它，但后续报表、分析和 AI 的可信程度，都建立在这里。</p>
+        <div class="detail-split">
+          <div>
+            <div class="job-block"><div class="job-title-row"><h3>数据开发工程师</h3><span class="department">技术 / 数据中台</span></div><p>面对订单、支付、配送等大量原始记录，负责采集、清洗、加工，形成可供分析使用的中间表或宽表。重点是让数据能稳定、按时、准确地流动。</p><ul class="list"><li>处理重复、缺失、格式不一致等原始问题</li><li>把分散系统里的信息加工成分析主题数据</li><li>让后续团队不用每次都从“原材料”开始找数据</li></ul></div>
+            <div class="job-block green-top"><div class="job-title-row"><h3>数据仓库工程师</h3><span class="department green-dept">数据中台 / 技术</span></div><p>负责数仓建模、主题域设计、数据治理和资产盘点。重点是建立统一规则，让“订单量”“活跃用户”等核心指标不再各算各的。</p><ul class="list green-list"><li>明确数据该放在哪里、怎样被复用</li><li>管理指标口径和数据质量</li><li>让数据像图书馆一样有目录、有秩序、可检索</li></ul></div>
+          </div>
+          <div>
+            <div class="card soft"><div class="icon-box"><i data-lucide="database"></i></div><h3>从原始记录到可用数据</h3><p>订单、支付、配送等系统中的信息往往分散、重复，格式也不完全一致。数据开发会把它们采集、清洗并加工成可供后续使用的数据，让分析不必每次都从“原材料”开始。</p></div>
+            <div class="key-callout"><i data-lucide="lightbulb"></i><p><b>一个常见误会：</b>数据开发和数据仓库不是“只管表格”。它们管的是平台的数据基础设施。基础不稳，后面的看板再漂亮、结论再精彩，也可能建立在错误数据上。</p></div>
+          </div>
+        </div>
+        <div class="slide-footer"><span>偏好代码、系统、逻辑和稳定性，可优先了解这一层</span><span>02 · 生产加工</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="数据消费层">
+      <div class="slide-inner">
+        <div class="topline"><span>第二部分 · 大数据</span><span class="section-no">08 / 23</span></div>
+        <span class="eyebrow">数据消费层</span>
+        <h2>让数据被看见、被理解、被使用</h2>
+        <p class="small-lead">数据加工完成后，不是为了静静躺在数据库里，而是要被业务、运营、产品和管理者使用。数据消费层负责让数据成为“能行动的信息”。</p>
+        <div class="grid grid-2">
+          <div class="card clay"><div class="icon-box clay-box"><i data-lucide="layout-dashboard"></i></div><span class="role-tag">数据中台 / 产品部门</span><h3>数据产品经理</h3><p>定义指标体系，规划看板和数据产品，并管理需求优先级。他们会想清楚：谁需要看数据？看什么指标？怎样设计才不会让人打开后更迷糊？</p><ul class="list"><li>把运营和管理者的问题翻译成数据产品需求</li><li>设计活动、经营、用户等主题看板</li><li>和数据开发协作，推动数据能力真正落地</li></ul></div>
+          <div class="card green-card"><div class="icon-box green-box"><i data-lucide="chart-column-big"></i></div><span class="role-tag">业务部门 / 数据中台</span><h3>数据分析师</h3><p>承接业务取数需求，制作报表、维护看板，更重要的是解释业务变化。面对“订单下降”，不只报一个数字，而是要找到流量、价格、供给或体验中的原因。</p><ul class="list green-list"><li>拆解指标：访问少了，还是下单转化低了？</li><li>定位问题：发生在新用户、老用户还是某个商圈？</li><li>输出建议：让业务团队知道下一步可以做什么</li></ul></div>
+        </div>
+        <div class="quote">报表像体检单，告诉你哪里“红了”；数据分析更像医生，要判断原因，并提出下一步怎么处理。</div>
+        <div class="slide-footer"><span>数据产品让数据好用，数据分析让数据说话</span><span>02 · 数据消费</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="数据决策层">
+      <div class="slide-inner">
+        <div class="topline"><span>第二部分 · 大数据</span><span class="section-no">09 / 23</span></div>
+        <span class="eyebrow">数据决策层</span>
+        <h2>从“发生了什么”走向“下一步怎么办”</h2>
+        <p class="small-lead">决策层岗位通常建立在数据分析能力之上，只是关注的问题更专项、更深入，更贴近经营、策略和管理选择。</p>
+        <div class="decision-grid">
+          <div class="decision-card"><h3>战略分析师</h3><div class="dept-line">战略部 / 业务战略团队</div><p>研究行业、竞品与商业模式，支持中长期战略。例如判断短途游是否增长，平台是否应进入新的校园服务场景。</p></div>
+          <div class="decision-card"><h3>经营分析师</h3><div class="dept-line">经营管理部 / 业务部门</div><p>盯订单、收入、成本、利润和用户增长。指标出现异动时，帮助管理者快速理解影响和原因。</p></div>
+          <div class="decision-card"><h3>商业分析师</h3><div class="dept-line">商业化 / 业务 / 策略团队</div><p>评估活动或产品 ROI，连接业务与数据。核心问题是：花出去的钱，到底换回了多少真实效果？</p></div>
+          <div class="decision-card"><h3>收益策略分析师</h3><div class="dept-line">策略 / 商业化部门</div><p>输出定价、收益优化、CPX/出价等策略，在用户体验、供给收入和平台经营之间找平衡。</p></div>
+        </div>
+        <div class="key-callout"><i data-lucide="scale"></i><p><b>关于 ROI 与 CPX：</b>ROI 可以理解为投入和回报的关系；CPX/出价策略常见于广告与商业化场景，关注如何衡量一次展示、点击或转化的价值，并合理分配资源。初学阶段理解目标即可，不必急着钻进公式。</p></div>
+        <div class="slide-footer"><span>分析不是终点，推动更好的决策才是价值所在</span><span>02 · 数据决策</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="数据岗位接力案例">
+      <div class="slide-inner">
+        <div class="topline"><span>第二部分 · 大数据</span><span class="section-no">10 / 23</span></div>
+        <span class="eyebrow">案例 · 酒店预订量下降</span>
+        <h2>同一条数据，不同岗位怎样接力？</h2>
+        <div class="case-layout">
+          <div class="case-question"><span class="case-tag">业务场景</span><h3>暑假某城市的酒店预订量下降了。</h3><p>问题可能来自流量、价格、供给、用户偏好或竞争环境。平台不能只凭直觉发一轮优惠券，而要让数据链路逐步回答问题。</p></div>
+          <div class="relay">
+            <div class="relay-row"><b>数据开发</b><span>保证搜索、浏览、预订和取消等数据被准确采集、加工。</span></div>
+            <div class="relay-row"><b>数据仓库</b><span>确保“预订量”“取消率”“新用户”等指标口径一致。</span></div>
+            <div class="relay-row"><b>数据产品</b><span>设计经营看板，让业务团队及时看到变化。</span></div>
+            <div class="relay-row"><b>数据分析</b><span>定位问题：流量少了、价格高了，还是看完没有下单？</span></div>
+            <div class="relay-row"><b>经营 / 商业分析</b><span>判断变化对收入、利润的影响，并评估发券是否值得。</span></div>
+            <div class="relay-row"><b>收益 / 战略分析</b><span>调整定价和补贴，或进一步判断用户整体偏好是否变化。</span></div>
+          </div>
+        </div>
+        <div class="quote">数据岗位不是单人项目，而是一场接力赛。好的结论，往往建立在前面每一棒都跑稳的基础上。</div>
+        <div class="slide-footer"><span>从原始记录，到经营动作</span><span>02 · 数据接力</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="找到数据方向">
+      <div class="slide-inner">
+        <div class="topline"><span>第二部分 · 大数据</span><span class="section-no">11 / 23</span></div>
+        <span class="eyebrow">方向选择</span>
+        <h2>喜欢什么，决定你可以先了解哪类数据岗位</h2>
+        <div class="fit-grid">
+          <div class="fit-row"><b>写代码、搭系统</b><span>数据开发、数据仓库更适合。你会更在意数据能否稳定、准确、可复用。</span></div>
+          <div class="fit-row"><b>做工具、理需求</b><span>数据产品值得优先了解。你会站在技术和业务之间，帮助他人更好使用数据。</span></div>
+          <div class="fit-row"><b>发现问题、解释变化</b><span>数据分析、经营分析、商业分析更贴近。你会用数据支持日常业务和管理决策。</span></div>
+          <div class="fit-row"><b>研究行业、定策略</b><span>战略分析、收益策略分析更适合。你会思考投入、价格、竞争和长期方向。</span></div>
+        </div>
+        <div class="quiz" data-answer="c" data-correct="答对了。先统一指标口径，是保证后续看板、分析和经营讨论建立在同一事实基础上的关键一步。" data-wrong="提示：当两个团队算出的“订单量”都不同，最先要解决的并不是图表样式，而是指标口径。">
+          <div class="quiz-head"><i data-lucide="circle-help"></i>小互动 · 选择题</div>
+          <p class="quiz-question">两个团队对“订单量”的计算结果不同，最应优先处理哪件事？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-choice="a"><span>A</span>把图表颜色换得更醒目</button>
+            <button class="quiz-option" data-choice="b"><span>B</span>直接选择数值较大的那一个</button>
+            <button class="quiz-option" data-choice="c"><span>C</span>统一指标定义和数据口径</button>
+          </div>
+          <div class="quiz-feedback" aria-live="polite"></div>
+        </div>
+        <div class="slide-footer"><span>选择方向，不必一次定终身，但要先知道自己愿意解决哪类问题</span><span>02 · 数据方向</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="AI岗位总览">
+      <div class="slide-inner">
+        <div class="topline"><span>第三部分 · AI岗位</span><span class="section-no">12 / 23</span></div>
+        <div class="chapter-intro">
+          <div class="chapter-index">03</div>
+          <div>
+            <span class="eyebrow">AI 不是一个岗位</span>
+            <h2>谁让智能变成真正有用的产品？</h2>
+            <p class="lead">有人研究模型怎么更聪明，有人保证模型能稳定运行，有人把它用到业务场景里，也有人决定它到底要帮助用户解决什么问题。</p>
+            <div class="four-lane"><div class="lane"><span>研究型</span><b>让模型更聪明</b></div><div class="lane"><span>工程型</span><b>让模型跑得稳</b></div><div class="lane"><span>应用型</span><b>让模型帮业务做事</b></div><div class="lane"><span>产品型</span><b>决定AI该做什么</b></div></div>
+          </div>
+        </div>
+        <div class="slide-footer"><span>研究、工程、应用、产品，共同完成 AI 的价值闭环</span><span>03 · AI岗位</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="AI研究型岗位">
+      <div class="slide-inner">
+        <div class="topline"><span>第三部分 · AI岗位</span><span class="section-no">13 / 23</span></div>
+        <div class="ai-header"><div><span class="eyebrow">AI研究型岗位</span><h2>让模型更聪明</h2></div><span class="work-focus">关注：模型能力与效果</span></div>
+        <p class="small-lead">研究型岗位负责研究、训练和优化模型，让机器更会理解、预测、生成和判断。常见于算法团队、AI 技术团队、研究院和大模型团队。</p>
+        <div class="direction-grid">
+          <div class="direction"><b>语言与大模型</b><p>提升文本理解、问答、生成和多轮对话能力。</p></div>
+          <div class="direction"><b>推荐与排序</b><p>让内容、商品、旅游信息更符合用户兴趣。</p></div>
+          <div class="direction"><b>预测与决策</b><p>预测需求、订单量、流失风险和供需变化。</p></div>
+          <div class="direction"><b>图像、视频与语音</b><p>处理图片识别、视频理解、语音输入和播报。</p></div>
+          <div class="direction"><b>模型评测与优化</b><p>比较模型效果，减少答非所问和错误回答。</p></div>
+          <div class="direction"><b>实际例子</b><p>理解“预算两千、凉快、人少”的旅行需求，再给出合理建议。</p></div>
+        </div>
+        <div class="key-callout"><i data-lucide="flask-conical"></i><p><b>更适合谁：</b>喜欢数学、编程、实验和模型原理，愿意反复做对比、调参数、验证效果的人。对本科生而言，可先从 Python、机器学习基础、课程项目和简单模型复现开始。</p></div>
+        <div class="slide-footer"><span>研究型关注“模型能不能做到”</span><span>03 · AI研究</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="AI工程型岗位">
+      <div class="slide-inner">
+        <div class="topline"><span>第三部分 · AI岗位</span><span class="section-no">14 / 23</span></div>
+        <div class="ai-header"><div><span class="eyebrow">AI工程型岗位</span><h2>让模型跑得起来、跑得稳</h2></div><span class="work-focus">关注：系统、性能、成本</span></div>
+        <p class="small-lead">模型在实验环境中跑通，只是第一步。工程型岗位要把它变成线上可调用、能承受大量访问、出现问题可追踪的服务。常见于 AI 平台、基础架构、技术中台和云服务团队。</p>
+        <div class="grid grid-3">
+          <div class="card soft"><div class="icon-box"><i data-lucide="server"></i></div><h3>训练与部署</h3><p>提供训练环境、工具和算力，把训练好的模型部署到线上，供产品和业务调用。</p></div>
+          <div class="card green-card"><div class="icon-box green-box"><i data-lucide="activity"></i></div><h3>稳定与监控</h3><p>处理响应慢、服务中断、并发量过高等问题，及时发现线上异常。</p></div>
+          <div class="card blue-card"><div class="icon-box blue-box"><i data-lucide="coins"></i></div><h3>资源与成本</h3><p>管理模型版本、数据版本和调用资源，在效果与成本之间找到可持续的方案。</p></div>
+        </div>
+        <div class="quote">研究型岗位负责造一辆更聪明的车；工程型岗位负责修路、建加油站、装导航，保证这辆车真的能开上路。</div>
+        <div class="slide-footer"><span>考试周大量同学同时使用校园 AI 助手时，谁在保证它不“转圈”？</span><span>03 · AI工程</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="AI应用型岗位">
+      <div class="slide-inner">
+        <div class="topline"><span>第三部分 · AI岗位</span><span class="section-no">15 / 23</span></div>
+        <div class="ai-header"><div><span class="eyebrow">AI应用型岗位</span><h2>把 AI 用到真实场景里</h2></div><span class="work-focus">关注：场景、用户、业务效果</span></div>
+        <p class="small-lead">应用型岗位结合具体业务，把 AI 能力做成用户能直接使用的功能。它常在出行、电商、内容、客服等业务技术团队或 AI 业务团队中发挥作用。</p>
+        <div class="grid grid-3">
+          <div class="card clay"><span class="role-tag">推荐与搜索</span><h3>更快找到所需内容</h3><p>让用户更快找到想看的内容、想买的商品或合适的出行方案。短视频“猜你想看什么”就是典型场景。</p></div>
+          <div class="card green-card"><span class="role-tag">智能客服与大模型应用</span><h3>把回答变成服务</h3><p>搭建知识库、智能问答和助手，让用户先解决订单、退款、行程和课程等高频问题。</p></div>
+          <div class="card blue-card"><span class="role-tag">业务智能化</span><h3>让流程更有效率</h3><p>将 AI 用于需求预测、辅助调度、风险识别、图像语音处理和运营提效。</p></div>
+        </div>
+        <div class="key-callout"><i data-lucide="target"></i><p><b>应用型岗位的判断标准：</b>不只看模型“准不准”，还要看用户用不用、问题有没有被解决、流程是否更顺、效果是否值得成本。一个回答很流畅的旅行助手，不等于它真的帮助用户完成了预订。</p></div>
+        <div class="slide-footer"><span>AI 应用的终点不是“像人聊天”，而是解决真实问题</span><span>03 · AI应用</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="研究型与应用型的关系">
+      <div class="slide-inner">
+        <div class="topline"><span>第三部分 · AI岗位</span><span class="section-no">16 / 23</span></div>
+        <span class="eyebrow">有关联，但关注点不同</span>
+        <h2>研究型与应用型：一个把能力做好，一个把能力用好</h2>
+        <div class="compare">
+          <div class="compare-side research"><h3>AI 研究型</h3><p>更关心模型能力有没有提升：理解是否更准确，推荐是否更可靠，回答质量是否更高。</p><div class="compare-rows"><span>提供模型与算法能力</span><span>关注训练、评测和模型效果</span><span>回答“模型能不能做到”</span></div></div>
+          <div class="compare-middle">⇄</div>
+          <div class="compare-side application"><h3>AI 应用型</h3><p>更关心能力能否解决真实问题：用户是否愿意使用，业务流程是否变顺，效果是否值得投入。</p><div class="compare-rows"><span>找到并落地业务场景</span><span>关注用户反馈、效果和成本</span><span>回答“模型做了有没有价值”</span></div></div>
+        </div>
+        <div class="quote">例如，研究团队提供更会理解自然语言的大模型；应用团队进一步决定旅行助手该查哪些可靠资料、怎样设计流程、回答后是否帮助用户完成下一步操作。</div>
+        <div class="slide-footer"><span>不是谁替代谁，而是协作完成从能力到价值的最后一公里</span><span>03 · AI协作</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="AI产品型岗位">
+      <div class="slide-inner">
+        <div class="topline"><span>第三部分 · AI岗位</span><span class="section-no">17 / 23</span></div>
+        <div class="ai-header"><div><span class="eyebrow">AI产品型岗位</span><h2>决定 AI 应该做什么、怎样做</h2></div><span class="work-focus">关注：需求、体验、策略、风险</span></div>
+        <p class="small-lead">AI 产品型岗位负责找到适合 AI 解决的问题，设计功能体验、使用边界和策略规则。常见于产品部门、AI 业务团队、策略团队和平台治理团队。</p>
+        <div class="grid grid-3">
+          <div class="card soft"><h3>定义问题</h3><p>判断用户真正卡在哪里。不是所有问题都需要 AI，一个清楚的问题往往比一个花哨功能更重要。</p></div>
+          <div class="card clay"><h3>设计体验</h3><p>设计提问、回答、知识库和人机协作流程，让用户知道 AI 能做什么，也知道它不能做什么。</p></div>
+          <div class="card green-card"><h3>评估与治理</h3><p>设定满意度、解决率、使用频率等指标，同时平衡质量、成本、隐私、安全和转人工规则。</p></div>
+        </div>
+        <div class="key-callout"><i data-lucide="map"></i><p><b>以 AI 旅行助手为例：</b>用户要的是灵感、行程规划、酒店推荐还是预订服务？回答能否引用可靠信息？哪些问题 AI 可以先处理，哪些情况必须提醒用户核实或转人工？这些都需要产品型岗位事先想清楚。</p></div>
+        <div class="slide-footer"><span>AI 产品不是“加一个聊天框”就结束了</span><span>03 · AI产品</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="AI团队协作">
+      <div class="slide-inner">
+        <div class="topline"><span>第三部分 · AI岗位</span><span class="section-no">18 / 23</span></div>
+        <span class="eyebrow">案例 · 一个 AI 旅行助手</span>
+        <h2>四类 AI 岗位，如何共同做出一个产品？</h2>
+        <div class="team-chain">
+          <div class="team-step"><span class="label">研究型</span><h3>提供模型能力</h3><p>让模型理解用户需求，具备问答、推荐和生成方案的基础能力。</p></div>
+          <div class="team-step"><span class="label">工程型</span><h3>保障稳定服务</h3><p>部署模型、接入工具、处理访问高峰，控制调用成本。</p></div>
+          <div class="team-step"><span class="label">应用型</span><h3>接入业务场景</h3><p>连接目的地资料、酒店信息和预订流程，持续观察用户效果。</p></div>
+          <div class="team-step"><span class="label">产品型</span><h3>定义体验与边界</h3><p>明确助手解决什么问题，怎样评估质量，何时提醒用户核实。</p></div>
+        </div>
+        <div class="quiz" data-answer="a" data-correct="答对了。把模型接入资料、预订流程和真实用户场景，并持续看业务效果，正是应用型岗位的重要工作。" data-wrong="想一想：这里问的是“把现有能力接入真实业务、让用户用起来”，而不是训练模型或管理服务器。">
+          <div class="quiz-head"><i data-lucide="circle-help"></i>小互动 · 选择题</div>
+          <p class="quiz-question">把已有大模型接入可靠旅游资料和预订流程，并持续观察用户是否完成行程规划，最贴近哪类岗位？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-choice="a"><span>A</span>AI 应用型岗位</button>
+            <button class="quiz-option" data-choice="b"><span>B</span>只做模型训练的研究型岗位</button>
+            <button class="quiz-option" data-choice="c"><span>C</span>只做线上监控的工程型岗位</button>
+          </div>
+          <div class="quiz-feedback" aria-live="polite"></div>
+        </div>
+        <div class="slide-footer"><span>AI 的价值，来自团队协作而不是单点能力</span><span>03 · AI协作</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="第四部分导览">
+      <div class="slide-inner">
+        <div class="topline"><span>第四部分 · 求职准备</span><span class="section-no">24 / 28</span></div>
+        <div class="chapter-intro">
+          <div class="chapter-index">04</div>
+          <div>
+            <span class="eyebrow">把行业地图变成自己的路径</span>
+            <h2>从校园到职场，准备可以从今天开始</h2>
+            <p class="lead">求职不是到了大四才突然开始的“终极副本”。观察一个 App、掌握一项工具、完成一个项目、讲清一个问题，都是在为未来积累可展示的能力。</p>
+            <div class="four-lane"><div class="lane"><span>选方向</span><b>找到适合的起点</b></div><div class="lane"><span>练基础</span><b>SQL、Python与业务理解</b></div><div class="lane"><span>做项目</span><b>形成可展示的作品</b></div><div class="lane"><span>会表达</span><b>写好简历、准备面试</b></div></div>
+          </div>
+        </div>
+        <div class="slide-footer"><span>第四部分导览：从兴趣偏好，到可执行的行动</span><span>04 · 求职准备</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="求职起点">
+      <div class="slide-inner">
+        <div class="topline"><span>第四部分 · 求职准备</span><span class="section-no">19 / 23</span></div>
+        <span class="eyebrow">从校园到职场</span>
+        <h2>先选一个起点，不必一次决定一生</h2>
+        <p class="lead">第一份工作不是给人生“盖章”，而是找到一个可以认真积累的方向。与其焦虑“到底选哪个最热门”，不如先判断自己愿意长期解决哪一类问题。</p>
+        <div class="path-grid">
+          <div class="path-card"><span class="path-num">01</span><h3>系统与稳定性</h3><p>喜欢代码、系统和工程问题，愿意让复杂流程稳定运行。</p><div class="path-role">数据开发 · 数据仓库 · AI工程</div></div>
+          <div class="path-card"><span class="path-num">02</span><h3>数字与业务变化</h3><p>喜欢发现问题、解释变化，愿意把数据变成经营建议。</p><div class="path-role">数据分析 · 经营分析 · 商业分析</div></div>
+          <div class="path-card"><span class="path-num">03</span><h3>模型与实验</h3><p>喜欢数学、模型和反复验证，愿意研究算法能力如何提升。</p><div class="path-role">AI研究型岗位</div></div>
+          <div class="path-card"><span class="path-num">04</span><h3>用户与产品场景</h3><p>喜欢理解需求、设计体验，让技术真正服务于人。</p><div class="path-role">数据产品 · AI应用 · AI产品</div></div>
+        </div>
+        <div class="slide-footer"><span>方向可以调整，基础能力和项目经验会持续积累</span><span>04 · 求职准备</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="核心技能">
+      <div class="slide-inner">
+        <div class="topline"><span>第四部分 · 求职准备</span><span class="section-no">20 / 23</span></div>
+        <span class="eyebrow">技能不是清单，而是解决问题的工具</span>
+        <h2>大数据与 AI，分别该从哪些基础开始？</h2>
+        <div class="skill-board">
+          <div class="skill-column data-skills"><h3>大数据方向</h3><div class="skill-row"><b>SQL</b><span>像和数据库说话的语言，是查询、整理和分析数据的重要基础。</span></div><div class="skill-row"><b>Excel 与可视化</b><span>重点不是把图表做得花，而是让别人一眼看懂结论。</span></div><div class="skill-row"><b>Python</b><span>用于读取、清洗、分析数据和完成基础自动化任务。</span></div><div class="skill-row"><b>指标意识</b><span>理解同比、环比、转化率、留存率、复购率和 ROI 在回答什么问题。</span></div><div class="skill-row"><b>业务表达</b><span>从“订单下降”提出流量、价格、供给、体验等合理假设，并讲清结论。</span></div></div>
+          <div class="skill-column ai-skills"><h3>AI 方向</h3><div class="skill-row"><b>Python 与编程</b><span>即使偏产品或应用，理解代码和数据处理也能更好协作。</span></div><div class="skill-row"><b>基本概念</b><span>理解训练、推理、模型、数据集、评测和“幻觉”等核心概念。</span></div><div class="skill-row"><b>大模型应用</b><span>学习提示词、模型调用、知识库和工作流的基础搭建。</span></div><div class="skill-row"><b>效果评估</b><span>不只看回答是否流畅，还要看是否正确、有用、可靠且成本合理。</span></div><div class="skill-row"><b>场景判断</b><span>不是每个问题都需要 AI。先找对问题，再选择合适技术。</span></div></div>
+        </div>
+        <div class="slide-footer"><span>先掌握基础，再用项目把它们串起来</span><span>04 · 能力准备</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="作品与项目">
+      <div class="slide-inner">
+        <div class="topline"><span>第四部分 · 求职准备</span><span class="section-no">21 / 23</span></div>
+        <span class="eyebrow">做一个能讲清楚的项目</span>
+        <h2>项目不必惊天动地，但一定要完整</h2>
+        <p class="small-lead">完整不等于复杂。一个好项目应该讲得清楚：为什么做、解决什么问题、做了哪些工作、得到什么结果，以及下次会怎样改进。</p>
+        <div class="project-grid">
+          <div class="project-card"><h3>可从身边的问题开始</h3><div class="project-example">数据方向：用公开数据分析某地旅游热度变化，设计预订转化看板，并给出提前推送优惠信息的建议。</div><div class="project-example">AI 方向：做一个校园课程资料问答助手，让它先查可信资料，再回答高频问题，并记录回答效果。</div></div>
+          <div class="project-card"><h3>按这四步组织你的项目</h3><div class="project-steps"><div>明确场景与问题：用户或业务到底卡在哪里？</div><div>选择方法与工具：数据分析、模型调用、看板还是流程设计？</div><div>展示过程与结果：用图表、案例或对比说明你做了什么。</div><div>写出反思与边界：哪些结论仍需验证，哪些数据需要授权？</div></div><div class="key-callout"><i data-lucide="shield-check"></i><p>只使用公开、个人自有或经过授权的数据。尊重隐私和数据边界，本身就是数字行业的重要职业素养。</p></div></div>
+        </div>
+        <div class="slide-footer"><span>一个小而完整的项目，比一串空泛的技能名更有说服力</span><span>04 · 项目准备</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="简历与面试">
+      <div class="slide-inner">
+        <div class="topline"><span>第四部分 · 求职准备</span><span class="section-no">22 / 23</span></div>
+        <span class="eyebrow">把问题讲成一个清楚的故事</span>
+        <h2>简历少写“认真负责”，面试多说“我做成了什么”</h2>
+        <div class="interview-layout">
+          <div class="interview-card"><h3>简历：用结果描述经历</h3><div class="formula"><span>背景</span><span>问题</span><span>行动</span><span>结果</span></div><p>不要只写“参与数据分析”。可以写：基于公开旅游数据，使用 SQL 和 Python 分析 12 个城市的酒店搜索与预订趋势，发现节假日前一周搜索量明显上升；据此设计预订转化看板，并提出提前推送优惠信息的建议。</p></div>
+          <div class="interview-card"><h3>面试：展示你的思考过程</h3><div class="formula"><span>确认定义</span><span>拆解流程</span><span>验证假设</span><span>给出建议</span></div><p>数据题先确认指标，再拆业务流程；AI 题先明确用户问题，再判断 AI 是否适合解决，并补充效果、风险、成本与边界。面试官通常不只问“会不会工具”，更看你会不会把工具用在对的问题上。</p></div>
+        </div>
+        <div class="quiz" data-answer="b" data-correct="答对了。先确认指标定义，才能避免在不同口径上做出一番很努力、却无法比较的分析。" data-wrong="数据题的第一步往往不是立刻画图，而是确认“这个指标究竟在算什么”。">
+          <div class="quiz-head"><i data-lucide="circle-help"></i>小互动 · 选择题</div>
+          <p class="quiz-question">面试中被问到“某城市订单下降，怎么分析”时，较合适的第一步是什么？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-choice="a"><span>A</span>马上建议大量发优惠券</button>
+            <button class="quiz-option" data-choice="b"><span>B</span>确认订单指标定义与统计范围</button>
+            <button class="quiz-option" data-choice="c"><span>C</span>先挑一个最漂亮的图表</button>
+          </div>
+          <div class="quiz-feedback" aria-live="polite"></div>
+        </div>
+        <div class="slide-footer"><span>能让外专业同学听懂项目，通常说明你的逻辑已经足够清楚</span><span>04 · 表达准备</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="行动清单">
+      <div class="slide-inner">
+        <div class="topline"><span>结语 · 从今天开始</span><span class="section-no">23 / 23</span></div>
+        <span class="eyebrow">把行业地图变成自己的行动</span>
+        <h2>求职不必从焦虑开始，可以从一个小行动开始</h2>
+        <div class="action-strip">
+          <div class="action"><span class="when">本周</span><h3>拆一个 App</h3><p>看看它连接了哪些角色，靠什么机制运转。</p></div>
+          <div class="action"><span class="when">本月</span><h3>学一项工具</h3><p>从 SQL 或 Python 开始，完成一个小练习。</p></div>
+          <div class="action"><span class="when">本学期</span><h3>做一个项目</h3><p>做出可展示的数据或 AI 小项目。</p></div>
+          <div class="action"><span class="when">投递前</span><h3>改一版简历</h3><p>把经历写成“做了什么、解决什么、结果如何”。</p></div>
+          <div class="action"><span class="when">面试前</span><h3>讲一次项目</h3><p>找同学模拟，让外专业的人也能听懂。</p></div>
+        </div>
+        <p class="closing-line">当你能认真观察问题、用数据找到线索、用技术尝试解决，再把过程讲清楚，你已经在靠近这个行业了。</p>
+        <div class="number-banner"><b>从现在</b><p>互联网、大数据和 AI 听起来很大，但它们都从一个具体问题开始：用户遇到了什么麻烦？平台如何更好地解决它？</p></div>
+        <div class="slide-footer"><span>互联网、大数据与AI：从日常到职场</span><span>谢谢</span></div>
+      </div>
+    </section>
+
+    <section class="slide cover" data-title="结束">
+      <div class="slide-inner">
+        <div class="topline"><span>结束 · 谢谢聆听</span><span class="section-no">28 / 28</span></div>
+        <div class="cover-grid">
+          <div>
+            <span class="eyebrow">从今天开始，积累自己的第一份作品</span>
+            <h1>看懂行业，<span class="line-break">也看见自己的可能</span></h1>
+            <p class="cover-subtitle">互联网、大数据和 AI 的世界很大，但每一个方向都从一个具体问题开始。保持好奇、练好基础、完成项目、讲清过程，职业路径会慢慢变得清晰。</p>
+            <div class="cover-meta"><span>观察问题</span><span>理解数据</span><span>尝试技术</span><span>清楚表达</span></div>
+          </div>
+          <div class="cover-art" aria-label="结束页视觉图">
+            <div class="art-node node-1"><i data-lucide="search"></i>保持好奇</div>
+            <div class="art-node node-2"><i data-lucide="chart-column-big"></i>读懂数据</div>
+            <div class="art-node node-3"><i data-lucide="code-2"></i>动手实践</div>
+            <div class="art-node node-4"><i data-lucide="message-square-text"></i>讲清过程</div>
+            <div class="art-center"><div><strong>现在</strong><span>从一个行动开始</span></div></div>
+          </div>
+        </div>
+        <div class="slide-footer"><span>互联网、大数据与AI：从日常到职场</span><span>谢谢</span></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toolbar" aria-label="演示文稿控制">
+    <button class="tool-button" id="prev" type="button" aria-label="上一页" data-tooltip="上一页"><i data-lucide="chevron-left"></i></button>
+    <div class="page-count" id="page-count">01 / 23</div>
+    <button class="tool-button" id="next" type="button" aria-label="下一页" data-tooltip="下一页"><i data-lucide="chevron-right"></i></button>
+    <button class="tool-button" id="edit" type="button" aria-label="编辑页面" aria-pressed="false" data-tooltip="编辑页面"><i data-lucide="pencil"></i></button>
+    <button class="tool-button" id="download" type="button" aria-label="保存修改" data-tooltip="保存修改"><i data-lucide="download"></i></button>
+    <button class="tool-button" id="fullscreen" type="button" aria-label="全屏" data-tooltip="全屏"><i data-lucide="maximize"></i></button>
+  </div>
+  <div class="progress" aria-hidden="true"><span id="progress-bar"></span></div>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    (() => {
+      const slides = [...document.querySelectorAll('.slide')];
+      const previous = document.getElementById('prev');
+      const next = document.getElementById('next');
+      const fullscreen = document.getElementById('fullscreen');
+      const edit = document.getElementById('edit');
+      const download = document.getElementById('download');
+      const counter = document.getElementById('page-count');
+      const progress = document.getElementById('progress-bar');
+      let current = 0;
+      let editing = false;
+
+      function drawIcons() {
+        if (window.lucide) window.lucide.createIcons({ attrs: { 'stroke-width': 2 } });
+      }
+
+      function goTo(index) {
+        current = Math.max(0, Math.min(index, slides.length - 1));
+        slides.forEach((slide, slideIndex) => slide.classList.toggle('active', slideIndex === current));
+        slides.forEach((slide, slideIndex) => {
+          const pageLabel = `${String(slideIndex + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
+          const pageNo = slide.querySelector('.section-no');
+          if (pageNo) pageNo.textContent = pageLabel;
+        });
+        counter.textContent = `${String(current + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
+        progress.style.width = `${((current + 1) / slides.length) * 100}%`;
+        document.title = `${slides[current].dataset.title}｜互联网、大数据与AI：从日常到职场`;
+        slides[current].scrollTop = 0;
+      }
+
+      previous.addEventListener('click', () => goTo(current - 1));
+      next.addEventListener('click', () => goTo(current + 1));
+
+      fullscreen.addEventListener('click', async () => {
+        try {
+          if (document.fullscreenElement) await document.exitFullscreen();
+          else await document.documentElement.requestFullscreen();
+        } catch (_) {}
+      });
+
+      edit.addEventListener('click', () => {
+        editing = !editing;
+        document.body.classList.toggle('editing', editing);
+        document.querySelectorAll('.slide-inner').forEach((inner) => {
+          inner.contentEditable = editing ? 'true' : 'false';
+          inner.spellcheck = editing;
+        });
+        edit.setAttribute('aria-pressed', String(editing));
+        edit.dataset.tooltip = editing ? '结束编辑' : '编辑页面';
+      });
+
+      download.addEventListener('click', () => {
+        const copy = document.documentElement.cloneNode(true);
+        copy.querySelector('body').classList.remove('editing');
+        copy.querySelectorAll('[contenteditable]').forEach((inner) => inner.removeAttribute('contenteditable'));
+        const source = `<!doctype html>\n${copy.outerHTML}`;
+        const blob = new Blob([source], { type: 'text/html;charset=utf-8' });
+        const anchor = document.createElement('a');
+        anchor.href = URL.createObjectURL(blob);
+        anchor.download = '互联网、大数据与AI：从日常到职场-已编辑.html';
+        anchor.click();
+        URL.revokeObjectURL(anchor.href);
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (editing || event.target.closest('button') || event.target.isContentEditable) return;
+        if (['ArrowRight', 'PageDown', ' '].includes(event.key)) { event.preventDefault(); goTo(current + 1); }
+        if (['ArrowLeft', 'PageUp'].includes(event.key)) { event.preventDefault(); goTo(current - 1); }
+        if (event.key === 'Home') { event.preventDefault(); goTo(0); }
+        if (event.key === 'End') { event.preventDefault(); goTo(slides.length - 1); }
+      });
+
+      document.querySelectorAll('.quiz').forEach((quiz) => {
+        quiz.querySelectorAll('.quiz-option').forEach((option) => {
+          option.addEventListener('click', () => {
+            const answer = quiz.dataset.answer;
+            const correct = option.dataset.choice === answer;
+            quiz.querySelectorAll('.quiz-option').forEach((item) => {
+              item.classList.remove('correct', 'incorrect');
+              if (item.dataset.choice === answer) item.classList.add('correct');
+            });
+            if (!correct) option.classList.add('incorrect');
+            quiz.querySelector('.quiz-feedback').textContent = correct ? quiz.dataset.correct : quiz.dataset.wrong;
+          });
+        });
+      });
+
+      let touchStartX = 0;
+      document.addEventListener('touchstart', (event) => { touchStartX = event.changedTouches[0].screenX; }, { passive: true });
+      document.addEventListener('touchend', (event) => {
+        const deltaX = event.changedTouches[0].screenX - touchStartX;
+        if (Math.abs(deltaX) < 60) return;
+        if (deltaX < 0) goTo(current + 1);
+        else goTo(current - 1);
+      }, { passive: true });
+
+      drawIcons();
+      goTo(0);
+    })();
+  </script>
+</body>
+</html>
