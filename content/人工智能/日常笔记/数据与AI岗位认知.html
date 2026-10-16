@@ -1,10 +1,9 @@
 <!doctype html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="面向高校师生的互联网、大数据与AI职业讲座" />
-  <title>互联网、大数据与AI：从日常到职场</title>
+<html lang="zh-CN"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="面向高校师生的互联网、大数据与AI职业讲座">
+  <title>平台服务链路｜互联网、大数据与AI：从日常到职场</title>
   <style>
     :root {
       --ink: #27221d;
@@ -44,7 +43,7 @@
       width: 100%;
       min-height: 100svh;
       height: 100svh;
-      overflow: auto;
+      overflow: hidden;
       padding: 42px 76px 56px;
       background: var(--paper);
       position: relative;
@@ -113,7 +112,7 @@
     }
 
     h2 {
-      font-size: 42px;
+      font-size: 46px;
       font-weight: 800;
       letter-spacing: 0;
       line-height: 1.16;
@@ -124,7 +123,7 @@
 
     .lead {
       color: #4d453e;
-      font-size: 20px;
+      font-size: 22px;
       line-height: 1.65;
       margin-top: 18px;
       max-width: 870px;
@@ -195,7 +194,7 @@
 
     .card p {
       color: #5f564e;
-      font-size: 15px;
+      font-size: 17px;
       line-height: 1.58;
       margin-top: 8px;
     }
@@ -220,7 +219,7 @@
     .list {
       color: #534b43;
       display: grid;
-      font-size: 15px;
+      font-size: 17px;
       gap: 8px;
       line-height: 1.55;
       list-style: none;
@@ -235,75 +234,43 @@
     .quote {
       border-left: 4px solid var(--gold);
       color: #4f463e;
-      font-size: 17px;
+      font-size: 19px;
       line-height: 1.65;
       margin-top: 22px;
       max-width: 980px;
       padding: 4px 0 4px 18px;
     }
 
-    .cover { background: #fffdfb; }
-    .cover::before { background: var(--warm); height: 8px; }
-    .cover-grid { align-items: center; display: grid; flex: 1; gap: 48px; grid-template-columns: 1.02fr 0.98fr; }
+    /* ===== 深色封面 / 结束页模板 ===== */
+    .cover-dark { background: radial-gradient(1100px 720px at 74% 24%, #4d2d1a 0%, #2b1a10 55%, #1b110a 100%); color: #fdf6ee; }
+    .cover-dark::before { background: linear-gradient(90deg, var(--gold), var(--warm)); height: 8px; }
+    .cover-dark .topline { color: rgba(253, 246, 238, 0.85); }
+    .cover-dark .section-no { color: rgba(253, 246, 238, 0.6); }
+    .cover-dark .slide-footer { color: rgba(253, 246, 238, 0.65); }
+    .cover-dark .slide-footer::before { background: rgba(253, 246, 238, 0.18); }
 
-    .cover h1 { max-width: 650px; }
-    .cover h1 .line-break { display: block; }
-    .cover-subtitle { color: #625950; font-size: 21px; line-height: 1.6; margin-top: 24px; max-width: 580px; }
-    .cover-meta { align-items: center; color: #817469; display: flex; font-size: 14px; font-weight: 700; gap: 18px; margin-top: 35px; }
-    .cover-meta span + span { border-left: 1px solid var(--line); padding-left: 18px; }
+    .dark-grid { align-items: center; display: grid; flex: 1; gap: 60px; grid-template-columns: 1.05fr 0.95fr; }
+    .gold-eyebrow { color: var(--gold); }
+    .gold-eyebrow::before { background: var(--gold); }
+    .dark-title { color: #fdf6ee; font-size: clamp(80px, 12vw, 148px); line-height: 1.02; letter-spacing: -0.01em; }
+    .dark-sub { color: #d9c6b2; font-size: 24px; line-height: 1.7; margin-top: 30px; max-width: 640px; }
+    .dark-meta { color: #b39a80; display: flex; font-size: 14px; font-weight: 700; gap: 18px; margin-top: 42px; }
+    .dark-meta span + span { border-left: 1px solid rgba(253, 246, 238, 0.2); padding-left: 18px; }
 
-    .cover-art {
-      aspect-ratio: 1.02;
-      background: var(--cream);
-      border: 1px solid #f0dfce;
-      border-radius: 8px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .cover-art::before, .cover-art::after { content: ""; position: absolute; }
-    .cover-art::before { border: 1px solid #edc38b; height: 250px; left: 104px; top: 100px; transform: rotate(21deg); width: 250px; }
-    .cover-art::after { background: var(--warm); height: 10px; left: 46px; top: 47px; width: 10px; }
-
-    .art-node {
-      align-items: center;
-      background: var(--paper);
-      border: 1px solid #ead7c4;
-      border-radius: 6px;
-      box-shadow: 0 12px 22px rgba(88, 53, 25, 0.07);
-      color: var(--ink);
-      display: flex;
-      font-size: 15px;
-      font-weight: 800;
-      gap: 9px;
-      padding: 13px 16px;
-      position: absolute;
-      z-index: 1;
-    }
-
-    .art-node i { color: var(--warm); height: 18px; width: 18px; }
-    .node-1 { left: 52px; top: 101px; }
-    .node-2 { right: 44px; top: 82px; }
-    .node-3 { left: 52px; bottom: 93px; }
-    .node-4 { right: 35px; bottom: 72px; }
-    .art-center {
-      align-items: center;
-      background: var(--warm-dark);
+    .orb-wrap { aspect-ratio: 1; position: relative; }
+    .orb-ring { border: 1px solid rgba(227, 165, 83, 0.45); border-radius: 50%; inset: 0; position: absolute; }
+    .orb-ring2 { border: 1px dashed rgba(227, 165, 83, 0.25); border-radius: 50%; inset: -9%; position: absolute; }
+    .orb-main {
+      background: radial-gradient(circle at 34% 30%, #edb06a 0%, #c95d3c 55%, #7e341e 100%);
       border-radius: 50%;
-      color: white;
-      display: flex;
-      height: 128px;
-      justify-content: center;
-      left: calc(50% - 64px);
+      box-shadow: 0 34px 90px rgba(0, 0, 0, 0.4);
+      inset: 15%;
       position: absolute;
-      text-align: center;
-      top: calc(50% - 64px);
-      width: 128px;
-      z-index: 2;
     }
-
-    .art-center strong { display: block; font-size: 24px; line-height: 1; }
-    .art-center span { display: block; font-size: 13px; margin-top: 8px; }
+    .orb-dot { background: var(--gold); border-radius: 50%; height: 12px; position: absolute; width: 12px; }
+    .orb-dot.d1 { left: 50%; top: -6px; transform: translateX(-50%); }
+    .orb-dot.d2 { right: 4%; top: 72%; }
+    .orb-dot.d3 { left: 2%; top: 30%; background: #fdf6ee; opacity: 0.7; }
 
     .number-banner {
       align-items: baseline;
@@ -314,17 +281,19 @@
       padding-bottom: 20px;
     }
 
-    .number-banner b { color: var(--warm); font-size: 54px; line-height: 1; }
-    .number-banner p { color: #655b51; font-size: 16px; line-height: 1.55; max-width: 760px; }
+    .number-banner b { color: var(--warm); font-size: 60px; line-height: 1; }
+    .number-banner p { color: #655b51; font-size: 18px; line-height: 1.55; max-width: 760px; }
 
     .agenda-grid { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 30px; }
     .agenda-item { align-items: start; border: 1px solid var(--line); border-radius: 7px; display: grid; gap: 16px; grid-template-columns: 58px 1fr; min-height: 118px; padding: 17px; }
     .agenda-item .agenda-index { color: var(--gold); font-size: 32px; font-weight: 800; line-height: 1; }
-    .agenda-item h3 { font-size: 19px; }
-    .agenda-item p { color: var(--muted); font-size: 14px; line-height: 1.5; margin-top: 7px; }
+    .agenda-item h3 { font-size: 20px; }
+    .agenda-item p { color: var(--muted); font-size: 16px; line-height: 1.5; margin-top: 7px; }
     .agenda-item:nth-child(2) { background: #fff9f5; border-color: #efd8c9; }
     .agenda-item:nth-child(3) { background: #f6fbf8; border-color: #d5e5dc; }
     .agenda-item:nth-child(4) { background: #f6fafb; border-color: #d4e5e7; }
+    .agenda-item:nth-child(5) { background: #fdf6ef; border-color: #eeddc9; }
+    .agenda-item.wide { grid-column: 1 / -1; }
 
     .day-line { align-items: stretch; display: grid; gap: 12px; grid-template-columns: repeat(5, 1fr); margin-top: 30px; }
     .day-step { border-top: 3px solid var(--warm); padding: 14px 10px 0 0; }
@@ -332,27 +301,27 @@
     .day-step:nth-child(3) { border-color: var(--green); }
     .day-step:nth-child(4) { border-color: #63868d; }
     .day-step:nth-child(5) { border-color: #bc7559; }
-    .day-step b { display: block; font-size: 16px; }
-    .day-step p { color: var(--muted); font-size: 14px; line-height: 1.45; margin-top: 6px; }
+    .day-step b { display: block; font-size: 18px; }
+    .day-step p { color: var(--muted); font-size: 16px; line-height: 1.45; margin-top: 6px; }
 
     .flow { align-items: stretch; display: grid; gap: 12px; grid-template-columns: repeat(5, 1fr); margin-top: 30px; }
     .flow-item { background: var(--cream); border: 1px solid #efdfcf; border-radius: 6px; min-height: 148px; padding: 18px 16px; position: relative; }
     .flow-item:not(:last-child)::after { color: var(--gold); content: "→"; font-size: 24px; font-weight: 700; position: absolute; right: -20px; top: calc(50% - 17px); z-index: 3; }
     .flow-item .flow-no { color: var(--warm); display: block; font-size: 12px; font-weight: 800; margin-bottom: 14px; }
-    .flow-item b { display: block; font-size: 17px; }
-    .flow-item p { color: var(--muted); font-size: 14px; line-height: 1.45; margin-top: 8px; }
+    .flow-item b { display: block; font-size: 18px; }
+    .flow-item p { color: var(--muted); font-size: 16px; line-height: 1.45; margin-top: 8px; }
 
     .pillar { border-top: 4px solid var(--warm); padding: 18px 5px 0; }
     .pillar:nth-child(2) { border-color: var(--gold); }
     .pillar:nth-child(3) { border-color: var(--green); }
     .pillar:nth-child(4) { border-color: #63868d; }
     .pillar h3 { font-size: 18px; }
-    .pillar p { color: var(--muted); font-size: 14px; line-height: 1.55; margin-top: 8px; }
+    .pillar p { color: var(--muted); font-size: 16px; line-height: 1.55; margin-top: 8px; }
 
     .role-map { display: grid; gap: 10px; grid-template-columns: repeat(7, minmax(0, 1fr)); margin-top: 26px; }
     .role-tile { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; min-height: 122px; padding: 14px; }
-    .role-tile b { display: block; font-size: 15px; }
-    .role-tile span { color: var(--muted); display: block; font-size: 12px; line-height: 1.45; margin-top: 7px; }
+    .role-tile b { display: block; font-size: 17px; }
+    .role-tile span { color: var(--muted); display: block; font-size: 14px; line-height: 1.45; margin-top: 7px; }
     .role-tile:nth-child(1) { border-top: 4px solid var(--warm); }
     .role-tile:nth-child(2) { border-top: 4px solid var(--gold); }
     .role-tile:nth-child(3) { border-top: 4px solid var(--green); }
@@ -370,8 +339,8 @@
     }
 
     .quiz-head { align-items: center; color: var(--warm-dark); display: flex; font-size: 13px; font-weight: 800; gap: 8px; }
-    .quiz-head i { height: 16px; width: 16px; }
-    .quiz-question { color: #332c26; font-size: 17px; font-weight: 700; line-height: 1.5; margin-top: 8px; }
+    .quiz-head svg { height: 16px; width: 16px; }
+    .quiz-question { color: #332c26; font-size: 19px; font-weight: 700; line-height: 1.5; margin-top: 8px; }
     .quiz-options { display: grid; gap: 10px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 14px; }
     .quiz-option {
       align-items: center;
@@ -381,7 +350,7 @@
       color: #4d443b;
       cursor: pointer;
       display: flex;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 700;
       gap: 9px;
       min-height: 42px;
@@ -395,7 +364,7 @@
     .quiz-option span { align-items: center; background: var(--gold-soft); border-radius: 50%; color: var(--warm-dark); display: inline-flex; flex: 0 0 auto; font-size: 12px; height: 22px; justify-content: center; width: 22px; }
     .quiz-option.correct { background: #f2faf5; border-color: #8db8a0; color: var(--green); }
     .quiz-option.incorrect { background: #fff5f1; border-color: #d58a74; color: var(--warm-dark); }
-    .quiz-feedback { color: var(--green); font-size: 14px; font-weight: 700; line-height: 1.5; margin-top: 12px; min-height: 21px; }
+    .quiz-feedback { color: var(--green); font-size: 15px; font-weight: 700; line-height: 1.5; margin-top: 12px; min-height: 21px; }
 
     .journey { align-items: center; display: grid; gap: 0; grid-template-columns: 1.05fr 46px 1.05fr 46px 1.05fr; margin-top: 36px; }
     .journey-stage { border: 1px solid var(--line); border-radius: 7px; min-height: 245px; padding: 22px; }
@@ -405,9 +374,9 @@
     .journey-stage .stage-no { color: var(--warm-dark); font-size: 13px; font-weight: 800; }
     .journey-stage.decision .stage-no { color: var(--green); }
     .journey-stage h3 { font-size: 23px; margin-top: 10px; }
-    .journey-stage p { color: var(--muted); font-size: 15px; line-height: 1.55; margin-top: 10px; }
+    .journey-stage p { color: var(--muted); font-size: 17px; line-height: 1.55; margin-top: 10px; }
     .journey-stage .mini-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 16px; }
-    .chip { background: white; border: 1px solid #e8ddd2; border-radius: 999px; color: #63594f; font-size: 12px; font-weight: 700; padding: 6px 9px; }
+    .chip { background: white; border: 1px solid #e8ddd2; border-radius: 999px; color: #63594f; font-size: 13px; font-weight: 700; padding: 6px 10px; }
     .journey-arrow { color: var(--gold); font-size: 28px; font-weight: 800; text-align: center; }
 
     .detail-split { display: grid; gap: 26px; grid-template-columns: 1.05fr 0.95fr; margin-top: 28px; }
@@ -416,19 +385,19 @@
     .job-block.green-top { border-color: var(--green); }
     .job-title-row { align-items: center; display: flex; gap: 12px; justify-content: space-between; }
     .job-title-row h3 { font-size: 22px; }
-    .department { background: var(--gold-soft); color: var(--warm-dark); font-size: 12px; font-weight: 800; padding: 6px 8px; white-space: nowrap; }
+    .department { background: var(--gold-soft); color: var(--warm-dark); font-size: 13px; font-weight: 800; padding: 6px 9px; white-space: nowrap; }
     .department.green-dept { background: var(--green-soft); color: var(--green); }
-    .job-block p { color: #5f554c; font-size: 15px; line-height: 1.58; margin-top: 10px; }
+    .job-block p { color: #5f554c; font-size: 17px; line-height: 1.58; margin-top: 10px; }
 
     .key-callout { align-items: flex-start; background: var(--cream); border-left: 4px solid var(--gold); display: flex; gap: 14px; margin-top: 22px; padding: 14px 16px; }
-    .key-callout i { color: var(--warm-dark); flex: 0 0 auto; height: 19px; margin-top: 2px; width: 19px; }
+    .key-callout svg { color: var(--warm-dark); flex: 0 0 auto; height: 19px; margin-top: 2px; width: 19px; }
     .key-callout p { color: #5d5045; font-size: 14px; line-height: 1.55; }
 
     .decision-grid { display: grid; gap: 14px; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 26px; }
     .decision-card { border: 1px solid var(--line); border-radius: 7px; min-height: 230px; padding: 17px; }
-    .decision-card h3 { font-size: 18px; }
+    .decision-card h3 { font-size: 19px; }
     .decision-card .dept-line { color: var(--warm-dark); font-size: 12px; font-weight: 800; margin-top: 8px; }
-    .decision-card p { color: #5f554c; font-size: 14px; line-height: 1.53; margin-top: 10px; }
+    .decision-card p { color: #5f554c; font-size: 16px; line-height: 1.53; margin-top: 10px; }
     .decision-card:nth-child(2) .dept-line { color: #9a6a22; }
     .decision-card:nth-child(3) .dept-line { color: var(--green); }
     .decision-card:nth-child(4) .dept-line { color: #537a85; }
@@ -440,17 +409,17 @@
     .case-question p { color: #fee9d5; font-size: 15px; line-height: 1.6; margin-top: 15px; }
     .relay { display: grid; gap: 8px; }
     .relay-row { align-items: center; border-bottom: 1px solid var(--line); display: grid; gap: 12px; grid-template-columns: 122px 1fr; padding: 8px 0; }
-    .relay-row b { color: var(--warm-dark); font-size: 14px; }
-    .relay-row span { color: #5e554d; font-size: 14px; line-height: 1.4; }
+    .relay-row b { color: var(--warm-dark); font-size: 15px; }
+    .relay-row span { color: #5e554d; font-size: 16px; line-height: 1.4; }
 
     .fit-grid { display: grid; gap: 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 28px; }
     .fit-row { align-items: center; border-bottom: 1px solid var(--line); display: grid; gap: 18px; grid-template-columns: 0.9fr 1.1fr; padding: 14px 0; }
-    .fit-row b { font-size: 17px; }
-    .fit-row span { color: var(--muted); font-size: 15px; line-height: 1.45; }
+    .fit-row b { font-size: 18px; }
+    .fit-row span { color: var(--muted); font-size: 17px; line-height: 1.45; }
 
     .chapter-intro { align-items: center; display: grid; flex: 1; gap: 50px; grid-template-columns: 0.82fr 1.18fr; }
     .chapter-index { color: var(--gold); font-size: 148px; font-weight: 800; letter-spacing: 0; line-height: 0.8; }
-    .chapter-intro h2 { font-size: 49px; }
+    .chapter-intro h2 { font-size: 52px; }
     .chapter-intro .lead { font-size: 19px; max-width: 660px; }
     .four-lane { display: grid; gap: 9px; grid-template-columns: repeat(4, 1fr); margin-top: 26px; }
     .lane { border-top: 4px solid var(--warm); padding: 12px 4px; }
@@ -465,8 +434,8 @@
     .work-focus { background: var(--gold-soft); color: var(--warm-dark); font-size: 13px; font-weight: 800; padding: 10px 12px; }
     .direction-grid { display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 23px; }
     .direction { border: 1px solid var(--line); border-radius: 6px; min-height: 110px; padding: 14px; }
-    .direction b { display: block; font-size: 16px; }
-    .direction p { color: var(--muted); font-size: 13px; line-height: 1.45; margin-top: 7px; }
+    .direction b { display: block; font-size: 17px; }
+    .direction p { color: var(--muted); font-size: 15px; line-height: 1.45; margin-top: 7px; }
     .direction:nth-child(4) { background: #fff9f5; border-color: #f1dacb; }
     .direction:nth-child(5) { background: #f6fbf8; border-color: #d5e5dc; }
     .direction:nth-child(6) { background: #f6fafb; border-color: #d4e5e7; }
@@ -476,17 +445,17 @@
     .compare-side.research { background: #fff9f5; border-color: #efd8c9; }
     .compare-side.application { background: #f6fbf8; border-color: #d5e5dc; }
     .compare-side h3 { font-size: 23px; }
-    .compare-side p { color: #5f554c; font-size: 15px; line-height: 1.55; margin-top: 10px; }
+    .compare-side p { color: #5f554c; font-size: 17px; line-height: 1.55; margin-top: 10px; }
     .compare-middle { align-items: center; color: var(--gold); display: flex; font-size: 34px; font-weight: 800; justify-content: center; }
     .compare-rows { display: grid; gap: 8px; margin-top: 17px; }
-    .compare-rows span { background: white; border: 1px solid #ebe0d5; color: #5d534b; font-size: 13px; font-weight: 700; padding: 9px 10px; }
+    .compare-rows span { background: white; border: 1px solid #ebe0d5; color: #5d534b; font-size: 15px; font-weight: 700; padding: 9px 10px; }
 
     .team-chain { align-items: stretch; display: grid; gap: 10px; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 26px; }
     .team-step { border: 1px solid var(--line); border-radius: 7px; min-height: 180px; padding: 16px; position: relative; }
     .team-step:not(:last-child)::after { color: var(--gold); content: "→"; font-size: 24px; font-weight: 800; position: absolute; right: -18px; top: calc(50% - 16px); z-index: 1; }
     .team-step .label { color: var(--warm-dark); font-size: 12px; font-weight: 800; }
-    .team-step h3 { font-size: 18px; margin-top: 9px; }
-    .team-step p { color: var(--muted); font-size: 13px; line-height: 1.5; margin-top: 8px; }
+    .team-step h3 { font-size: 19px; margin-top: 9px; }
+    .team-step p { color: var(--muted); font-size: 15px; line-height: 1.5; margin-top: 8px; }
     .team-step:nth-child(2) .label { color: #956015; }
     .team-step:nth-child(3) .label { color: var(--green); }
     .team-step:nth-child(4) .label { color: #537a85; }
@@ -494,9 +463,9 @@
     .path-grid { display: grid; gap: 15px; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 32px; }
     .path-card { border: 1px solid var(--line); border-radius: 7px; min-height: 252px; padding: 19px; }
     .path-card .path-num { color: var(--gold); font-size: 34px; font-weight: 800; line-height: 1; }
-    .path-card h3 { font-size: 19px; margin-top: 15px; }
-    .path-card p { color: var(--muted); font-size: 14px; line-height: 1.5; margin-top: 9px; }
-    .path-card .path-role { color: var(--warm-dark); font-size: 12px; font-weight: 800; margin-top: 14px; }
+    .path-card h3 { font-size: 20px; margin-top: 15px; }
+    .path-card p { color: var(--muted); font-size: 16px; line-height: 1.5; margin-top: 9px; }
+    .path-card .path-role { color: var(--warm-dark); font-size: 13px; font-weight: 800; margin-top: 14px; }
 
     .skill-board { display: grid; gap: 22px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 26px; }
     .skill-column { border: 1px solid var(--line); border-radius: 7px; padding: 20px; }
@@ -506,33 +475,61 @@
     .skill-row { align-items: start; border-top: 1px solid #eee4da; display: grid; gap: 13px; grid-template-columns: 112px 1fr; margin-top: 13px; padding-top: 13px; }
     .skill-row b { color: var(--warm-dark); font-size: 14px; }
     .ai-skills .skill-row b { color: var(--green); }
-    .skill-row span { color: #60564e; font-size: 14px; line-height: 1.5; }
+    .skill-row span { color: #60564e; font-size: 16px; line-height: 1.5; }
 
     .project-grid { display: grid; gap: 16px; grid-template-columns: 0.95fr 1.05fr; margin-top: 26px; }
     .project-card { border: 1px solid var(--line); border-radius: 7px; padding: 21px; }
     .project-card h3 { font-size: 23px; }
-    .project-example { background: var(--cream); border-left: 4px solid var(--gold); color: #55493e; font-size: 15px; line-height: 1.55; margin-top: 14px; padding: 13px 15px; }
+    .project-example { background: var(--cream); border-left: 4px solid var(--gold); color: #55493e; font-size: 17px; line-height: 1.55; margin-top: 14px; padding: 13px 15px; }
     .project-steps { counter-reset: project; display: grid; gap: 10px; margin-top: 14px; }
-    .project-steps div { align-items: center; color: #554b42; display: flex; font-size: 14px; font-weight: 700; gap: 10px; }
+    .project-steps div { align-items: center; color: #554b42; display: flex; font-size: 16px; font-weight: 700; gap: 10px; }
     .project-steps div::before { align-items: center; background: var(--gold-soft); border-radius: 50%; color: var(--warm-dark); content: counter(project); counter-increment: project; display: inline-flex; flex: 0 0 auto; font-size: 12px; height: 24px; justify-content: center; width: 24px; }
 
     .interview-layout { display: grid; gap: 18px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 26px; }
     .interview-card { border: 1px solid var(--line); border-radius: 7px; min-height: 275px; padding: 20px; }
     .interview-card h3 { font-size: 22px; }
     .formula { display: grid; gap: 7px; grid-template-columns: repeat(4, 1fr); margin-top: 16px; }
-    .formula span { background: var(--cream); color: #6a5646; font-size: 13px; font-weight: 800; padding: 11px 8px; text-align: center; }
+    .formula span { background: var(--cream); color: #6a5646; font-size: 15px; font-weight: 800; padding: 11px 8px; text-align: center; }
     .formula span:nth-child(2) { background: #fff0d8; }
     .formula span:nth-child(3) { background: #edf4ef; color: var(--green); }
     .formula span:nth-child(4) { background: #edf5f6; color: #3e6d75; }
-    .interview-card p { color: var(--muted); font-size: 14px; line-height: 1.55; margin-top: 16px; }
+    .interview-card p { color: var(--muted); font-size: 17px; line-height: 1.55; margin-top: 16px; }
 
     .action-strip { display: grid; gap: 0; grid-template-columns: repeat(5, 1fr); margin-top: 34px; }
     .action { border-left: 1px solid var(--line); min-height: 185px; padding: 0 16px; }
     .action:first-child { border-left: 0; padding-left: 0; }
     .action .when { color: var(--warm-dark); font-size: 12px; font-weight: 800; }
-    .action h3 { font-size: 18px; margin-top: 11px; }
-    .action p { color: var(--muted); font-size: 14px; line-height: 1.5; margin-top: 8px; }
-    .closing-line { color: var(--warm-dark); font-size: 24px; font-weight: 800; line-height: 1.45; margin-top: 36px; max-width: 1020px; }
+    .action h3 { font-size: 19px; margin-top: 11px; }
+    .action p { color: var(--muted); font-size: 16px; line-height: 1.5; margin-top: 8px; }
+    .closing-line { color: var(--warm-dark); font-size: 28px; font-weight: 800; line-height: 1.45; margin-top: 36px; max-width: 1020px; }
+
+    /* ===== 数学元素装饰 ===== */
+    .math-bg { inset: 0; overflow: hidden; pointer-events: none; position: absolute; z-index: 0; }
+    .math-bg span { color: rgba(227, 165, 83, 0.16); font-family: Georgia, "Times New Roman", serif; font-style: italic; font-weight: 600; position: absolute; white-space: nowrap; }
+    .math-bg .f1 { font-size: 38px; left: 4%; top: 13%; transform: rotate(-5deg); }
+    .math-bg .f2 { font-size: 28px; left: 42%; top: 7%; transform: rotate(3deg); }
+    .math-bg .f3 { font-size: 32px; right: 4%; top: 18%; transform: rotate(-3deg); }
+    .math-bg .f4 { font-size: 42px; left: 9%; bottom: 15%; transform: rotate(4deg); }
+    .math-bg .f5 { font-size: 28px; right: 10%; bottom: 11%; transform: rotate(-4deg); }
+    .math-bg .f6 { font-size: 24px; left: 56%; bottom: 19%; transform: rotate(2deg); }
+    .math-x { color: var(--gold); font-weight: 400; margin: 0 10px; }
+    .cover-dark .topline, .cover-dark .slide-footer, .cover-dark .dark-grid, .cover-dark .end-center { position: relative; z-index: 1; }
+
+    /* ===== 结束页 ===== */
+    .end-center { align-items: center; display: flex; flex: 1; flex-direction: column; justify-content: center; text-align: center; }
+    .thanks-title { color: #fdf6ee; font-size: clamp(140px, 24vw, 230px); line-height: 1; }
+    .end-slogan { color: #e8c9a4; font-size: 27px; font-weight: 700; letter-spacing: 0.1em; margin-top: 36px; }
+
+    /* ===== 目录导航 ===== */
+    .nav-overlay { align-items: center; backdrop-filter: blur(6px); background: rgba(29, 17, 10, 0.55); display: none; inset: 0; justify-content: center; position: fixed; z-index: 30; }
+    .nav-overlay.open { display: flex; }
+    .nav-panel { background: #fffdfb; border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 30px 80px rgba(40, 20, 8, 0.35); max-height: 86vh; overflow: auto; padding: 20px 22px 24px; width: min(940px, 92vw); }
+    .nav-head { align-items: center; color: var(--warm-dark); display: flex; font-size: 15px; font-weight: 800; justify-content: space-between; margin-bottom: 14px; }
+    .nav-grid { display: grid; gap: 8px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .nav-item { align-items: center; background: var(--paper); border: 1px solid var(--line); border-radius: 6px; color: var(--ink); cursor: pointer; display: flex; font-size: 15px; font-weight: 700; gap: 9px; min-height: 44px; padding: 8px 10px; text-align: left; }
+    .nav-item em { color: var(--gold); flex: 0 0 auto; font-size: 12px; font-style: normal; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .nav-item:hover { background: var(--cream); border-color: var(--warm); }
+    .nav-item.current { background: var(--gold-soft); border-color: var(--warm); color: var(--warm-dark); }
 
     .toolbar {
       align-items: center;
@@ -573,14 +570,20 @@
     body.editing .tool-button#edit { background: var(--warm-dark); border-color: var(--warm-dark); color: white; }
     body.editing .tool-button#edit::after { background: var(--warm-dark); }
 
+    @media print {
+      body { overflow: visible; }
+      .slide { display: flex !important; height: auto; min-height: 0; page-break-after: always; padding: 40px 60px; }
+      .toolbar, .progress { display: none !important; }
+    }
+
     @media (max-width: 980px) {
       body { overflow: auto; }
       .slide { height: auto; min-height: 100svh; padding: 30px 28px 80px; }
       .slide-inner { min-height: calc(100svh - 110px); }
       h1 { font-size: 46px; }
       h2 { font-size: 34px; }
-      .cover-grid, .chapter-intro, .case-layout { grid-template-columns: 1fr; }
-      .cover-art { max-width: 520px; width: 100%; }
+      .dark-grid, .chapter-intro, .case-layout { grid-template-columns: 1fr; }
+      .orb-wrap { margin: 0 auto; max-width: 360px; width: 100%; }
       .grid-4, .decision-grid, .path-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .role-map { grid-template-columns: repeat(4, minmax(0, 1fr)); }
       .flow { grid-template-columns: 1fr; }
@@ -599,7 +602,7 @@
       .topline { margin-bottom: 20px; }
       h1 { font-size: 38px; }
       h2, .chapter-intro h2 { font-size: 30px; }
-      .lead, .cover-subtitle { font-size: 17px; }
+      .lead, .dark-sub { font-size: 17px; }
       .grid-2, .grid-3, .grid-4, .decision-grid, .path-grid, .skill-board, .project-grid, .interview-layout, .fit-grid { grid-template-columns: 1fr; }
       .role-map { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .day-line { grid-template-columns: 1fr; }
@@ -612,53 +615,60 @@
       .action, .action:first-child { border-left: 0; border-top: 1px solid var(--line); min-height: auto; padding: 14px 0; }
       .action:first-child { border-top: 0; padding-top: 0; }
       .chapter-index { font-size: 96px; }
+      .nav-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .slide-footer::before { bottom: 54px; }
     }
   </style>
 </head>
-<body>
+<body class="">
   <main class="deck" id="deck" aria-live="polite">
-    <section class="slide cover active" data-title="封面">
-      <div class="slide-inner">
-        <div class="topline"><span>高校师生讲座</span><span class="section-no">01 / 23</span></div>
-        <div class="cover-grid">
-          <div>
-            <span class="eyebrow">从日常体验，看懂职业地图</span>
-            <h1>互联网、大数据与AI<span class="line-break">从日常到职场</span></h1>
-            <p class="cover-subtitle">一份面向高校师生的行业与求职入门读本。我们从出行、外卖、短视频和旅游这些熟悉的场景出发，看看平台如何运转，也看看自己可以从哪里出发。</p>
-            <div class="cover-meta"><span>互联网平台</span><span>大数据岗位</span><span>AI岗位</span><span>求职准备</span></div>
+    <section class="slide cover-dark" data-title="封面">
+      <div class="slide-inner" style="zoom: 0.8396;" spellcheck="true">
+        <div class="math-bg" aria-hidden="true">
+          <span class="f1">P(A|B) = P(B|A)·P(A) / P(B)</span>
+          <span class="f2">∇θ J(θ)</span>
+          <span class="f3">min L(θ)</span>
+          <span class="f4">ŷ = σ(wᵀx + b)</span>
+          <span class="f5">E[X] = μ</span>
+          <span class="f6">lim n→∞</span>
+        </div>
+        <div class="topline"><span>从日常到职场</span><span class="section-no">01 / 34</span></div>
+        <div class="dark-grid">
+          <div><br><h1 class="dark-title">互联网</h1><h1 class="dark-title">大数据<span class="math-x">×</span>AI</h1>
+            <p class="dark-sub">2026年-10月</p>
+            <div class="dark-meta"><span><br></span></div>
           </div>
-          <div class="cover-art" aria-label="互联网、大数据与AI的关联示意图">
-            <div class="art-node node-1"><i data-lucide="smartphone"></i>用户日常</div>
-            <div class="art-node node-2"><i data-lucide="chart-no-axes-combined"></i>数据洞察</div>
-            <div class="art-node node-3"><i data-lucide="briefcase-business"></i>职业方向</div>
-            <div class="art-node node-4"><i data-lucide="bot"></i>AI应用</div>
-            <div class="art-center"><div><strong>平台</strong><span>连接与协作</span></div></div>
+          <div class="orb-wrap" aria-hidden="true">
+            <div class="orb-ring2"></div>
+            <div class="orb-ring"></div>
+            <div class="orb-main"></div>
+            <span class="orb-dot d1"></span><span class="orb-dot d2"></span><span class="orb-dot d3"></span>
           </div>
         </div>
-        <div class="slide-footer"><span>互联网、大数据与AI：从日常到职场</span><span>高校师生讲座</span></div>
+        <div class="slide-footer"><span>互联网、大数据与AI：从日常到职场</span><span>2026</span></div>
       </div>
     </section>
 
     <section class="slide" data-title="目录">
-      <div class="slide-inner">
-        <div class="topline"><span>目录 · 从日常到职场</span><span class="section-no">02 / 28</span></div>
-        <span class="eyebrow">四个部分，一张职业地图</span>
+      <div class="slide-inner" spellcheck="true" style="zoom: 0.6394;">
+        <div class="topline"><span>目录 · 从日常到职场</span><span class="section-no">02 / 34</span></div>
+        <span class="eyebrow">五个部分，一张职业地图</span>
         <h2>从每天的使用体验，走到自己的职业起点</h2>
-        <p class="lead">这场分享不从复杂术语开始，而是从大家熟悉的平台服务出发。先理解行业怎样运转，再认识数据与 AI 如何参与其中，最后把视线收回到自己的能力与求职准备。</p>
+        <p class="lead">这场分享不从复杂术语开始，而是从大家熟悉的平台服务出发。先理解行业怎样运转，再认识数据与 AI 如何参与其中，然后聊聊怎么面对 AI 带来的焦虑，最后把视线收回到自己的准备。</p>
         <div class="agenda-grid">
           <div class="agenda-item"><span class="agenda-index">01</span><div><h3>互联网平台如何运转</h3><p>理解平台如何连接供需、分配流量、保障履约，以及平台中有哪些岗位共同协作。</p></div></div>
           <div class="agenda-item"><span class="agenda-index">02</span><div><h3>大数据岗位与链路</h3><p>沿着数据生产加工、消费使用、决策行动的路径，看懂不同数据岗位的分工。</p></div></div>
           <div class="agenda-item"><span class="agenda-index">03</span><div><h3>AI 岗位如何分工</h3><p>从研究、工程、应用到产品，理解 AI 能力怎样成为真正可用的服务。</p></div></div>
-          <div class="agenda-item"><span class="agenda-index">04</span><div><h3>大学生如何准备</h3><p>从方向选择、基础技能、项目作品到简历面试，形成一份可执行的行动清单。</p></div></div>
+          <div class="agenda-item"><span class="agenda-index">04</span><div><h3>面对AI趋势：如何看待恐慌与焦虑</h3><p>看看历史上机器来过时发生了什么，把焦虑拆开看清楚，学会缓解它的方法。</p></div></div>
+          <div class="agenda-item"><span class="agenda-index">05</span><div><h3>AI 时代的求职准备</h3><p>方向、技能、项目、表达的基本功不变；工具、岗位形态与准备方式全面升级。</p></div></div>
         </div>
         <div class="slide-footer"><span>先建立全局，再进入每个具体方向</span><span>目录</span></div>
       </div>
     </section>
 
     <section class="slide" data-title="第一部分导览">
-      <div class="slide-inner">
-        <div class="topline"><span>第一部分 · 互联网平台</span><span class="section-no">03 / 28</span></div>
+      <div class="slide-inner" spellcheck="true" style="">
+        <div class="topline"><span>第一部分 · 互联网平台</span><span class="section-no">03 / 34</span></div>
         <div class="chapter-intro">
           <div class="chapter-index">01</div>
           <div>
@@ -673,8 +683,8 @@
     </section>
 
     <section class="slide" data-title="日常中的互联网">
-      <div class="slide-inner">
-        <div class="topline"><span>开场 · 你已身在行业之中</span><span class="section-no">02 / 23</span></div>
+      <div class="slide-inner" spellcheck="true" style="zoom: 0.8591;">
+        <div class="topline"><span>开场 · 你已身在行业之中</span><span class="section-no">04 / 34</span></div>
         <span class="eyebrow">一部手机，一条职业线索</span>
         <h2>你每天都在使用互联网行业的成果</h2>
         <p class="lead">从早上看路况到晚上订酒店，手机上的每一次点击，都连接着产品、运营、技术、数据、AI、设计和风控等不同岗位。看懂这些日常体验，就是看懂行业的第一步。</p>
@@ -690,12 +700,11 @@
       </div>
     </section>
 
-    <section class="slide" data-title="平台服务链路">
-      <div class="slide-inner">
-        <div class="topline"><span>第一部分 · 互联网平台</span><span class="section-no">03 / 23</span></div>
+    <section class="slide active" data-title="平台服务链路">
+      <div class="slide-inner" spellcheck="true" style="zoom: 0.9823;">
+        <div class="topline"><span>第一部分 · 互联网平台</span><span class="section-no">05 / 34</span></div>
         <span class="eyebrow">用一份外卖，看懂一套服务</span>
         <h2>一次下单，背后是一条完整的协作链路</h2>
-        <p class="small-lead">用户看到的可能只是“下单成功”；平台需要完成的却是供需匹配、商品展示、价格计算、履约调度、支付结算与售后保障等一系列动作。</p>
         <div class="flow">
           <div class="flow-item"><span class="flow-no">01</span><b>打开与发现</b><p>产品设计入口，推荐和搜索帮助用户找到商家。</p></div>
           <div class="flow-item"><span class="flow-no">02</span><b>选择与下单</b><p>价格、优惠券、库存、支付等规则一起生效。</p></div>
@@ -709,8 +718,8 @@
     </section>
 
     <section class="slide" data-title="平台四个关键动作">
-      <div class="slide-inner">
-        <div class="topline"><span>第一部分 · 互联网平台</span><span class="section-no">04 / 23</span></div>
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第一部分 · 互联网平台</span><span class="section-no">06 / 34</span></div>
         <span class="eyebrow">平台为什么能持续转动</span>
         <h2>互联网平台，通常围绕四件事运转</h2>
         <div class="grid grid-4">
@@ -725,11 +734,10 @@
     </section>
 
     <section class="slide" data-title="平台岗位地图">
-      <div class="slide-inner">
-        <div class="topline"><span>第一部分 · 互联网平台</span><span class="section-no">05 / 23</span></div>
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第一部分 · 互联网平台</span><span class="section-no">07 / 34</span></div>
         <span class="eyebrow">不只有程序员</span>
         <h2>一个 App 背后，站着一支跨专业的队伍</h2>
-        <p class="small-lead">如果把一个互联网 App 想象成一家超级大餐厅：有人决定菜单，有人搭建厨房，有人招呼客人，有人研究经营数据，也有人让服务变得更智能。</p>
         <div class="role-map">
           <div class="role-tile"><b>产品</b><span>用户需要什么？功能怎样设计？</span></div>
           <div class="role-tile"><b>运营</b><span>如何吸引用户、服务供给方、组织活动？</span></div>
@@ -740,7 +748,11 @@
           <div class="role-tile"><b>风控与客服</b><span>如何处理异常、投诉和风险？</span></div>
         </div>
         <div class="quiz" data-answer="b" data-correct="答对了。数据团队会通过订单、评分、配送时长、投诉等信息定位体验问题，并为产品、运营提供改进线索。" data-wrong="再想想：谁最直接负责从大量行为记录中发现“配送慢”或“评分下降”的原因？">
-          <div class="quiz-head"><i data-lucide="circle-help"></i>小互动 · 选择题</div>
+          <div class="quiz-head"><svg class="lucide lucide-circle-help" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="10"></circle>
+  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+  <path d="M12 17h.01"></path>
+</svg>小互动 · 选择题</div>
           <p class="quiz-question">某商圈的外卖评分持续下降，平台最需要先借助哪类能力判断问题出在哪里？</p>
           <div class="quiz-options">
             <button class="quiz-option" data-choice="a"><span>A</span>只增加广告投放</button>
@@ -754,8 +766,8 @@
     </section>
 
     <section class="slide" data-title="第二部分导览">
-      <div class="slide-inner">
-        <div class="topline"><span>第二部分 · 大数据</span><span class="section-no">08 / 28</span></div>
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第二部分 · 大数据</span><span class="section-no">08 / 34</span></div>
         <div class="chapter-intro">
           <div class="chapter-index">02</div>
           <div>
@@ -770,8 +782,8 @@
     </section>
 
     <section class="slide" data-title="数据旅行">
-      <div class="slide-inner">
-        <div class="topline"><span>第二部分 · 大数据</span><span class="section-no">06 / 23</span></div>
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第二部分 · 大数据</span><span class="section-no">09 / 34</span></div>
         <span class="eyebrow">一杯奶茶，也是一条数据</span>
         <h2>数据从哪里来，又会走到哪里去？</h2>
         <p class="lead">下单时间、商品价格、商家位置、配送时长、优惠券、评价……对用户来说是一笔普通消费，对平台来说却是一条刚刚出生的数据。它需要被整理、被使用，最后参与业务决策。</p>
@@ -787,19 +799,22 @@
     </section>
 
     <section class="slide" data-title="数据生产与加工">
-      <div class="slide-inner">
-        <div class="topline"><span>第二部分 · 大数据</span><span class="section-no">07 / 23</span></div>
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第二部分 · 大数据</span><span class="section-no">10 / 34</span></div>
         <span class="eyebrow">数据生产与加工层</span>
         <h2>把“散装信息”整理成可靠的数据资产</h2>
-        <p class="small-lead">这一层更偏技术和数据中台。普通用户未必直接看到它，但后续报表、分析和 AI 的可信程度，都建立在这里。</p>
         <div class="detail-split">
           <div>
-            <div class="job-block"><div class="job-title-row"><h3>数据开发工程师</h3><span class="department">技术 / 数据中台</span></div><p>面对订单、支付、配送等大量原始记录，负责采集、清洗、加工，形成可供分析使用的中间表或宽表。重点是让数据能稳定、按时、准确地流动。</p><ul class="list"><li>处理重复、缺失、格式不一致等原始问题</li><li>把分散系统里的信息加工成分析主题数据</li><li>让后续团队不用每次都从“原材料”开始找数据</li></ul></div>
-            <div class="job-block green-top"><div class="job-title-row"><h3>数据仓库工程师</h3><span class="department green-dept">数据中台 / 技术</span></div><p>负责数仓建模、主题域设计、数据治理和资产盘点。重点是建立统一规则，让“订单量”“活跃用户”等核心指标不再各算各的。</p><ul class="list green-list"><li>明确数据该放在哪里、怎样被复用</li><li>管理指标口径和数据质量</li><li>让数据像图书馆一样有目录、有秩序、可检索</li></ul></div>
+            <div class="job-block"><div class="job-title-row"><h3>数据开发工程师</h3><span class="department">技术 / 数据中台</span></div><p>把海量原始记录清洗、加工成可分析的宽表，让数据稳定、按时、准确地流动。</p><ul class="list"><li>处理重复、缺失、格式不一致等原始问题</li><li>把分散系统里的信息加工成分析主题数据</li><li>让后续团队不用每次都从“原材料”开始找数据</li></ul></div>
+            <div class="job-block green-top"><div class="job-title-row"><h3>数据仓库工程师</h3><span class="department green-dept">数据中台 / 技术</span></div><p>负责数仓建模与数据治理，让核心指标口径统一、可复用。</p><ul class="list green-list"><li>明确数据该放在哪里、怎样被复用</li><li>管理指标口径和数据质量</li><li>让数据像图书馆一样有目录、有秩序、可检索</li></ul></div>
           </div>
           <div>
-            <div class="card soft"><div class="icon-box"><i data-lucide="database"></i></div><h3>从原始记录到可用数据</h3><p>订单、支付、配送等系统中的信息往往分散、重复，格式也不完全一致。数据开发会把它们采集、清洗并加工成可供后续使用的数据，让分析不必每次都从“原材料”开始。</p></div>
-            <div class="key-callout"><i data-lucide="lightbulb"></i><p><b>一个常见误会：</b>数据开发和数据仓库不是“只管表格”。它们管的是平台的数据基础设施。基础不稳，后面的看板再漂亮、结论再精彩，也可能建立在错误数据上。</p></div>
+            <div class="card soft"><div class="icon-box"><svg class="lucide lucide-database" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+  <path d="M3 5V19A9 3 0 0 0 21 19V5"></path>
+  <path d="M3 12A9 3 0 0 0 21 12"></path>
+</svg></div><h3>从原始记录到可用数据</h3><p>把分散、重复、格式不一的原始信息，加工成可信、可复用的数据资产。</p></div>
+            
           </div>
         </div>
         <div class="slide-footer"><span>偏好代码、系统、逻辑和稳定性，可优先了解这一层</span><span>02 · 生产加工</span></div>
@@ -807,14 +822,22 @@
     </section>
 
     <section class="slide" data-title="数据消费层">
-      <div class="slide-inner">
-        <div class="topline"><span>第二部分 · 大数据</span><span class="section-no">08 / 23</span></div>
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第二部分 · 大数据</span><span class="section-no">11 / 34</span></div>
         <span class="eyebrow">数据消费层</span>
         <h2>让数据被看见、被理解、被使用</h2>
-        <p class="small-lead">数据加工完成后，不是为了静静躺在数据库里，而是要被业务、运营、产品和管理者使用。数据消费层负责让数据成为“能行动的信息”。</p>
         <div class="grid grid-2">
-          <div class="card clay"><div class="icon-box clay-box"><i data-lucide="layout-dashboard"></i></div><span class="role-tag">数据中台 / 产品部门</span><h3>数据产品经理</h3><p>定义指标体系，规划看板和数据产品，并管理需求优先级。他们会想清楚：谁需要看数据？看什么指标？怎样设计才不会让人打开后更迷糊？</p><ul class="list"><li>把运营和管理者的问题翻译成数据产品需求</li><li>设计活动、经营、用户等主题看板</li><li>和数据开发协作，推动数据能力真正落地</li></ul></div>
-          <div class="card green-card"><div class="icon-box green-box"><i data-lucide="chart-column-big"></i></div><span class="role-tag">业务部门 / 数据中台</span><h3>数据分析师</h3><p>承接业务取数需求，制作报表、维护看板，更重要的是解释业务变化。面对“订单下降”，不只报一个数字，而是要找到流量、价格、供给或体验中的原因。</p><ul class="list green-list"><li>拆解指标：访问少了，还是下单转化低了？</li><li>定位问题：发生在新用户、老用户还是某个商圈？</li><li>输出建议：让业务团队知道下一步可以做什么</li></ul></div>
+          <div class="card clay"><div class="icon-box clay-box"><svg class="lucide lucide-layout-dashboard" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <rect width="7" height="9" x="3" y="3" rx="1"></rect>
+  <rect width="7" height="5" x="14" y="3" rx="1"></rect>
+  <rect width="7" height="9" x="14" y="12" rx="1"></rect>
+  <rect width="7" height="5" x="3" y="16" rx="1"></rect>
+</svg></div><span class="role-tag">数据中台 / 产品部门</span><h3>数据产品经理</h3><p>定义指标体系、规划看板与数据产品：谁需要看数据？看什么？怎样设计才不让人迷糊？</p><ul class="list"><li>把运营和管理者的问题翻译成数据产品需求</li><li>设计活动、经营、用户等主题看板</li><li>和数据开发协作，推动数据能力真正落地</li></ul></div>
+          <div class="card green-card"><div class="icon-box green-box"><svg class="lucide lucide-chart-column-big" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M3 3v16a2 2 0 0 0 2 2h16"></path>
+  <rect x="15" y="5" width="4" height="12" rx="1"></rect>
+  <rect x="7" y="8" width="4" height="9" rx="1"></rect>
+</svg></div><span class="role-tag">业务部门 / 数据中台</span><h3>数据分析师</h3><p>不只报数字，更要解释变化：订单下降，是流量、价格、供给还是体验的问题？</p><ul class="list green-list"><li>拆解指标：访问少了，还是下单转化低了？</li><li>定位问题：发生在新用户、老用户还是某个商圈？</li><li>输出建议：让业务团队知道下一步可以做什么</li></ul></div>
         </div>
         <div class="quote">报表像体检单，告诉你哪里“红了”；数据分析更像医生，要判断原因，并提出下一步怎么处理。</div>
         <div class="slide-footer"><span>数据产品让数据好用，数据分析让数据说话</span><span>02 · 数据消费</span></div>
@@ -822,25 +845,24 @@
     </section>
 
     <section class="slide" data-title="数据决策层">
-      <div class="slide-inner">
-        <div class="topline"><span>第二部分 · 大数据</span><span class="section-no">09 / 23</span></div>
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第二部分 · 大数据</span><span class="section-no">12 / 34</span></div>
         <span class="eyebrow">数据决策层</span>
         <h2>从“发生了什么”走向“下一步怎么办”</h2>
-        <p class="small-lead">决策层岗位通常建立在数据分析能力之上，只是关注的问题更专项、更深入，更贴近经营、策略和管理选择。</p>
         <div class="decision-grid">
           <div class="decision-card"><h3>战略分析师</h3><div class="dept-line">战略部 / 业务战略团队</div><p>研究行业、竞品与商业模式，支持中长期战略。例如判断短途游是否增长，平台是否应进入新的校园服务场景。</p></div>
           <div class="decision-card"><h3>经营分析师</h3><div class="dept-line">经营管理部 / 业务部门</div><p>盯订单、收入、成本、利润和用户增长。指标出现异动时，帮助管理者快速理解影响和原因。</p></div>
           <div class="decision-card"><h3>商业分析师</h3><div class="dept-line">商业化 / 业务 / 策略团队</div><p>评估活动或产品 ROI，连接业务与数据。核心问题是：花出去的钱，到底换回了多少真实效果？</p></div>
           <div class="decision-card"><h3>收益策略分析师</h3><div class="dept-line">策略 / 商业化部门</div><p>输出定价、收益优化、CPX/出价等策略，在用户体验、供给收入和平台经营之间找平衡。</p></div>
         </div>
-        <div class="key-callout"><i data-lucide="scale"></i><p><b>关于 ROI 与 CPX：</b>ROI 可以理解为投入和回报的关系；CPX/出价策略常见于广告与商业化场景，关注如何衡量一次展示、点击或转化的价值，并合理分配资源。初学阶段理解目标即可，不必急着钻进公式。</p></div>
+        
         <div class="slide-footer"><span>分析不是终点，推动更好的决策才是价值所在</span><span>02 · 数据决策</span></div>
       </div>
     </section>
 
     <section class="slide" data-title="数据岗位接力案例">
-      <div class="slide-inner">
-        <div class="topline"><span>第二部分 · 大数据</span><span class="section-no">10 / 23</span></div>
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第二部分 · 大数据</span><span class="section-no">13 / 34</span></div>
         <span class="eyebrow">案例 · 酒店预订量下降</span>
         <h2>同一条数据，不同岗位怎样接力？</h2>
         <div class="case-layout">
@@ -860,8 +882,8 @@
     </section>
 
     <section class="slide" data-title="找到数据方向">
-      <div class="slide-inner">
-        <div class="topline"><span>第二部分 · 大数据</span><span class="section-no">11 / 23</span></div>
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第二部分 · 大数据</span><span class="section-no">14 / 34</span></div>
         <span class="eyebrow">方向选择</span>
         <h2>喜欢什么，决定你可以先了解哪类数据岗位</h2>
         <div class="fit-grid">
@@ -871,7 +893,11 @@
           <div class="fit-row"><b>研究行业、定策略</b><span>战略分析、收益策略分析更适合。你会思考投入、价格、竞争和长期方向。</span></div>
         </div>
         <div class="quiz" data-answer="c" data-correct="答对了。先统一指标口径，是保证后续看板、分析和经营讨论建立在同一事实基础上的关键一步。" data-wrong="提示：当两个团队算出的“订单量”都不同，最先要解决的并不是图表样式，而是指标口径。">
-          <div class="quiz-head"><i data-lucide="circle-help"></i>小互动 · 选择题</div>
+          <div class="quiz-head"><svg class="lucide lucide-circle-help" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="10"></circle>
+  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+  <path d="M12 17h.01"></path>
+</svg>小互动 · 选择题</div>
           <p class="quiz-question">两个团队对“订单量”的计算结果不同，最应优先处理哪件事？</p>
           <div class="quiz-options">
             <button class="quiz-option" data-choice="a"><span>A</span>把图表颜色换得更醒目</button>
@@ -885,8 +911,8 @@
     </section>
 
     <section class="slide" data-title="AI岗位总览">
-      <div class="slide-inner">
-        <div class="topline"><span>第三部分 · AI岗位</span><span class="section-no">12 / 23</span></div>
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第三部分 · AI岗位</span><span class="section-no">15 / 34</span></div>
         <div class="chapter-intro">
           <div class="chapter-index">03</div>
           <div>
@@ -901,10 +927,9 @@
     </section>
 
     <section class="slide" data-title="AI研究型岗位">
-      <div class="slide-inner">
-        <div class="topline"><span>第三部分 · AI岗位</span><span class="section-no">13 / 23</span></div>
-        <div class="ai-header"><div><span class="eyebrow">AI研究型岗位</span><h2>让模型更聪明</h2></div><span class="work-focus">关注：模型能力与效果</span></div>
-        <p class="small-lead">研究型岗位负责研究、训练和优化模型，让机器更会理解、预测、生成和判断。常见于算法团队、AI 技术团队、研究院和大模型团队。</p>
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第三部分 · AI岗位</span><span class="section-no">16 / 34</span></div>
+        <div class="ai-header"><div><span class="eyebrow">AI研究型岗位</span><h2>让模型更聪明</h2></div></div>
         <div class="direction-grid">
           <div class="direction"><b>语言与大模型</b><p>提升文本理解、问答、生成和多轮对话能力。</p></div>
           <div class="direction"><b>推荐与排序</b><p>让内容、商品、旅游信息更符合用户兴趣。</p></div>
@@ -913,20 +938,31 @@
           <div class="direction"><b>模型评测与优化</b><p>比较模型效果，减少答非所问和错误回答。</p></div>
           <div class="direction"><b>实际例子</b><p>理解“预算两千、凉快、人少”的旅行需求，再给出合理建议。</p></div>
         </div>
-        <div class="key-callout"><i data-lucide="flask-conical"></i><p><b>更适合谁：</b>喜欢数学、编程、实验和模型原理，愿意反复做对比、调参数、验证效果的人。对本科生而言，可先从 Python、机器学习基础、课程项目和简单模型复现开始。</p></div>
+        
         <div class="slide-footer"><span>研究型关注“模型能不能做到”</span><span>03 · AI研究</span></div>
       </div>
     </section>
 
     <section class="slide" data-title="AI工程型岗位">
-      <div class="slide-inner">
-        <div class="topline"><span>第三部分 · AI岗位</span><span class="section-no">14 / 23</span></div>
-        <div class="ai-header"><div><span class="eyebrow">AI工程型岗位</span><h2>让模型跑得起来、跑得稳</h2></div><span class="work-focus">关注：系统、性能、成本</span></div>
-        <p class="small-lead">模型在实验环境中跑通，只是第一步。工程型岗位要把它变成线上可调用、能承受大量访问、出现问题可追踪的服务。常见于 AI 平台、基础架构、技术中台和云服务团队。</p>
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第三部分 · AI岗位</span><span class="section-no">17 / 34</span></div>
+        <div class="ai-header"><div><span class="eyebrow">AI工程型岗位</span><h2>让模型跑得起来、跑得稳</h2></div></div>
         <div class="grid grid-3">
-          <div class="card soft"><div class="icon-box"><i data-lucide="server"></i></div><h3>训练与部署</h3><p>提供训练环境、工具和算力，把训练好的模型部署到线上，供产品和业务调用。</p></div>
-          <div class="card green-card"><div class="icon-box green-box"><i data-lucide="activity"></i></div><h3>稳定与监控</h3><p>处理响应慢、服务中断、并发量过高等问题，及时发现线上异常。</p></div>
-          <div class="card blue-card"><div class="icon-box blue-box"><i data-lucide="coins"></i></div><h3>资源与成本</h3><p>管理模型版本、数据版本和调用资源，在效果与成本之间找到可持续的方案。</p></div>
+          <div class="card soft"><div class="icon-box"><svg class="lucide lucide-server" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <rect width="20" height="8" x="2" y="2" rx="2" ry="2"></rect>
+  <rect width="20" height="8" x="2" y="14" rx="2" ry="2"></rect>
+  <line x1="6" x2="6.01" y1="6" y2="6"></line>
+  <line x1="6" x2="6.01" y1="18" y2="18"></line>
+</svg></div><h3>训练与部署</h3><p>提供训练环境、工具和算力，把训练好的模型部署到线上，供产品和业务调用。</p></div>
+          <div class="card green-card"><div class="icon-box green-box"><svg class="lucide lucide-activity" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"></path>
+</svg></div><h3>稳定与监控</h3><p>处理响应慢、服务中断、并发量过高等问题，及时发现线上异常。</p></div>
+          <div class="card blue-card"><div class="icon-box blue-box"><svg class="lucide lucide-coins" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M13.744 17.736a6 6 0 1 1-7.48-7.48"></path>
+  <path d="M15 6h1v4"></path>
+  <path d="m6.134 14.768.866-.5 2 3.464"></path>
+  <circle cx="16" cy="8" r="6"></circle>
+</svg></div><h3>资源与成本</h3><p>管理模型版本、数据版本和调用资源，在效果与成本之间找到可持续的方案。</p></div>
         </div>
         <div class="quote">研究型岗位负责造一辆更聪明的车；工程型岗位负责修路、建加油站、装导航，保证这辆车真的能开上路。</div>
         <div class="slide-footer"><span>考试周大量同学同时使用校园 AI 助手时，谁在保证它不“转圈”？</span><span>03 · AI工程</span></div>
@@ -934,23 +970,22 @@
     </section>
 
     <section class="slide" data-title="AI应用型岗位">
-      <div class="slide-inner">
-        <div class="topline"><span>第三部分 · AI岗位</span><span class="section-no">15 / 23</span></div>
-        <div class="ai-header"><div><span class="eyebrow">AI应用型岗位</span><h2>把 AI 用到真实场景里</h2></div><span class="work-focus">关注：场景、用户、业务效果</span></div>
-        <p class="small-lead">应用型岗位结合具体业务，把 AI 能力做成用户能直接使用的功能。它常在出行、电商、内容、客服等业务技术团队或 AI 业务团队中发挥作用。</p>
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第三部分 · AI岗位</span><span class="section-no">18 / 34</span></div>
+        <div class="ai-header"><div><span class="eyebrow">AI应用型岗位</span><h2>把 AI 用到真实场景里</h2></div></div>
         <div class="grid grid-3">
           <div class="card clay"><span class="role-tag">推荐与搜索</span><h3>更快找到所需内容</h3><p>让用户更快找到想看的内容、想买的商品或合适的出行方案。短视频“猜你想看什么”就是典型场景。</p></div>
           <div class="card green-card"><span class="role-tag">智能客服与大模型应用</span><h3>把回答变成服务</h3><p>搭建知识库、智能问答和助手，让用户先解决订单、退款、行程和课程等高频问题。</p></div>
           <div class="card blue-card"><span class="role-tag">业务智能化</span><h3>让流程更有效率</h3><p>将 AI 用于需求预测、辅助调度、风险识别、图像语音处理和运营提效。</p></div>
         </div>
-        <div class="key-callout"><i data-lucide="target"></i><p><b>应用型岗位的判断标准：</b>不只看模型“准不准”，还要看用户用不用、问题有没有被解决、流程是否更顺、效果是否值得成本。一个回答很流畅的旅行助手，不等于它真的帮助用户完成了预订。</p></div>
+        
         <div class="slide-footer"><span>AI 应用的终点不是“像人聊天”，而是解决真实问题</span><span>03 · AI应用</span></div>
       </div>
     </section>
 
     <section class="slide" data-title="研究型与应用型的关系">
-      <div class="slide-inner">
-        <div class="topline"><span>第三部分 · AI岗位</span><span class="section-no">16 / 23</span></div>
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第三部分 · AI岗位</span><span class="section-no">19 / 34</span></div>
         <span class="eyebrow">有关联，但关注点不同</span>
         <h2>研究型与应用型：一个把能力做好，一个把能力用好</h2>
         <div class="compare">
@@ -964,23 +999,22 @@
     </section>
 
     <section class="slide" data-title="AI产品型岗位">
-      <div class="slide-inner">
-        <div class="topline"><span>第三部分 · AI岗位</span><span class="section-no">17 / 23</span></div>
-        <div class="ai-header"><div><span class="eyebrow">AI产品型岗位</span><h2>决定 AI 应该做什么、怎样做</h2></div><span class="work-focus">关注：需求、体验、策略、风险</span></div>
-        <p class="small-lead">AI 产品型岗位负责找到适合 AI 解决的问题，设计功能体验、使用边界和策略规则。常见于产品部门、AI 业务团队、策略团队和平台治理团队。</p>
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第三部分 · AI岗位</span><span class="section-no">20 / 34</span></div>
+        <div class="ai-header"><div><span class="eyebrow">AI产品型岗位</span><h2>决定 AI 应该做什么、怎样做</h2></div></div>
         <div class="grid grid-3">
           <div class="card soft"><h3>定义问题</h3><p>判断用户真正卡在哪里。不是所有问题都需要 AI，一个清楚的问题往往比一个花哨功能更重要。</p></div>
           <div class="card clay"><h3>设计体验</h3><p>设计提问、回答、知识库和人机协作流程，让用户知道 AI 能做什么，也知道它不能做什么。</p></div>
           <div class="card green-card"><h3>评估与治理</h3><p>设定满意度、解决率、使用频率等指标，同时平衡质量、成本、隐私、安全和转人工规则。</p></div>
         </div>
-        <div class="key-callout"><i data-lucide="map"></i><p><b>以 AI 旅行助手为例：</b>用户要的是灵感、行程规划、酒店推荐还是预订服务？回答能否引用可靠信息？哪些问题 AI 可以先处理，哪些情况必须提醒用户核实或转人工？这些都需要产品型岗位事先想清楚。</p></div>
+        
         <div class="slide-footer"><span>AI 产品不是“加一个聊天框”就结束了</span><span>03 · AI产品</span></div>
       </div>
     </section>
 
     <section class="slide" data-title="AI团队协作">
-      <div class="slide-inner">
-        <div class="topline"><span>第三部分 · AI岗位</span><span class="section-no">18 / 23</span></div>
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第三部分 · AI岗位</span><span class="section-no">21 / 34</span></div>
         <span class="eyebrow">案例 · 一个 AI 旅行助手</span>
         <h2>四类 AI 岗位，如何共同做出一个产品？</h2>
         <div class="team-chain">
@@ -990,7 +1024,11 @@
           <div class="team-step"><span class="label">产品型</span><h3>定义体验与边界</h3><p>明确助手解决什么问题，怎样评估质量，何时提醒用户核实。</p></div>
         </div>
         <div class="quiz" data-answer="a" data-correct="答对了。把模型接入资料、预订流程和真实用户场景，并持续看业务效果，正是应用型岗位的重要工作。" data-wrong="想一想：这里问的是“把现有能力接入真实业务、让用户用起来”，而不是训练模型或管理服务器。">
-          <div class="quiz-head"><i data-lucide="circle-help"></i>小互动 · 选择题</div>
+          <div class="quiz-head"><svg class="lucide lucide-circle-help" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="10"></circle>
+  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+  <path d="M12 17h.01"></path>
+</svg>小互动 · 选择题</div>
           <p class="quiz-question">把已有大模型接入可靠旅游资料和预订流程，并持续观察用户是否完成行程规划，最贴近哪类岗位？</p>
           <div class="quiz-options">
             <button class="quiz-option" data-choice="a"><span>A</span>AI 应用型岗位</button>
@@ -1004,24 +1042,141 @@
     </section>
 
     <section class="slide" data-title="第四部分导览">
-      <div class="slide-inner">
-        <div class="topline"><span>第四部分 · 求职准备</span><span class="section-no">24 / 28</span></div>
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第四部分 · 面对AI趋势</span><span class="section-no">22 / 34</span></div>
         <div class="chapter-intro">
           <div class="chapter-index">04</div>
           <div>
-            <span class="eyebrow">把行业地图变成自己的路径</span>
-            <h2>从校园到职场，准备可以从今天开始</h2>
-            <p class="lead">求职不是到了大四才突然开始的“终极副本”。观察一个 App、掌握一项工具、完成一个项目、讲清一个问题，都是在为未来积累可展示的能力。</p>
-            <div class="four-lane"><div class="lane"><span>选方向</span><b>找到适合的起点</b></div><div class="lane"><span>练基础</span><b>SQL、Python与业务理解</b></div><div class="lane"><span>做项目</span><b>形成可展示的作品</b></div><div class="lane"><span>会表达</span><b>写好简历、准备面试</b></div></div>
+            <span class="eyebrow">先安顿心态，再谈准备</span>
+            <h2>面对 AI 浪潮，恐慌和焦虑怎么办</h2>
+            <p class="lead">“AI 会不会取代我”，几乎是这一代学生共同的问号。这一章不贩卖焦虑，也不灌鸡汤：先看看历史上机器来过时发生了什么，再把焦虑拆开看清楚，最后给出可以立刻上手的缓解方法。</p>
+            <div class="four-lane"><div class="lane"><span>看历史</span><b>机器来过很多次</b></div><div class="lane"><span>看事实</span><b>区分事实与叙事</b></div><div class="lane"><span>练心态</span><b>焦虑可以缓解</b></div><div class="lane"><span>早准备</span><b>时间窗口在现在</b></div></div>
           </div>
         </div>
-        <div class="slide-footer"><span>第四部分导览：从兴趣偏好，到可执行的行动</span><span>04 · 求职准备</span></div>
+        <div class="slide-footer"><span>第四部分导览：与AI共处，是一门新功课</span><span>04 · 心态与焦虑</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="机器来过很多次">
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第四部分 · 面对AI趋势</span><span class="section-no">23 / 34</span></div>
+        <span class="eyebrow">四个真实案例 · 国内外</span>
+        <h2>机器来过很多次，上次发生了什么？</h2>
+        <div class="grid grid-2">
+          <div class="card soft"><div class="icon-box"><svg class="lucide lucide-landmark" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M10 18v-7"></path>
+  <path d="M11.119 2.205a2 2 0 0 1 1.762 0l7.84 3.846A.5.5 0 0 1 20.5 7h-17a.5.5 0 0 1-.22-.949z"></path>
+  <path d="M14 18v-7"></path>
+  <path d="M18 18v-7"></path>
+  <path d="M3 22h18"></path>
+  <path d="M6 18v-7"></path>
+</svg></div><h3>ATM 与银行柜员（国际）</h3><p>ATM 普及后，很多人预言柜员将消失；此后几十年美国柜员不降反升——柜员转向服务与销售，机器省下的钱变成了更多网点和新岗位。</p></div>
+          <div class="card clay"><div class="icon-box clay-box"><svg class="lucide lucide-briefcase" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+  <rect width="20" height="14" x="2" y="6" rx="2"></rect>
+</svg></div><h3>交易大厅的变化（国际）</h3><p>高盛交易楼层曾有约 600 名人工交易员；自动化后执行类大幅减少，工程师团队大规模扩张。被替代的是“执行”，增长的是“设计算法”的人。</p></div>
+          <div class="card blue-card"><div class="icon-box blue-box"><svg class="lucide lucide-banknote" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <rect width="20" height="12" x="2" y="6" rx="2"></rect>
+  <circle cx="12" cy="12" r="2"></circle>
+  <path d="M6 12h.01M18 12h.01"></path>
+</svg></div><h3>高速公路收费员（国内）</h3><p>ETC 普及后，人工收费岗大幅减少。“36 岁收费员除了收费啥也不会”曾引发全网讨论——技能迁移要趁早。</p></div>
+          <div class="card green-card"><div class="icon-box green-box"><svg class="lucide lucide-users" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+  <path d="M16 3.128a4 4 0 0 1 0 7.744"></path>
+  <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+  <circle cx="9" cy="7" r="4"></circle>
+</svg></div><h3>打字员与电梯操作员（中外）</h3><p>职业整体消失的同时，程序员、产品经理、数据分析师、提示词工程师等新职业在开幕。</p></div>
+        </div>
+        
+        <div class="quote">被替代的从来不是“整个人”，而是“可标准化的任务”；人的价值，会流向机器暂时做不好的部分。</div>
+        <div class="slide-footer"><span>历史不会简单重复，但总在押韵</span><span>04 · 历史案例</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="如何看待AI焦虑">
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第四部分 · 面对AI趋势</span><span class="section-no">24 / 34</span></div>
+        <span class="eyebrow">先把焦虑看清楚</span>
+        <h2>焦虑不是软弱，是大脑在提醒你"未来很重要"</h2>
+        <div class="grid grid-3">
+          <div class="card clay"><div class="icon-box clay-box"><svg class="lucide lucide-cloud-fog" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path>
+  <path d="M16 17H7"></path>
+  <path d="M17 21H9"></path>
+</svg></div><h3>不确定性</h3><p>不知道哪些工作会改变、何时改变。人对"看不清的东西"最容易紧张，这与技术无关，是人的本能。</p></div>
+          <div class="card soft"><div class="icon-box"><svg class="lucide lucide-megaphone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M11 6a13 13 0 0 0 8.4-2.8A1 1 0 0 1 21 4v12a1 1 0 0 1-1.6.8A13 13 0 0 0 11 14H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"></path>
+  <path d="M6 14a12 12 0 0 0 2.4 7.2 2 2 0 0 0 3.2-2.4A8 8 0 0 1 10 14"></path>
+  <path d="M8 6v8"></path>
+</svg></div><h3>信息过载与叙事</h3><p>"AI又取代了XX"更容易被传播和记住。刷到的多是情绪化的标题，而不是像上一页那样完整的案例与规律。</p></div>
+          <div class="card green-card"><div class="icon-box green-box"><svg class="lucide lucide-trending-down" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M16 17h6v-6"></path>
+  <path d="m22 17-8.5-8.5-5 5L2 7"></path>
+</svg></div><h3>能力贬值担忧</h3><p>担心辛苦学的技能过时。这个担忧部分真实——但案例告诉我们，它指向的结论是"持续迁移"，而不是"学什么都没用"。</p></div>
+        </div>
+        
+        <div class="quote">把"AI 会不会取代我"换成"我的哪些工作会被 AI 放大"，问题就从恐慌变成了地图。</div>
+        <div class="slide-footer"><span>焦虑指向的问题值得回答，但要用事实回答</span><span>04 · 心态</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="如何缓解焦虑">
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第四部分 · 面对AI趋势</span><span class="section-no">25 / 34</span></div>
+        <span class="eyebrow">焦虑的解药不是想通，是具体</span>
+        <h2>三件事，把焦虑降到"能思考"的水平</h2>
+        <div class="grid grid-3">
+          <div class="card soft"><div class="icon-box"><svg class="lucide lucide-eye" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path>
+  <circle cx="12" cy="12" r="3"></circle>
+</svg></div><h3>少刷一点</h3><p>管理信息摄入：固定时间看 AI 动态，其余时间不刷。算法会把你担心的内容不断推给你，焦虑常常是被"喂养"出来的。</p></div>
+          <div class="card green-card"><div class="icon-box green-box"><svg class="lucide lucide-hand" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2"></path>
+  <path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"></path>
+  <path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"></path>
+  <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"></path>
+</svg></div><h3>动手一点</h3><p>找一个和自己专业相关的 AI 工具，完成一个真实的小任务。恐惧大多来自陌生，用过之后，判断力会取代想象力。</p></div>
+          <div class="card clay"><div class="icon-box clay-box"><svg class="lucide lucide-message-circle" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"></path>
+</svg></div><h3>说出来</h3><p>和同学、老师、学长学姐聊聊担心的事。把焦虑说出来、一起拆解，比一个人内耗有效得多。</p></div>
+        </div>
+        <div class="quiz" data-answer="b" data-correct="答对了。焦虑的最好解药是具体：用一个真实的小任务建立与AI的第一手经验，判断力会替代想象中的恐惧。" data-wrong="再想想：刷更多消息往往加重焦虑；等待也不会让不确定消失。最有效的是让自己获得具体的、第一手的使用经验。">
+          <div class="quiz-head"><svg class="lucide lucide-circle-help" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="10"></circle>
+  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+  <path d="M12 17h.01"></path>
+</svg>小互动 · 选择题</div>
+          <p class="quiz-question">面对"AI焦虑"，下面哪种做法通常最有效？</p>
+          <div class="quiz-options">
+            <button class="quiz-option" data-choice="a"><span>A</span>刷更多AI新闻，掌握全部动态</button>
+            <button class="quiz-option" data-choice="b"><span>B</span>挑一个和专业相关的小任务，动手用AI完成</button>
+            <button class="quiz-option" data-choice="c"><span>C</span>等技术稳定之后再开始学习</button>
+          </div>
+          <div class="quiz-feedback" aria-live="polite"></div>
+        </div>
+        <div class="slide-footer"><span>心态安顿好了，下一章把准备变成清单</span><span>04 · 缓解</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="第五部分导览">
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第五部分 · AI时代的求职准备</span><span class="section-no">26 / 34</span></div>
+        <div class="chapter-intro">
+          <div class="chapter-index">05</div>
+          <div>
+            <span class="eyebrow">基本功不变，打法升级</span>
+            <h2>AI 时代，如何做求职准备</h2>
+            <p class="lead">方向选择、基础技能、项目作品、简历表达——这些基本功没有变。变的是工具箱、岗位形态，以及雇主提出的新问题。这一章把"不变"与"变"放在一起讲。</p>
+            <div class="four-lane"><div class="lane"><span>不变的</span><b>基本功与表达</b></div><div class="lane"><span>变化的</span><b>工具与岗位形态</b></div><div class="lane"><span>新增的</span><b>人机协作能力</b></div><div class="lane"><span>更新的</span><b>求职准备方式</b></div></div>
+          </div>
+        </div>
+        <div class="slide-footer"><span>第五部分导览：把行业地图变成自己的路径</span><span>05 · 求职准备</span></div>
       </div>
     </section>
 
     <section class="slide" data-title="求职起点">
-      <div class="slide-inner">
-        <div class="topline"><span>第四部分 · 求职准备</span><span class="section-no">19 / 23</span></div>
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第五部分 · AI时代的求职准备</span><span class="section-no">27 / 34</span></div>
         <span class="eyebrow">从校园到职场</span>
         <h2>先选一个起点，不必一次决定一生</h2>
         <p class="lead">第一份工作不是给人生“盖章”，而是找到一个可以认真积累的方向。与其焦虑“到底选哪个最热门”，不如先判断自己愿意长期解决哪一类问题。</p>
@@ -1031,48 +1186,51 @@
           <div class="path-card"><span class="path-num">03</span><h3>模型与实验</h3><p>喜欢数学、模型和反复验证，愿意研究算法能力如何提升。</p><div class="path-role">AI研究型岗位</div></div>
           <div class="path-card"><span class="path-num">04</span><h3>用户与产品场景</h3><p>喜欢理解需求、设计体验，让技术真正服务于人。</p><div class="path-role">数据产品 · AI应用 · AI产品</div></div>
         </div>
-        <div class="slide-footer"><span>方向可以调整，基础能力和项目经验会持续积累</span><span>04 · 求职准备</span></div>
+        <div class="slide-footer"><span>方向可以调整，基础能力和项目经验会持续积累</span><span>05 · 求职准备</span></div>
       </div>
     </section>
 
     <section class="slide" data-title="核心技能">
-      <div class="slide-inner">
-        <div class="topline"><span>第四部分 · 求职准备</span><span class="section-no">20 / 23</span></div>
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第五部分 · AI时代的求职准备</span><span class="section-no">28 / 34</span></div>
         <span class="eyebrow">技能不是清单，而是解决问题的工具</span>
         <h2>大数据与 AI，分别该从哪些基础开始？</h2>
         <div class="skill-board">
           <div class="skill-column data-skills"><h3>大数据方向</h3><div class="skill-row"><b>SQL</b><span>像和数据库说话的语言，是查询、整理和分析数据的重要基础。</span></div><div class="skill-row"><b>Excel 与可视化</b><span>重点不是把图表做得花，而是让别人一眼看懂结论。</span></div><div class="skill-row"><b>Python</b><span>用于读取、清洗、分析数据和完成基础自动化任务。</span></div><div class="skill-row"><b>指标意识</b><span>理解同比、环比、转化率、留存率、复购率和 ROI 在回答什么问题。</span></div><div class="skill-row"><b>业务表达</b><span>从“订单下降”提出流量、价格、供给、体验等合理假设，并讲清结论。</span></div></div>
           <div class="skill-column ai-skills"><h3>AI 方向</h3><div class="skill-row"><b>Python 与编程</b><span>即使偏产品或应用，理解代码和数据处理也能更好协作。</span></div><div class="skill-row"><b>基本概念</b><span>理解训练、推理、模型、数据集、评测和“幻觉”等核心概念。</span></div><div class="skill-row"><b>大模型应用</b><span>学习提示词、模型调用、知识库和工作流的基础搭建。</span></div><div class="skill-row"><b>效果评估</b><span>不只看回答是否流畅，还要看是否正确、有用、可靠且成本合理。</span></div><div class="skill-row"><b>场景判断</b><span>不是每个问题都需要 AI。先找对问题，再选择合适技术。</span></div></div>
         </div>
-        <div class="slide-footer"><span>先掌握基础，再用项目把它们串起来</span><span>04 · 能力准备</span></div>
+        <div class="slide-footer"><span>先掌握基础，再用项目把它们串起来</span><span>05 · 能力准备</span></div>
       </div>
     </section>
 
     <section class="slide" data-title="作品与项目">
-      <div class="slide-inner">
-        <div class="topline"><span>第四部分 · 求职准备</span><span class="section-no">21 / 23</span></div>
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第五部分 · AI时代的求职准备</span><span class="section-no">29 / 34</span></div>
         <span class="eyebrow">做一个能讲清楚的项目</span>
         <h2>项目不必惊天动地，但一定要完整</h2>
-        <p class="small-lead">完整不等于复杂。一个好项目应该讲得清楚：为什么做、解决什么问题、做了哪些工作、得到什么结果，以及下次会怎样改进。</p>
         <div class="project-grid">
           <div class="project-card"><h3>可从身边的问题开始</h3><div class="project-example">数据方向：用公开数据分析某地旅游热度变化，设计预订转化看板，并给出提前推送优惠信息的建议。</div><div class="project-example">AI 方向：做一个校园课程资料问答助手，让它先查可信资料，再回答高频问题，并记录回答效果。</div></div>
-          <div class="project-card"><h3>按这四步组织你的项目</h3><div class="project-steps"><div>明确场景与问题：用户或业务到底卡在哪里？</div><div>选择方法与工具：数据分析、模型调用、看板还是流程设计？</div><div>展示过程与结果：用图表、案例或对比说明你做了什么。</div><div>写出反思与边界：哪些结论仍需验证，哪些数据需要授权？</div></div><div class="key-callout"><i data-lucide="shield-check"></i><p>只使用公开、个人自有或经过授权的数据。尊重隐私和数据边界，本身就是数字行业的重要职业素养。</p></div></div>
+          <div class="project-card"><h3>按这四步组织你的项目</h3><div class="project-steps"><div>明确场景与问题：用户或业务到底卡在哪里？</div><div>选择方法与工具：数据分析、模型调用、看板还是流程设计？</div><div>展示过程与结果：用图表、案例或对比说明你做了什么。</div><div>写出反思与边界：哪些结论仍需验证，哪些数据需要授权？</div></div></div>
         </div>
-        <div class="slide-footer"><span>一个小而完整的项目，比一串空泛的技能名更有说服力</span><span>04 · 项目准备</span></div>
+        <div class="slide-footer"><span>一个小而完整的项目，比一串空泛的技能名更有说服力</span><span>05 · 项目准备</span></div>
       </div>
     </section>
 
     <section class="slide" data-title="简历与面试">
-      <div class="slide-inner">
-        <div class="topline"><span>第四部分 · 求职准备</span><span class="section-no">22 / 23</span></div>
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第五部分 · AI时代的求职准备</span><span class="section-no">30 / 34</span></div>
         <span class="eyebrow">把问题讲成一个清楚的故事</span>
         <h2>简历少写“认真负责”，面试多说“我做成了什么”</h2>
         <div class="interview-layout">
-          <div class="interview-card"><h3>简历：用结果描述经历</h3><div class="formula"><span>背景</span><span>问题</span><span>行动</span><span>结果</span></div><p>不要只写“参与数据分析”。可以写：基于公开旅游数据，使用 SQL 和 Python 分析 12 个城市的酒店搜索与预订趋势，发现节假日前一周搜索量明显上升；据此设计预订转化看板，并提出提前推送优惠信息的建议。</p></div>
-          <div class="interview-card"><h3>面试：展示你的思考过程</h3><div class="formula"><span>确认定义</span><span>拆解流程</span><span>验证假设</span><span>给出建议</span></div><p>数据题先确认指标，再拆业务流程；AI 题先明确用户问题，再判断 AI 是否适合解决，并补充效果、风险、成本与边界。面试官通常不只问“会不会工具”，更看你会不会把工具用在对的问题上。</p></div>
+          <div class="interview-card"><h3>简历：用结果描述经历</h3><div class="formula"><span>背景</span><span>问题</span><span>行动</span><span>结果</span></div><p>例如：用 SQL 和 Python 分析 12 个城市的酒店预订趋势，发现节假日前一周搜索量上升，据此设计转化看板并提出建议。</p></div>
+          <div class="interview-card"><h3>面试：展示你的思考过程</h3><div class="formula"><span>确认定义</span><span>拆解流程</span><span>验证假设</span><span>给出建议</span></div><p>数据题先确认指标，再拆流程；AI 题先明确问题，再谈效果、风险与边界。面试官更看重：你会不会把工具用在对的问题上。</p></div>
         </div>
         <div class="quiz" data-answer="b" data-correct="答对了。先确认指标定义，才能避免在不同口径上做出一番很努力、却无法比较的分析。" data-wrong="数据题的第一步往往不是立刻画图，而是确认“这个指标究竟在算什么”。">
-          <div class="quiz-head"><i data-lucide="circle-help"></i>小互动 · 选择题</div>
+          <div class="quiz-head"><svg class="lucide lucide-circle-help" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="10"></circle>
+  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+  <path d="M12 17h.01"></path>
+</svg>小互动 · 选择题</div>
           <p class="quiz-question">面试中被问到“某城市订单下降，怎么分析”时，较合适的第一步是什么？</p>
           <div class="quiz-options">
             <button class="quiz-option" data-choice="a"><span>A</span>马上建议大量发优惠券</button>
@@ -1081,62 +1239,128 @@
           </div>
           <div class="quiz-feedback" aria-live="polite"></div>
         </div>
-        <div class="slide-footer"><span>能让外专业同学听懂项目，通常说明你的逻辑已经足够清楚</span><span>04 · 表达准备</span></div>
+        <div class="slide-footer"><span>能让外专业同学听懂项目，通常说明你的逻辑已经足够清楚</span><span>05 · 表达准备</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="AI时代的变与不变">
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第五部分 · AI时代的求职准备</span><span class="section-no">31 / 34</span></div>
+        <span class="eyebrow">重新思考 · AI 时代的新变量</span>
+        <h2>AI 时代求职：什么不变，什么变了</h2>
+        <div class="compare">
+          <div class="compare-side research"><h3>不变的</h3><p>雇主仍然在找“靠谱的人”：能把事情讲清楚、有真实产出、愿意持续学习。</p><div class="compare-rows"><span>清楚的表达与逻辑</span><span>真实做过的项目</span><span>数字与业务基本功</span><span>责任心与协作</span></div></div>
+          <div class="compare-middle">⇄</div>
+          <div class="compare-side application"><h3>变化的</h3><p>工具箱、岗位形态和筛选方式都在更新：AI 正在成为像 Office 一样的默认技能。</p><div class="compare-rows"><span>AI 成为简历上的默认技能项</span><span>岗位长出新形态（下一页展开）</span><span>面试开始问“你平时怎么用 AI”</span><span>准备方式从“写出来”到“练出来”</span></div></div>
+        </div>
+        <div class="quote">有句流行语说“AI 不会取代你，会用 AI 的人会”。这句话值得当真——但只有落到具体动作上，它才有意义。</div>
+        <div class="slide-footer"><span>先守住不变的，再追上变化的</span><span>05 · 变与不变</span></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="新岗位与用AI准备">
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第五部分 · AI时代的求职准备</span><span class="section-no">32 / 34</span></div>
+        <span class="eyebrow">新机会与新打法</span>
+        <h2>正在长出的新岗位，和可以今天就用的准备法</h2>
+        <div class="grid grid-2">
+          <div class="card soft"><div class="icon-box"><svg class="lucide lucide-sparkles" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path>
+  <path d="M20 2v4"></path>
+  <path d="M22 4h-4"></path>
+  <circle cx="4" cy="20" r="2"></circle>
+</svg></div><h3>正在长出的新岗位</h3><ul class="list"><li>大模型应用与 Agent 开发工程师</li><li>提示词工程、AI 产品经理</li><li>AI 训练师、模型评测与数据质量</li><li>专业 × AI 复合岗：AI+设计、AI+金融、AI+医疗……</li><li>传统岗位的“AI 增强版”：分析师、运营、设计师都在用 AI 放大产出</li></ul></div>
+          <div class="card green-card"><div class="icon-box green-box"><svg class="lucide lucide-graduation-cap" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path>
+  <path d="M22 10v6"></path>
+  <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path>
+</svg></div><h3>用 AI 准备求职</h3><ul class="list green-list"><li>拆 JD：让 AI 把招聘描述翻译成能力清单，对照补短板</li><li>改简历：用“背景-问题-行动-结果”逐条让 AI 挑刺</li><li>模拟面试：让 AI 扮演面试官，练习表达与被追问</li><li>作品集升级：做一个人机协作项目，讲清你和 AI 各自的贡献</li></ul></div>
+        </div>
+        <div class="quote"><b>AI 是陪练，不是枪手。</b>简历和项目里的每一句话，都要能在面试现场讲清楚、答上来——被识破“代写”的代价，远大于朴素的真实。</div>
+        <div class="slide-footer"><span>把 AI 用在准备过程里，而不是用来代替你本人</span><span>05 · 新打法</span></div>
       </div>
     </section>
 
     <section class="slide" data-title="行动清单">
-      <div class="slide-inner">
-        <div class="topline"><span>结语 · 从今天开始</span><span class="section-no">23 / 23</span></div>
+      <div class="slide-inner" spellcheck="true">
+        <div class="topline"><span>第五部分 · AI时代的求职准备</span><span class="section-no">33 / 34</span></div>
         <span class="eyebrow">把行业地图变成自己的行动</span>
         <h2>求职不必从焦虑开始，可以从一个小行动开始</h2>
         <div class="action-strip">
-          <div class="action"><span class="when">本周</span><h3>拆一个 App</h3><p>看看它连接了哪些角色，靠什么机制运转。</p></div>
-          <div class="action"><span class="when">本月</span><h3>学一项工具</h3><p>从 SQL 或 Python 开始，完成一个小练习。</p></div>
-          <div class="action"><span class="when">本学期</span><h3>做一个项目</h3><p>做出可展示的数据或 AI 小项目。</p></div>
-          <div class="action"><span class="when">投递前</span><h3>改一版简历</h3><p>把经历写成“做了什么、解决什么、结果如何”。</p></div>
-          <div class="action"><span class="when">面试前</span><h3>讲一次项目</h3><p>找同学模拟，让外专业的人也能听懂。</p></div>
+          <div class="action"><span class="when">本周</span><h3>拆一个 App</h3><p>看看它连接了哪些角色，再用一个 AI 工具验证你的猜想。</p></div>
+          <div class="action"><span class="when">本月</span><h3>学一项工具</h3><p>从 SQL 或 Python 开始，让 AI 当你的陪练教练。</p></div>
+          <div class="action"><span class="when">本学期</span><h3>做一个项目</h3><p>做一个“人机协作”的小项目，讲清你和 AI 的分工。</p></div>
+          <div class="action"><span class="when">投递前</span><h3>改一版简历</h3><p>用 AI 逐条挑刺，再自己逐句核对到能答上来。</p></div>
+          <div class="action"><span class="when">面试前</span><h3>练一次表达</h3><p>让 AI 模拟面试官，再找同学来一场实战。</p></div>
         </div>
-        <p class="closing-line">当你能认真观察问题、用数据找到线索、用技术尝试解决，再把过程讲清楚，你已经在靠近这个行业了。</p>
-        <div class="number-banner"><b>从现在</b><p>互联网、大数据和 AI 听起来很大，但它们都从一个具体问题开始：用户遇到了什么麻烦？平台如何更好地解决它？</p></div>
-        <div class="slide-footer"><span>互联网、大数据与AI：从日常到职场</span><span>谢谢</span></div>
+        <p class="closing-line">当你能认真观察问题、用数据找到线索、用 AI 放大效率，再把过程讲清楚，你已经在靠近这个行业了。</p>
+        <div class="number-banner"><b>从现在</b><p>互联网、大数据和 AI 听起来很大，但它们都从一个具体问题开始：用户遇到了什么麻烦？你准备怎样更好地解决它？</p></div>
+        <div class="slide-footer"><span>互联网、大数据与AI：从日常到职场</span><span>05 · 行动清单</span></div>
       </div>
     </section>
 
-    <section class="slide cover" data-title="结束">
-      <div class="slide-inner">
-        <div class="topline"><span>结束 · 谢谢聆听</span><span class="section-no">28 / 28</span></div>
-        <div class="cover-grid">
-          <div>
-            <span class="eyebrow">从今天开始，积累自己的第一份作品</span>
-            <h1>看懂行业，<span class="line-break">也看见自己的可能</span></h1>
-            <p class="cover-subtitle">互联网、大数据和 AI 的世界很大，但每一个方向都从一个具体问题开始。保持好奇、练好基础、完成项目、讲清过程，职业路径会慢慢变得清晰。</p>
-            <div class="cover-meta"><span>观察问题</span><span>理解数据</span><span>尝试技术</span><span>清楚表达</span></div>
-          </div>
-          <div class="cover-art" aria-label="结束页视觉图">
-            <div class="art-node node-1"><i data-lucide="search"></i>保持好奇</div>
-            <div class="art-node node-2"><i data-lucide="chart-column-big"></i>读懂数据</div>
-            <div class="art-node node-3"><i data-lucide="code-2"></i>动手实践</div>
-            <div class="art-node node-4"><i data-lucide="message-square-text"></i>讲清过程</div>
-            <div class="art-center"><div><strong>现在</strong><span>从一个行动开始</span></div></div>
-          </div>
+    <section class="slide cover-dark" data-title="结束">
+      <div class="slide-inner" spellcheck="true">
+        <div class="math-bg" aria-hidden="true">
+          <span class="f1">P(A|B) = P(B|A)·P(A) / P(B)</span>
+          <span class="f2">∇θ J(θ)</span>
+          <span class="f3">min L(θ)</span>
+          <span class="f4">ŷ = σ(wᵀx + b)</span>
+          <span class="f5">E[X] = μ</span>
+          <span class="f6">lim n→∞</span>
         </div>
-        <div class="slide-footer"><span>互联网、大数据与AI：从日常到职场</span><span>谢谢</span></div>
+        <div class="topline"><span>结束 · Q&amp;A</span><span class="section-no">34 / 34</span></div>
+        <div class="end-center">
+          <h1 class="thanks-title">谢谢</h1>
+          <p class="end-slogan">把不确定性，变成你的变量。</p>
+        </div>
+        <div class="slide-footer"><span>互联网、大数据与AI：从日常到职场</span><span>Q&amp;A</span></div>
       </div>
     </section>
   </main>
 
   <div class="toolbar" aria-label="演示文稿控制">
-    <button class="tool-button" id="prev" type="button" aria-label="上一页" data-tooltip="上一页"><i data-lucide="chevron-left"></i></button>
-    <div class="page-count" id="page-count">01 / 23</div>
-    <button class="tool-button" id="next" type="button" aria-label="下一页" data-tooltip="下一页"><i data-lucide="chevron-right"></i></button>
-    <button class="tool-button" id="edit" type="button" aria-label="编辑页面" aria-pressed="false" data-tooltip="编辑页面"><i data-lucide="pencil"></i></button>
-    <button class="tool-button" id="download" type="button" aria-label="保存修改" data-tooltip="保存修改"><i data-lucide="download"></i></button>
-    <button class="tool-button" id="fullscreen" type="button" aria-label="全屏" data-tooltip="全屏"><i data-lucide="maximize"></i></button>
+    <button class="tool-button" id="prev" type="button" aria-label="上一页" data-tooltip="上一页"><svg class="lucide lucide-chevron-left" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m15 18-6-6 6-6"></path>
+</svg></button>
+    <div class="page-count" id="page-count">05 / 34</div>
+    <button class="tool-button" id="next" type="button" aria-label="下一页" data-tooltip="下一页"><svg class="lucide lucide-chevron-right" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m9 18 6-6-6-6"></path>
+</svg></button>
+    <button class="tool-button" id="nav" type="button" aria-label="目录导航" aria-pressed="false" data-tooltip="目录导航 (G)"><svg class="lucide lucide-layout-grid" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <rect width="7" height="7" x="3" y="3" rx="1"></rect>
+  <rect width="7" height="7" x="14" y="3" rx="1"></rect>
+  <rect width="7" height="7" x="14" y="14" rx="1"></rect>
+  <rect width="7" height="7" x="3" y="14" rx="1"></rect>
+</svg></button>
+    <button class="tool-button" id="edit" type="button" aria-label="编辑页面" aria-pressed="true" data-tooltip="结束编辑"><svg class="lucide lucide-pencil" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path>
+  <path d="m15 5 4 4"></path>
+</svg></button>
+    <button class="tool-button" id="download" type="button" aria-label="保存修改" data-tooltip="保存修改"><svg class="lucide lucide-download" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12 15V3"></path>
+  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+  <path d="m7 10 5 5 5-5"></path>
+</svg></button>
+    <button class="tool-button" id="fullscreen" type="button" aria-label="全屏" data-tooltip="全屏"><svg class="lucide lucide-maximize" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M8 3H5a2 2 0 0 0-2 2v3"></path>
+  <path d="M21 8V5a2 2 0 0 0-2-2h-3"></path>
+  <path d="M3 16v3a2 2 0 0 0 2 2h3"></path>
+  <path d="M16 21h3a2 2 0 0 0 2-2v-3"></path>
+</svg></button>
   </div>
-  <div class="progress" aria-hidden="true"><span id="progress-bar"></span></div>
+  <div class="progress" aria-hidden="true"><span id="progress-bar" style="width: 14.7059%;"></span></div>
 
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <div class="nav-overlay" id="nav-overlay" aria-label="目录导航">
+    <div class="nav-panel">
+      <div class="nav-head"><span>目录导航 · 点击跳转（快捷键 G 打开 / Esc 关闭）</span><button class="tool-button" id="nav-close" type="button" aria-label="关闭导航"><svg class="lucide lucide-x" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M18 6 6 18"></path>
+  <path d="m6 6 12 12"></path>
+</svg></button></div>
+      <div class="nav-grid" id="nav-grid"><button type="button" class="nav-item"><em>01</em>封面</button><button type="button" class="nav-item"><em>02</em>目录</button><button type="button" class="nav-item"><em>03</em>第一部分导览</button><button type="button" class="nav-item"><em>04</em>日常中的互联网</button><button type="button" class="nav-item current"><em>05</em>平台服务链路</button><button type="button" class="nav-item"><em>06</em>平台四个关键动作</button><button type="button" class="nav-item"><em>07</em>平台岗位地图</button><button type="button" class="nav-item"><em>08</em>第二部分导览</button><button type="button" class="nav-item"><em>09</em>数据旅行</button><button type="button" class="nav-item"><em>10</em>数据生产与加工</button><button type="button" class="nav-item"><em>11</em>数据消费层</button><button type="button" class="nav-item"><em>12</em>数据决策层</button><button type="button" class="nav-item"><em>13</em>数据岗位接力案例</button><button type="button" class="nav-item"><em>14</em>找到数据方向</button><button type="button" class="nav-item"><em>15</em>AI岗位总览</button><button type="button" class="nav-item"><em>16</em>AI研究型岗位</button><button type="button" class="nav-item"><em>17</em>AI工程型岗位</button><button type="button" class="nav-item"><em>18</em>AI应用型岗位</button><button type="button" class="nav-item"><em>19</em>研究型与应用型的关系</button><button type="button" class="nav-item"><em>20</em>AI产品型岗位</button><button type="button" class="nav-item"><em>21</em>AI团队协作</button><button type="button" class="nav-item"><em>22</em>第四部分导览</button><button type="button" class="nav-item"><em>23</em>机器来过很多次</button><button type="button" class="nav-item"><em>24</em>如何看待AI焦虑</button><button type="button" class="nav-item"><em>25</em>如何缓解焦虑</button><button type="button" class="nav-item"><em>26</em>第五部分导览</button><button type="button" class="nav-item"><em>27</em>求职起点</button><button type="button" class="nav-item"><em>28</em>核心技能</button><button type="button" class="nav-item"><em>29</em>作品与项目</button><button type="button" class="nav-item"><em>30</em>简历与面试</button><button type="button" class="nav-item"><em>31</em>AI时代的变与不变</button><button type="button" class="nav-item"><em>32</em>新岗位与用AI准备</button><button type="button" class="nav-item"><em>33</em>行动清单</button><button type="button" class="nav-item"><em>34</em>结束</button></div>
+    </div>
+  </div>
+
   <script>
     (() => {
       const slides = [...document.querySelectorAll('.slide')];
@@ -1149,10 +1373,27 @@
       const progress = document.getElementById('progress-bar');
       let current = 0;
       let editing = false;
+      let navItems = [];
 
-      function drawIcons() {
-        if (window.lucide) window.lucide.createIcons({ attrs: { 'stroke-width': 2 } });
+      /* 自适应缩放：保证每页在一屏内完整展示，无需拖拽滚动 */
+      function fitSlide() {
+        const slide = slides[current];
+        if (!slide) return;
+        const inner = slide.querySelector('.slide-inner');
+        inner.style.zoom = '1';
+        const cs = getComputedStyle(slide);
+        const availH = slide.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+        const natural = inner.scrollHeight;
+        const scale = availH > 0 ? Math.min(1, availH / natural) : 1;
+        inner.style.zoom = scale < 0.995 ? scale.toFixed(4) : '';
       }
+
+      window.addEventListener('resize', () => {
+        clearTimeout(window.__fitTimer);
+        window.__fitTimer = setTimeout(fitSlide, 120);
+      });
+      document.addEventListener('fullscreenchange', () => setTimeout(fitSlide, 80));
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitSlide);
 
       function goTo(index) {
         current = Math.max(0, Math.min(index, slides.length - 1));
@@ -1164,8 +1405,10 @@
         });
         counter.textContent = `${String(current + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
         progress.style.width = `${((current + 1) / slides.length) * 100}%`;
+        navItems.forEach((el, i) => el.classList.toggle('current', i === current));
         document.title = `${slides[current].dataset.title}｜互联网、大数据与AI：从日常到职场`;
         slides[current].scrollTop = 0;
+        fitSlide();
       }
 
       previous.addEventListener('click', () => goTo(current - 1));
@@ -1208,6 +1451,8 @@
         if (['ArrowLeft', 'PageUp'].includes(event.key)) { event.preventDefault(); goTo(current - 1); }
         if (event.key === 'Home') { event.preventDefault(); goTo(0); }
         if (event.key === 'End') { event.preventDefault(); goTo(slides.length - 1); }
+        if (event.key.toLowerCase() === 'g' && !editing) { event.preventDefault(); toggleNav(); }
+        if (event.key === 'Escape' && document.getElementById('nav-overlay').classList.contains('open')) toggleNav(false);
       });
 
       document.querySelectorAll('.quiz').forEach((quiz) => {
@@ -1225,6 +1470,31 @@
         });
       });
 
+      /* 目录导航 */
+      const navBtn = document.getElementById('nav');
+      const navOverlay = document.getElementById('nav-overlay');
+      const navGrid = document.getElementById('nav-grid');
+      function buildNav() {
+        slides.forEach((slide, i) => {
+          const item = document.createElement('button');
+          item.type = 'button';
+          item.className = 'nav-item';
+          item.innerHTML = `<em>${String(i + 1).padStart(2, '0')}</em>${slide.dataset.title}`;
+          item.addEventListener('click', () => { goTo(i); toggleNav(false); });
+          navGrid.appendChild(item);
+          navItems.push(item);
+        });
+      }
+      function toggleNav(force) {
+        const show = force !== undefined ? force : !navOverlay.classList.contains('open');
+        navOverlay.classList.toggle('open', show);
+        navBtn.classList.toggle('active', show);
+        navBtn.setAttribute('aria-pressed', String(show));
+      }
+      navBtn.addEventListener('click', () => toggleNav());
+      document.getElementById('nav-close').addEventListener('click', () => toggleNav(false));
+      navOverlay.addEventListener('click', (event) => { if (event.target === navOverlay) toggleNav(false); });
+
       let touchStartX = 0;
       document.addEventListener('touchstart', (event) => { touchStartX = event.changedTouches[0].screenX; }, { passive: true });
       document.addEventListener('touchend', (event) => {
@@ -1234,9 +1504,10 @@
         else goTo(current - 1);
       }, { passive: true });
 
-      drawIcons();
+      buildNav();
       goTo(0);
     })();
   </script>
-</body>
-</html>
+
+
+</body></html>
