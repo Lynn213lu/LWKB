@@ -208,10 +208,6 @@ tr.me td{background:#FFF3D6;font-weight:700}
 #gardenMap .cmp{transform-box:fill-box;transform-origin:center bottom;animation:bob 2.6s ease-in-out infinite}
 #gardenMap .flagWave{transform-box:fill-box;transform-origin:left bottom;animation:flagW 1.6s ease-in-out infinite}
 @keyframes flagW{0%,100%{transform:skewY(-4deg)}50%{transform:skewY(4deg)}}
-.gStones{position:absolute;left:18px;top:64px;z-index:5;display:flex;flex-direction:column;gap:8px;
-  background:rgba(255,255,255,.9);border-radius:20px;padding:10px 12px;
-  box-shadow:0 6px 18px rgba(120,90,160,.16)}
-.gStones .st2{margin:0}
 /* 手机快捷按钮格 */
 .quickGrid{display:none;padding:10px 14px 0;gap:8px;
   grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -237,7 +233,8 @@ tr.me td{background:#FFF3D6;font-weight:700}
   box-shadow:0 4px 12px rgba(120,90,160,.16)}
 .mface.bk{background:linear-gradient(135deg,#B48BE8,#7A5CF0);color:#fff;font-size:clamp(20px,4vh,32px)}
 .mface.ft{background:#fff;transform:rotateY(180deg);border:3px solid var(--line);
-  font-size:clamp(12px,1.8vh,16px);text-align:center;padding:4px}
+  font-size:clamp(12px,1.8vh,16px);text-align:center;padding:4px;overflow:hidden}
+.mface.ft svg{height:52%;width:auto;max-width:72%;flex:none;min-height:0}
 .mcard.done .inner{opacity:0;transform:rotateY(180deg) scale(.6);transition:all .5s;pointer-events:none}
 .dotRow{display:flex;gap:3px;justify-content:center}
 .dotRow i{width:12px;height:12px;border-radius:50%;display:inline-block}
@@ -259,19 +256,20 @@ tr.me td{background:#FFF3D6;font-weight:700}
   html,body{overflow:auto}
   #app{height:auto;min-height:100dvh}
   .scene.on{display:flex;flex-direction:column;min-height:100dvh}
-  .scene{display:none}
-  .scene.on{display:flex}
   #sHome.on{min-height:100dvh}
-  .top{padding:8px 12px}
-  .gardenWrap{order:1;flex:none}
-  .gardenCard{aspect-ratio:16/11;padding:4px}
+  .top{padding:8px 10px}
+  /* 花园满宽无留白 */
+  .gardenWrap{order:1;flex:none;padding:0}
+  .gardenCard{aspect-ratio:900/560;border-radius:0;box-shadow:none;padding:0}
   .quickGrid{order:2;display:grid}
-  .gStones{display:none}
   .foot{order:3}
   .homeMain{display:none}
+  /* 游戏页竖屏顺序：舞台 → 操作按钮 → 科学知识 */
   .gameMain{display:flex;flex-direction:column;padding:0 10px;overflow:visible}
-  .stageBox{flex:none;height:44vh;min-height:240px}
-  .side{flex:none}
+  .stageBox{order:1;flex:none;height:44vh;min-height:230px;overflow:hidden}
+  .side{display:contents}
+  .panel.ctrl{order:2}
+  .panel.know{order:3}
   .ctrl{overflow:visible}
   .wikiMain{display:flex;flex-direction:column;padding:0 10px 12px}
   .wikiMain .card{max-height:38vh}
@@ -279,7 +277,10 @@ tr.me td{background:#FFF3D6;font-weight:700}
   .bgrid{grid-template-columns:repeat(4,minmax(0,1fr))}
   .zgrid{grid-template-columns:repeat(3,minmax(0,1fr))}
   .sheet{overflow:visible}
-  .memoGrid{grid-template-columns:repeat(3,1fr)}
+  /* 翻牌：4 列缩放，保证全部塞进舞台 */
+  .memoGrid{grid-template-columns:repeat(4,1fr);gap:8px}
+  .mcard{max-height:none}
+  .mface.ft{font-size:clamp(11px,1.7vh,15px);gap:2px;justify-content:center;padding:2px}
   .qbox{padding:14px}
 }
 @media (max-width:600px){
@@ -324,19 +325,15 @@ tr.me td{background:#FFF3D6;font-weight:700}
       <span data-page-node-id="P8EcUJIFPk5vPRSV1JvJMs" class="muted" id="who"></span>
       <span class="stat" id="homeStars"></span>
     </div>
-    <div data-page-node-id="WMR3KI6B5B3WNrWkt2t2PE" style="display:flex; gap:8px">
+    <div data-page-node-id="WMR3KI6B5B3WNrWkt2t2PE" style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end">
       <button data-page-node-id="EYfHQtzOZyLc4VW9mwFVL9" class="btn sm" onclick="go('sBadge')"><!--pnid:6Pwbxjg8xMxASiAwZtfkKu-->生肖馆</button>
       <button data-page-node-id="uJPrmi3jQ03HblupuY9q54" class="btn sm" onclick="go('sRank')"><!--pnid:fSJkWouQUVxdCUJaeYvWkd-->排行榜</button>
       <button data-page-node-id="Cixgzj9vrII9nfIOP03uDy" class="btn sm" onclick="logout()"><!--pnid:88Fgtm2aMLJ1VM81qXMJTj-->换个玩家</button>
+      <button class="btn sm o" onclick="showCode()">进度码</button>
     </div>
   </div>
   <div class="gardenWrap">
     <div class="gardenCard">
-      <div class="gStones">
-        <div class="st2"><span class="big" id="stoneStars">0</span><span class="u">颗星星</span></div>
-        <div class="muted" id="stoneTip" style="font-size:11px;max-width:150px"></div>
-        <button class="btn sm o" onclick="showCode()">进度码</button>
-      </div>
       <div id="gardenMap"></div>
     </div>
   </div>
@@ -1084,8 +1081,6 @@ function renderHome(){
   const p=DB[ME],s=p.stars,z=zodiacOf(s);
   $('#who').textContent='你好，'+ME;
   $('#homeStars').textContent='⭐ '+s;
-  $('#stoneStars').textContent=s;
-  $('#stoneTip').textContent=z?('第 '+z+' 位萌宝：'+ZODIAC[z-1].n):('再攒 '+(CYCLE-s)+' 颗星，第一位萌宝就来啦');
   $('#homeTip').textContent=z<12
     ?('玩游戏、答对题都能攒星星——再攒 '+nextGap(s)+' 颗，「'+ZODIAC[z].n+'」就来找你；每次通关奖励一样，随时可以重玩喜欢的关卡')
     :'十二只彩虹萌宝已经全部到齐啦，了不起！';
@@ -1128,7 +1123,7 @@ function hint(){HU=1;if(HINTFN)HINTFN();}
 let GT0=0,GERR=0,GDONE=false,GTIMER=null,HU=0;
 function gBegin(){GT0=Date.now();GERR=0;GDONE=false;HU=0;if(GTIMER){clearInterval(GTIMER);GTIMER=null;}}
 function gSec(){return Math.max(1,Math.round((Date.now()-GT0)/1000));}
-function finishLevel(n,tip){
+function finishLevel(n,tip,stat){
   if(GDONE)return;GDONE=true;
   if(GTIMER){clearInterval(GTIMER);GTIMER=null;}
   let s=Math.max(1,Math.min(3,n|0));
@@ -1139,9 +1134,10 @@ function finishLevel(n,tip){
   const get=s;
   addRawStar(get);
   const K=KNOW[CUR-1],L=LEVELS[CUR-1];
+  const statLine=stat||('失误 '+GERR+' 次'+(HU?'　·　用了提示 -1 星':''));
   showPop(`<h2>${L.t} 通关！</h2>
     <div class="stars3">${[0,1,2].map(i=>`<span class="${i<s?'on':''}">★</span>`).join('')}</div>
-    <div class="muted">用时 ${gSec()} 秒　·　失误 ${GERR} 次${HU?'　·　用了提示 -1 星':''}</div>
+    <div class="muted">用时 ${gSec()} 秒　·　${statLine}</div>
     <div class="muted">拿到 <b>${get}</b> 颗星星（每次通关都是这个奖励，随时可以再来玩）</div>
     <p style="font-size:clamp(13px,1.9vh,16px);line-height:1.8;margin-top:8px">${tip}</p>
     <div class="knowKey">${K.k}</div>
@@ -1238,9 +1234,9 @@ function lv2(){
   let cards,open=[],lock=0,found=0;
   $('#stage').innerHTML='<div class="memoGrid" id="memoG"></div>';
   $('#ctrl').innerHTML=`<div class="gbar"><span class="gpill" id="p2pg">配对 0 / 6</span>
-      <span class="gpill warn" id="p2er">失误 0 次</span></div>
+      <span class="gpill warn" id="p2mv">步数 0</span></div>
     <h3>翻牌找朋友</h3>
-    <div class="muted">每张牌后面藏着一颗彩色光球。点开两张，<b>颜色一样</b>的就是好朋友！</div>
+    <div class="muted">每张牌后面藏着一颗彩色光球。点开两张，<b>颜色一样</b>的就是好朋友！每翻两张算一步，<b>步数越少星星越多</b>：12 步内 ★★★，19 步内 ★★☆。</div>
     <div class="muted bigMsg" id="s2msg"></div>`;
   const deck=[];
   FACES.forEach(f=>{deck.push({n:f.n,c:f.c});deck.push({n:f.n,c:f.c});});
@@ -1253,7 +1249,7 @@ function lv2(){
     return `<div class="mcard" data-i="${i}"><div class="inner">
       <div class="mface bk">✦</div>
       <div class="mface ft" style="background:${c.c}1F;border-color:${c.c}">
-        <svg viewBox="0 0 100 100" style="width:60%;height:auto">${rays}
+        <svg viewBox="0 0 100 100">${rays}
           <circle cx="50" cy="50" r="24" fill="${c.c}"/>
           <circle cx="43" cy="46" r="3" fill="#fff"/><circle cx="57" cy="46" r="3" fill="#fff"/>
           <path d="M42 56 q8 8 16 0" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>
@@ -1261,13 +1257,17 @@ function lv2(){
         <div style="color:${tc};font-size:clamp(13px,2vh,17px);font-weight:800">${c.n}</div>
       </div>
     </div></div>`;}).join('');
+  const starsFor=m=>m<=12?3:(m<=19?2:1);
+  let moves=0;
   $$('#memoG .mcard').forEach(el=>{
     el.onclick=()=>{
       if(lock||el.classList.contains('flip')||el.classList.contains('done'))return;
       const c=cards[+el.dataset.i];
       el.classList.add('flip');open.push({el:el,c:c});
       if(open.length===2){
-        lock=1;const A=open[0],B=open[1];
+        lock=1;moves++;
+        $('#p2mv').textContent='步数 '+moves;
+        const A=open[0],B=open[1];
         if(A.c.n===B.c.n){
           found++;
           $('#p2pg').textContent='配对 '+found+' / 6';
@@ -1276,12 +1276,12 @@ function lv2(){
             A.el.classList.add('done');B.el.classList.add('done');
             open=[];lock=0;
             if(found===FACES.length){
-              let st=3-GERR;if(gSec()>120)st--;
-              finishLevel(Math.max(1,st),'红、橙、黄、绿、蓝、紫，彩虹里的每一种颜色都是一束光。两束光混在一起，还会变出新颜色呢！');
+              const st=Math.max(1,starsFor(moves)-(HU?1:0));
+              finishLevel(st,'红、橙、黄、绿、蓝、紫，彩虹里的每一种颜色都是一束光。两束光混在一起，还会变出新颜色呢！',
+                '翻了 '+moves+' 步（两张算一步）'+(HU?'　·　用了提示 -1 星':(moves<=12?'　·　记忆小达人！':'')));
             }
           },480);
         }else{
-          GERR++;$('#p2er').textContent='失误 '+GERR+' 次';
           $('#s2msg').textContent='颜色不一样，记住它们在哪里～';
           setTimeout(()=>{A.el.classList.remove('flip');B.el.classList.remove('flip');open=[];lock=0;},820);
         }
