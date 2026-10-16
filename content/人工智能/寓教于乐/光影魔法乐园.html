@@ -1,0 +1,1887 @@
+<!DOCTYPE html>
+<html data-page-node-id="CnBMbhy3VKY75yr2OyRb0X" lang="zh-CN">
+<head data-page-node-id="usofNOrnLeKNM5ra9FzpAc">
+<script data-page-node-id="8NuV1E2Fg1bMv1Xlw2FqrC" src="/page/page_comm/inject.js"></script>
+<meta data-page-node-id="qySYaaFEXwHbUVQcRXUYmc" charset="UTF-8">
+<meta data-page-node-id="0YZECi62BAXebui0Z21BTv" content="width=device-width,initial-scale=1" name="viewport">
+<title data-page-node-id="5d1hjcOmWVTXQ2OpuD2Zid" data-pnid-children="6nTtVA7Znl9dkLVr5asZvP">光影魔法乐园</title>
+<style data-page-node-id="yYQxOEEqEzEWrK220w342I" data-pnid-children="GaAfC7gzloARFl3OwQ216j">
+:root{
+  --bg1:#FFF6E0; --bg2:#FFE1F0; --bg3:#DFF3FF;
+  --ink:#3B3355; --sub:#8A82A6; --line:#EBE0F7;
+  --pink:#FF5C8A; --orange:#FF8A3D; --yellow:#FFC61A; --green:#3FC97A;
+  --cyan:#2FC5C0; --blue:#3E8BFF; --purple:#8A5CFF; --red:#FF4B57;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;overflow:hidden}
+body{
+  font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:var(--ink);
+  background:
+    radial-gradient(1100px 560px at 10% -12%, rgba(255,246,190,.95) 0%, rgba(255,246,190,0) 62%),
+    radial-gradient(900px 520px at 100% 0%, rgba(214,240,255,.9) 0%, rgba(214,240,255,0) 60%),
+    linear-gradient(140deg,var(--bg1) 0%,var(--bg2) 48%,var(--bg3) 100%);
+}
+#app{height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+.scene{display:none;height:100%;min-height:0}
+.scene.on{display:grid}
+
+/* 通用 */
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 18px;flex-wrap:nowrap}
+.brand{font-size:clamp(17px,2.4vh,24px);font-weight:700;letter-spacing:1px;
+  background:linear-gradient(90deg,var(--pink),var(--orange),var(--green),var(--cyan),var(--blue),var(--purple));
+  -webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap}
+.btn{border:none;background:#fff;color:var(--ink);font-size:clamp(13px,1.7vh,16px);
+  padding:9px 18px;border-radius:999px;cursor:pointer;font-family:inherit;
+  box-shadow:0 3px 10px rgba(120,90,160,.14);white-space:nowrap}
+.btn:hover{transform:translateY(-1px)}
+.btn.p{background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff}
+.btn.o{background:linear-gradient(135deg,var(--orange),var(--yellow));color:#fff}
+.btn.sm{padding:6px 13px;font-size:clamp(12px,1.5vh,14px)}
+.card{background:rgba(255,255,255,.92);border-radius:22px;padding:14px 16px;
+  box-shadow:0 8px 26px rgba(120,90,160,.13)}
+.muted{color:var(--sub);font-size:clamp(12px,1.5vh,14px);line-height:1.6}
+h1{font-size:clamp(20px,3.4vh,32px);margin:0 0 4px}
+h2{font-size:clamp(15px,2.1vh,20px);margin:0 0 6px}
+h3{font-size:clamp(13px,1.7vh,16px);margin:0 0 6px}
+
+/* 注册 */
+#sReg.on{grid-template-rows:1fr;place-items:center}
+.reg{width:min(560px,92vw);text-align:center;padding:26px 26px}
+.reg input{width:100%;font-size:clamp(16px,2.4vh,22px);padding:14px 18px;border-radius:16px;
+  border:2px solid var(--line);outline:none;font-family:inherit;text-align:center;margin:14px 0 6px}
+.reg input:focus{border-color:var(--purple)}
+.msg{font-size:clamp(13px,1.6vh,15px);min-height:22px;margin:6px 0 12px}
+.err{color:var(--red)}.ok{color:var(--green)}
+
+/* 主页 */
+#sHome.on{grid-template-rows:auto 1fr auto}
+.badgeRow{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+
+/* 游戏 */
+#sGame.on{grid-template-rows:auto 1fr auto}
+.gameMain{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,330px);gap:14px;
+  padding:0 18px;min-height:0}
+.stageBox{background:rgba(255,255,255,.88);border-radius:24px;padding:8px;min-height:0;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 8px 26px rgba(120,90,160,.13)}
+.stageBox svg{width:100%;height:100%;max-height:100%}
+.side{display:flex;flex-direction:column;gap:10px;min-height:0}
+.panel{background:rgba(255,255,255,.94);border-radius:20px;padding:12px 14px;
+  box-shadow:0 6px 20px rgba(120,90,160,.12)}
+.panel.know{background:linear-gradient(135deg,#FFF9E9,#F1F7FF);border:2px solid #FFE6B8}
+.knowList{margin:6px 0 0;padding-left:18px;font-size:clamp(12px,1.55vh,15px);line-height:1.75}
+.knowList li{margin:3px 0}
+.knowKey{margin-top:8px;font-size:clamp(12px,1.6vh,15px);font-weight:700;color:#C97B1A;
+  background:#FFF1D6;border-radius:12px;padding:7px 10px}
+.ctrl{display:flex;flex-direction:column;gap:8px;overflow:auto}
+.opt{border:2px solid var(--line);background:#fff;border-radius:14px;padding:10px 13px;
+  font-size:clamp(12px,1.6vh,15px);cursor:pointer;text-align:left;font-family:inherit;width:100%}
+.opt:hover{border-color:var(--blue)}
+.opt.ok{border-color:var(--green);background:#E9FBEE}
+.opt.no{border-color:var(--pink);background:#FFEEF3}
+.foot{padding:6px 18px 12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stat{font-size:clamp(12px,1.6vh,15px);font-weight:700;color:#C97B1A}
+
+/* 徽章馆 / 排行 */
+#sBadge.on,#sRank.on{grid-template-rows:auto 1fr}
+.sheet{padding:0 18px 14px;min-height:0;overflow:auto}
+.bgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;margin-top:10px}
+.bitem{background:#fff;border-radius:18px;padding:8px;text-align:center;
+  box-shadow:0 5px 16px rgba(120,90,160,.12)}
+.zgrid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-top:10px}
+table{width:100%;border-collapse:collapse;font-size:clamp(12px,1.55vh,15px)}
+th,td{padding:7px 10px;text-align:left;border-bottom:1px solid var(--line)}
+th{color:var(--sub);font-weight:600}
+tr.me td{background:#FFF3D6;font-weight:700}
+.zone{border:2px dashed #DCCFE8;border-radius:18px;padding:10px;background:rgba(255,255,255,.7);min-height:96px}
+.zone.over{border-color:var(--green);background:#E9FBEE}
+.plant{background:#fff;border:2px solid var(--line);border-radius:14px;padding:7px 11px;
+  font-size:clamp(12px,1.5vh,14px);cursor:grab;display:inline-block;margin:4px;touch-action:none}
+.plant.ok{border-color:var(--green);background:#E9FBEE}
+.pickList{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:8px;
+  max-height:22vh;overflow:auto}
+.pick{background:#fff;border-radius:14px;padding:8px 14px;cursor:pointer;
+  box-shadow:0 3px 10px rgba(120,90,160,.12);font-size:clamp(12px,1.6vh,15px)}
+.pick:hover{background:#F3ECFF}
+.blkTitle{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.mini{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:14px;cursor:pointer;
+  background:#FBF6FF;margin-bottom:6px}
+.mini:hover{background:#F1E8FF}
+.mini .q{font-size:clamp(11px,1.45vh,14px);font-weight:600;line-height:1.4}
+#sWiki.on,#sQuiz.on{grid-template-rows:auto 1fr}
+.wikiMain{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:14px;
+  padding:0 18px 14px;min-height:0}
+.tabs{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.tab{border:none;background:#fff;border-radius:999px;padding:7px 14px;cursor:pointer;
+  font-family:inherit;font-size:clamp(11px,1.45vh,14px);box-shadow:0 2px 8px rgba(120,90,160,.1)}
+.tab.on{background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff}
+.wlist{max-height:100%;overflow:auto;padding-right:4px}
+.witem{display:flex;align-items:center;gap:8px;background:#fff;border-radius:14px;padding:6px 8px;
+  margin-bottom:6px;cursor:pointer;box-shadow:0 2px 8px rgba(120,90,160,.08)}
+.witem:hover{background:#F6F0FF}
+.witem .nm{font-size:clamp(12px,1.5vh,15px);font-weight:600}
+.witem .fm{font-size:11px;color:var(--sub)}
+.wdet{background:rgba(255,255,255,.95);border-radius:22px;padding:16px 18px;min-height:0;overflow:auto;
+  box-shadow:0 8px 26px rgba(120,90,160,.13)}
+.wdet .big{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+.wdet h2{font-size:clamp(17px,2.6vh,26px)}
+.tag{display:inline-block;background:#F3ECFF;color:#6C4FB8;border-radius:999px;
+  padding:3px 10px;font-size:11px;margin:2px 4px 2px 0}
+.qbox{background:rgba(255,255,255,.95);border-radius:22px;padding:16px 18px;max-width:820px;
+  margin:0 auto;box-shadow:0 8px 26px rgba(120,90,160,.13);
+  max-height:100%;overflow:auto}
+.qtitle{font-size:clamp(15px,2.3vh,22px);font-weight:700;line-height:1.5;margin-bottom:10px}
+.qopt{display:block;width:100%;text-align:left;border:2px solid var(--line);background:#fff;
+  border-radius:14px;padding:11px 15px;margin-bottom:8px;cursor:pointer;font-family:inherit;
+  font-size:clamp(13px,1.7vh,16px)}
+.qopt:hover{border-color:var(--blue)}
+.qopt.ok{border-color:var(--green);background:#E9FBEE}
+.qopt.no{border-color:var(--pink);background:#FFEEF3}
+.qmeta{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.qcat{color:#fff;border-radius:999px;padding:3px 12px;font-size:12px;font-weight:700;
+  box-shadow:0 2px 6px rgba(120,90,160,.18)}
+.qpic{display:flex;justify-content:center;margin:2px 0 8px}
+.qpic svg{filter:drop-shadow(0 4px 8px rgba(120,90,160,.18))}
+.qscore{font-size:clamp(34px,7vh,60px);font-weight:800;color:var(--purple);line-height:1.1}
+.qscore span{font-size:0.42em;color:#9A8FB5;font-weight:700}
+.qchips{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 8px}
+.qchips .qcat{font-size:11px;padding:2px 10px}
+.stars3{font-size:clamp(30px,6vh,52px);letter-spacing:6px;line-height:1.2}
+.stars3 span{color:#E3DAF0}
+.stars3 span.on{color:#FFC93D;text-shadow:0 3px 8px rgba(255,190,60,.45)}
+.gbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.gpill{background:#F3ECFF;color:#6C4FB8;border-radius:999px;padding:3px 11px;font-size:12px;font-weight:700}
+.gpill.warn{background:#FFEAF0;color:#D9436A}
+.bTask{display:flex;align-items:center;gap:10px;background:#FFF8E8;border:2px solid #FFD98A;
+  border-radius:16px;padding:8px 12px;margin-bottom:8px}
+.bTask .bt{font-size:clamp(13px,2vh,18px);font-weight:700}
+.bst{color:#FFB43D;letter-spacing:1px}
+
+/* 乐园地图主页 */
+.homeMain{display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);gap:14px;
+  padding:0 18px 10px;min-height:0}
+.sideCol{display:grid;grid-template-rows:auto minmax(0,1fr);gap:12px;min-height:0}
+.mapCard{padding:10px;min-height:0;overflow:hidden}
+#parkMap{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+#parkMap svg{width:100%;height:100%}
+#parkMap .mk{cursor:pointer;transition:transform .2s;transform-box:fill-box;transform-origin:center bottom}
+#parkMap .mk:hover{transform:translateY(-7px)}
+#parkMap .cmp{transform-box:fill-box;transform-origin:center bottom;animation:bob 2.6s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.meTop{display:flex;gap:10px;align-items:center}
+.meTop .av{line-height:0;flex:none}
+.meTop .hi{font-size:clamp(14px,2vh,19px);font-weight:800;word-break:break-all}
+.st2{display:flex;align-items:baseline;gap:5px;margin:2px 0}
+.st2 .big{font-size:clamp(24px,3.6vh,34px);font-weight:800;color:var(--purple);line-height:1.05}
+.st2 .u{font-size:12px;color:var(--sub)}
+.pbar{height:10px;background:#F1EBF8;border-radius:999px;overflow:hidden;margin:10px 0 6px}
+.pbar div{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--yellow),var(--orange),var(--pink))}
+.lvGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.lv2{background:#fff;border:none;border-radius:18px;padding:9px 5px 8px;cursor:pointer;
+  font-family:inherit;box-shadow:0 5px 14px rgba(120,90,160,.12);
+  display:flex;flex-direction:column;align-items:center;gap:2px}
+.lv2:hover{transform:translateY(-3px)}
+.lv2 .t{font-size:clamp(11px,1.5vh,14px);font-weight:700;text-align:center;line-height:1.25}
+.lv2 .st{font-size:11px;color:#FFB43D;letter-spacing:1px}
+.lv2 .st.no{color:#BDB3D4;letter-spacing:0;font-size:10px}
+.pop{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:50}
+.pop.on{display:flex}
+.popCard{background:#fff;border-radius:26px;padding:22px 26px;text-align:center;
+  box-shadow:0 20px 50px rgba(90,60,130,.28);max-width:min(460px,90vw)}
+
+/* ===== 花园首页 ===== */
+#sHome.on{grid-template-rows:auto 1fr auto}
+.gardenWrap{min-height:0;padding:0 14px;display:flex}
+.gardenCard{flex:1;position:relative;background:rgba(255,255,255,.6);border-radius:26px;padding:6px;
+  box-shadow:0 10px 30px rgba(120,90,160,.14);min-height:0;overflow:hidden}
+#gardenMap{width:100%;height:100%}
+#gardenMap svg{width:100%;height:100%;display:block}
+#gardenMap .mk{cursor:pointer}
+#gardenMap .mk:hover .lift{transform:translateY(-8px)}
+#gardenMap .lift{transition:transform .25s;transform-box:fill-box;transform-origin:center bottom}
+#gardenMap .sway{transform-box:fill-box;transform-origin:center bottom;animation:sway 3.2s ease-in-out infinite}
+#gardenMap .sway2{animation-delay:.7s}#gardenMap .sway3{animation-delay:1.3s}#gardenMap .sway4{animation-delay:1.9s}
+@keyframes sway{0%,100%{transform:rotate(-2.6deg)}50%{transform:rotate(2.6deg)}}
+#gardenMap .fly1{animation:fly1 9s ease-in-out infinite}
+#gardenMap .fly2{animation:fly2 12s ease-in-out infinite}
+@keyframes fly1{0%,100%{transform:translate(0,0)}25%{transform:translate(60px,-26px)}55%{transform:translate(130px,10px)}80%{transform:translate(40px,26px)}}
+@keyframes fly2{0%,100%{transform:translate(0,0)}30%{transform:translate(-80px,20px)}60%{transform:translate(-150px,-18px)}85%{transform:translate(-50px,-30px)}}
+#gardenMap .cmp{transform-box:fill-box;transform-origin:center bottom;animation:bob 2.6s ease-in-out infinite}
+#gardenMap .flagWave{transform-box:fill-box;transform-origin:left bottom;animation:flagW 1.6s ease-in-out infinite}
+@keyframes flagW{0%,100%{transform:skewY(-4deg)}50%{transform:skewY(4deg)}}
+.gStones{position:absolute;left:18px;top:64px;z-index:5;display:flex;flex-direction:column;gap:8px;
+  background:rgba(255,255,255,.9);border-radius:20px;padding:10px 12px;
+  box-shadow:0 6px 18px rgba(120,90,160,.16)}
+.gStones .st2{margin:0}
+/* 手机快捷按钮格 */
+.quickGrid{display:none;padding:10px 14px 0;gap:8px;
+  grid-template-columns:repeat(4,minmax(0,1fr))}
+.qbtn{border:none;border-radius:18px;padding:11px 4px;cursor:pointer;font-family:inherit;color:#fff;
+  font-size:clamp(12px,1.6vh,15px);font-weight:700;box-shadow:0 5px 14px rgba(120,90,160,.18);
+  display:flex;flex-direction:column;align-items:center;gap:3px;line-height:1.2}
+.qbtn:active{transform:scale(.96)}
+.qbtn .qic{font-size:clamp(18px,2.6vh,24px)}
+.qbtn.castle{grid-column:span 4;background:linear-gradient(135deg,#FF7EB0,#A78BFA)}
+.quickGrid .qbtn:nth-child(1){background:#FF5A5F}.quickGrid .qbtn:nth-child(2){background:#FFA94D}
+.quickGrid .qbtn:nth-child(3){background:#E8B70A}.quickGrid .qbtn:nth-child(4){background:#3FB877}
+.quickGrid .qbtn:nth-child(5){background:#2FC5C0}.quickGrid .qbtn:nth-child(6){background:#3E8BFF}
+.quickGrid .qbtn:nth-child(7){background:#8A5CFF}
+
+/* 翻牌 / 点球 / 点灯 等新游戏 */
+.memoGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%;height:100%;
+  align-content:center;padding:10px;max-width:640px;margin:0 auto}
+.mcard{position:relative;border-radius:16px;cursor:pointer;perspective:600px;aspect-ratio:3/4;max-height:150px}
+.mcard .inner{position:absolute;inset:0;transition:transform .35s;transform-style:preserve-3d}
+.mcard.flip .inner{transform:rotateY(180deg)}
+.mface{position:absolute;inset:0;border-radius:16px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:4px;backface-visibility:hidden;font-weight:700;
+  box-shadow:0 4px 12px rgba(120,90,160,.16)}
+.mface.bk{background:linear-gradient(135deg,#B48BE8,#7A5CF0);color:#fff;font-size:clamp(20px,4vh,32px)}
+.mface.ft{background:#fff;transform:rotateY(180deg);border:3px solid var(--line);
+  font-size:clamp(12px,1.8vh,16px);text-align:center;padding:4px}
+.mcard.done .inner{opacity:0;transform:rotateY(180deg) scale(.6);transition:all .5s;pointer-events:none}
+.dotRow{display:flex;gap:3px;justify-content:center}
+.dotRow i{width:12px;height:12px;border-radius:50%;display:inline-block}
+.bigMsg{font-size:clamp(15px,2.2vh,20px);font-weight:800;color:#7A4BE8}
+
+.lampGrid{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;padding:6px}
+.lamp{cursor:pointer}
+.lamp circle.body{transition:fill .18s}
+@keyframes orbIn{from{transform:scale(0)}70%{transform:scale(1.18)}to{transform:scale(1)}}
+@keyframes orbOut{to{transform:scale(1.6);opacity:0}}
+@keyframes happy{0%{transform:scale(1)}40%{transform:scale(1.18) rotate(-5deg)}70%{transform:scale(1.05) rotate(4deg)}100%{transform:scale(1)}}
+@keyframes wilt{0%,100%{transform:rotate(0)}25%{transform:rotate(-7deg)}75%{transform:rotate(7deg)}}
+@keyframes lampGlow{0%{filter:brightness(1)}50%{filter:brightness(1.7)}100%{filter:brightness(1)}}
+@keyframes bubbleUp{0%{transform:translateY(0);opacity:0}25%{opacity:.9}100%{transform:translateY(-72px);opacity:0}}
+.bb{animation:bubbleUp 2.2s ease-in infinite}
+
+/* ===== 响应式 ===== */
+@media (max-width:900px){
+  html,body{overflow:auto}
+  #app{height:auto;min-height:100dvh}
+  .scene.on{display:flex;flex-direction:column;min-height:100dvh}
+  .scene{display:none}
+  .scene.on{display:flex}
+  #sHome.on{min-height:100dvh}
+  .top{padding:8px 12px}
+  .gardenWrap{order:1;flex:none}
+  .gardenCard{aspect-ratio:16/11;padding:4px}
+  .quickGrid{order:2;display:grid}
+  .gStones{display:none}
+  .foot{order:3}
+  .homeMain{display:none}
+  .gameMain{display:flex;flex-direction:column;padding:0 10px;overflow:visible}
+  .stageBox{flex:none;height:44vh;min-height:240px}
+  .side{flex:none}
+  .ctrl{overflow:visible}
+  .wikiMain{display:flex;flex-direction:column;padding:0 10px 12px}
+  .wikiMain .card{max-height:38vh}
+  .wdet{overflow:visible}
+  .bgrid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .zgrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .sheet{overflow:visible}
+  .memoGrid{grid-template-columns:repeat(3,1fr)}
+  .qbox{padding:14px}
+}
+@media (max-width:600px){
+  .top{flex-wrap:wrap;row-gap:6px}
+  .top>div:first-child{flex-wrap:wrap}
+  .brand{white-space:normal}
+}
+@media (max-width:480px){
+  .quickGrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .quickGrid .qbtn.castle{grid-column:span 3}
+}
+@media (pointer:coarse){
+  .btn,.opt,.qopt,.tab{min-height:44px}
+}
+</style>
+</head>
+<body data-page-node-id="T8T2Dhr85ByhwnRFnhXpsA">
+<div data-page-node-id="nUjJZCkTT3sMBW7JfyxU4M" id="app">
+
+<!--pnid:5r7ZMMHtafrHN0xTU2B4x2--><!-- 注册 -->
+<section data-page-node-id="e7DukoQFJP5Q8RpAbVFwwx" class="scene on" id="sReg">
+  <div data-page-node-id="B554xkkhuSHwJifL7fIOyw" class="card reg">
+    <h1 data-page-node-id="sC0R5pxGMP8k8pENr6lGzw"><!--pnid:otbdgL9OASOTgm66MLJYmE-->光影魔法乐园</h1>
+    <div data-page-node-id="lUDn0frZA1RmHaHKtKOWrT" class="muted"><!--pnid:3VLx5Ul1uW5jxZBsDSH35n-->选一个玩家直接进，或者创建一个新玩家</div>
+    <div data-page-node-id="PuXteCZ1XsaelPBilqatf1" id="backBox"></div>
+    <input data-page-node-id="7HwlNmGatmeXcRlitO5mhf" id="nameIn" maxlength="12" placeholder="输入新名字">
+    <div data-page-node-id="NzRdXtztSrtyCxdjW7yJdu" class="msg" id="regMsg"></div>
+    <button data-page-node-id="b5Lw40WVotUBfEXkU78LVT" class="btn p" onclick="doReg()"><!--pnid:gitPJgWJfriKfxDPXleG5Y-->创建并进入</button>
+    <div data-page-node-id="PoA6V8mdaKrXUkTK1A9YxQ" style="margin-top:14px">
+      <div data-page-node-id="tGy6hQXIotyUmrvUbHFPCQ" class="muted"><!--pnid:m4Bv9SjJU1brMVBjmy6LUA-->已经创建过的玩家（点一下就能进入）</div>
+      <div data-page-node-id="VmPvxvJyJe6JHXwKY7Mvxe" class="pickList" id="oldList"></div>
+      <div class="muted" style="margin-top:12px">换了手机或电脑？<button class="btn sm o" style="margin-left:6px" onclick="askCode()">用进度码找回进度</button></div>
+    </div>
+  </div>
+</section>
+
+<!--pnid:jHJ2kvhz0wkYgJ8AfjvRYj--><!-- 主页：光影花园 -->
+<section data-page-node-id="7YaHFumUWvamjvJ9yLkOEF" class="scene" id="sHome">
+  <div data-page-node-id="feDwZPqEibHTmCegeT2ZSg" class="top">
+    <div data-page-node-id="2XmwZfLNTGmftvaYISbrRf" style="display:flex; align-items:center; gap:10px">
+      <div data-page-node-id="rX1RXSJI5OSG7CSkc3lcVp" class="brand"><!--pnid:iAE07PuV71LpW4kccMvN0H-->光影魔法乐园</div>
+      <span data-page-node-id="P8EcUJIFPk5vPRSV1JvJMs" class="muted" id="who"></span>
+      <span class="stat" id="homeStars"></span>
+    </div>
+    <div data-page-node-id="WMR3KI6B5B3WNrWkt2t2PE" style="display:flex; gap:8px">
+      <button data-page-node-id="EYfHQtzOZyLc4VW9mwFVL9" class="btn sm" onclick="go('sBadge')"><!--pnid:6Pwbxjg8xMxASiAwZtfkKu-->生肖馆</button>
+      <button data-page-node-id="uJPrmi3jQ03HblupuY9q54" class="btn sm" onclick="go('sRank')"><!--pnid:fSJkWouQUVxdCUJaeYvWkd-->排行榜</button>
+      <button data-page-node-id="Cixgzj9vrII9nfIOP03uDy" class="btn sm" onclick="logout()"><!--pnid:88Fgtm2aMLJ1VM81qXMJTj-->换个玩家</button>
+    </div>
+  </div>
+  <div class="gardenWrap">
+    <div class="gardenCard">
+      <div class="gStones">
+        <div class="st2"><span class="big" id="stoneStars">0</span><span class="u">颗星星</span></div>
+        <div class="muted" id="stoneTip" style="font-size:11px;max-width:150px"></div>
+        <button class="btn sm o" onclick="showCode()">进度码</button>
+      </div>
+      <div id="gardenMap"></div>
+    </div>
+  </div>
+  <div class="quickGrid" id="quickGrid"></div>
+  <div data-page-node-id="DBYS8IgGf8vZ2MwOtCuUQv" class="foot"><span data-page-node-id="bp6bZoft9P1EA7ES4D0vPV" class="muted" id="homeTip"></span></div>
+</section>
+
+<!--pnid:BwCRaBCJwb6EyubwxebAp7--><!-- 游戏 -->
+<section data-page-node-id="abaKULOa4PdcEqHPFQimAL" class="scene" id="sGame">
+  <div data-page-node-id="Q9k229IXpD4KI6o55p0AwA" class="top">
+    <div data-page-node-id="w1iLVuPYJaW6pqHUrnMt7p" style="display:flex; align-items:center; gap:10px">
+      <div data-page-node-id="HN47YvzuoXmLif74xycV4F" class="brand" id="gTitle"><!--pnid:K8kf40SLUHn79cgB6kudtf-->关卡</div>
+      <span data-page-node-id="VeZ0zeIBGsC01scfrVO2N7" class="muted" id="gSub"></span>
+    </div>
+    <div data-page-node-id="ZRMtdKPQVi7x7BP4ecdLyp" style="display:flex; gap:8px; align-items:center">
+      <span data-page-node-id="cdFTnV38psNJmG0WWQy2O3" class="stat" id="gStar"></span>
+      <button data-page-node-id="tQB0bl3ejakYWevcspCWLK" class="btn sm" onclick="hint()"><!--pnid:dro1BCNxi22bqnrZqGVuQG-->帮帮我</button>
+      <button data-page-node-id="hITVC5PkQtXJzRekS50qML" class="btn sm" onclick="go('sHome')"><!--pnid:FyDfvVP0rZpHyyy6ukRINv-->回花园</button>
+    </div>
+  </div>
+  <div data-page-node-id="cL8y2NyNkDNWYIgenEpHsO" class="gameMain">
+    <div data-page-node-id="8X4qnQfkZpN6vFruSkQDh9" class="stageBox" id="stage"></div>
+    <div data-page-node-id="CgoHYMobrA55AbWbKEFJ9C" class="side">
+      <div data-page-node-id="zXUhVHiMhUePDPhG016NDC" class="panel know">
+        <h3 data-page-node-id="3XKdTOfhxn98z41bNSoq4K"><!--pnid:mpwear5Ymz48PfSrp8jbfr-->这一关的科学</h3>
+        <ul data-page-node-id="Cwl2q8CbE8OFZmvxkEPGC5" class="knowList" id="knowList"></ul>
+        <div data-page-node-id="4X2ZB83z94JtKx9o2qsqWt" class="knowKey" id="knowKey"></div>
+      </div>
+      <div data-page-node-id="5AHO19R4MJ1NnU10IWHKbD" class="panel ctrl" id="ctrl"></div>
+    </div>
+  </div>
+  <div data-page-node-id="m3l1lsk8VTqAtV0lZmXOsf" class="foot"><span data-page-node-id="KYhEzAvEwkOtn3MfcmCam3" class="muted" id="gMsg"></span></div>
+</section>
+
+<!--pnid:49GUxB204SjMcSIxi3DPHR--><!-- 百科 -->
+<section data-page-node-id="hRdzXLGUwfhiUflqQC89v6" class="scene" id="sWiki">
+  <div data-page-node-id="ZoXFeMVWGk2OJjWn5ej75u" class="top">
+    <div data-page-node-id="KSPd0j4zmpGaiNxB25lWJr" class="brand"><!--pnid:9VBeHKlU3g1QUkAFLnuLZ7-->光影百科 · 植物图鉴</div>
+    <button data-page-node-id="CMYcMfJaZlXKyRvuAKTuuf" class="btn sm" onclick="go('sHome')"><!--pnid:IuvsGrkNhX6pAGeKkQDcyi-->回花园</button>
+  </div>
+  <div data-page-node-id="9ui8M1eAGOQoRplqpiOTk3" class="wikiMain">
+    <div data-page-node-id="NRTsEAkjRTut51QI7DySz2" class="card" style="padding:12px; min-height:0; display:flex; flex-direction:column">
+      <div data-page-node-id="GMEvoToBVy1WaMrYnEIaZr" class="tabs" id="wikiTabs"></div>
+      <div data-page-node-id="TzzRW2FLeE1mCnGzZc5MUo" class="wlist" id="wikiList"></div>
+    </div>
+    <div data-page-node-id="Cx2VDv3nYCsNsSTVQ1tAPW" class="wdet" id="wikiDet"></div>
+  </div>
+</section>
+
+<!--pnid:WJF0xYTg3jZJHH96gWP0gb--><!-- 问答 -->
+<section data-page-node-id="WurnV2bFEB69LCHNPTMnfC" class="scene" id="sQuiz">
+  <div data-page-node-id="S4KWqV4ktoZlkiGNTvaSxR" class="top">
+    <div data-page-node-id="x8UgWObDyraOfck69EUxae" class="brand"><!--pnid:C9rW2w6Ss2RnutSFAFSDo1-->知识问答</div>
+    <div data-page-node-id="ZbdmaZp1LNF39VTaZkjvsS" style="display:flex; gap:8px; align-items:center">
+      <span data-page-node-id="QWDzV6fJwEfWzivHnatGME" class="stat" id="quizStat"></span>
+      <button data-page-node-id="5oijdqVVd4bkbM8eSC2Z2Z" class="btn sm" onclick="go('sHome')"><!--pnid:F1yYUI22qT9ym8fsnp0AZr-->回花园</button>
+    </div>
+  </div>
+  <div data-page-node-id="cHqoe4ykdU0HOnptZcD54A" style="padding:0 18px 14px; min-height:0; overflow:auto">
+    <div data-page-node-id="Xi0BH4DS7YyRPoGv3heFVk" class="qbox" id="quizBox2"></div>
+  </div>
+</section>
+
+<!--pnid:u7NpqWt2ttApuv4woUm2z0--><!-- 生肖馆 -->
+<section data-page-node-id="8GCoFEBHVX1XZ3Pu4RXH4S" class="scene" id="sBadge">
+  <div data-page-node-id="FFNWmXYrRMQLiTWkESAhaa" class="top">
+    <div data-page-node-id="OWLhh8ERVsQAap9ahWoiCA" class="brand"><!--pnid:uDAwAyTrrWREeDMZ81iFu9-->生肖馆 · 彩虹萌宝</div>
+    <button data-page-node-id="lHQeYun9O8OkHE3bYYbNjc" class="btn sm" onclick="go('sHome')"><!--pnid:gSi6Wnk7iV2TmCMHlR0Z3R-->回花园</button>
+  </div>
+  <div data-page-node-id="uPeZTvmTEouliGZURIFofY" class="sheet">
+    <div data-page-node-id="ybVeV2c8JknMl0ttKRbyGq" class="card" style="padding:14px 16px">
+      <h2 data-page-node-id="ITCN4fJQrxKBmGSPNItaXE"><!--pnid:QSIv562Ys4sjZL9kyWOufk-->十二生肖彩虹萌宝</h2>
+      <div data-page-node-id="XRns4NoGXLQORjkxNFu1mR" class="muted" id="badgeTip"><!--pnid:Zu6dKrcKUsqEfT48g9JsEX-->每攒 15 颗星星，就有一位穿彩虹衣的萌宝来找你。玩游戏、答对题都能攒星星！</div>
+      <div data-page-node-id="giImFCoOQgJ0JNwxYyrQVQ" class="zgrid" id="zgrid"></div>
+    </div>
+  </div>
+</section>
+
+<!--pnid:c9FtKxYYtlL8LhxQ37JqJQ--><!-- 排行榜 -->
+<section data-page-node-id="FqfYCr1nW1PJnNIevQBP3g" class="scene" id="sRank">
+  <div data-page-node-id="QHYYr7L5gLqP7gc7pjuB2e" class="top">
+    <div data-page-node-id="GemKYe76Gw3uflonoBKNt1" class="brand"><!--pnid:eS1xnPF37fo1qT1cfCXd78-->星星排行榜</div>
+    <button data-page-node-id="3Jh6FOadCjFPQOsyVCdOSm" class="btn sm" onclick="go('sHome')"><!--pnid:HHMe5RV60WzPFmqyyA4WX4-->回花园</button>
+  </div>
+  <div data-page-node-id="3PHfYp4WK5oogUC0EypS42" class="sheet">
+    <div data-page-node-id="l27Dz5AiOi71UZWWrVZRM0" class="card" style="padding:14px 16px">
+      <table data-page-node-id="HfwJYHPkEUNXXPymtiqFHu" id="rankTable"></table>
+    </div>
+  </div>
+</section>
+
+<!--pnid:29ZhNoBHMIUIDQ2SmQTA4U--><!-- 弹层 -->
+<div data-page-node-id="Wy14GZS0UuLgzjMcrDaroF" class="pop" id="pop"><div data-page-node-id="9gRLYlHSAxXMKqOzBVrTco" class="popCard" id="popCard"></div></div>
+
+</div>
+
+<script data-page-node-id="4cmksTESOoLgjetgCw0gyx" data-pnid-children="Ac2jDQRRZMyj2vGJskHd40">
+const $=s=>document.querySelector(s);
+const RAINBOW=['#FF5A5F','#FFA94D','#FFD93D','#7BD389','#4ECDC4','#5B9DF9','#A78BFA'];
+const TIERS=[
+ {need:5,name:'小红花',c:'#FF5A5F'},{need:10,name:'小橙花',c:'#FFA94D'},
+ {need:15,name:'小黄花',c:'#FFD93D'},{need:20,name:'小绿花',c:'#7BD389'},
+ {need:25,name:'小青花',c:'#4ECDC4'},{need:30,name:'小蓝花',c:'#5B9DF9'},
+ {need:35,name:'小紫花',c:'#A78BFA'}];
+const CYCLE=15;
+const ZODIAC=[
+ {n:'彩虹鼠',c:'#CFC9E8',ear:'round'},{n:'彩虹牛',c:'#F3EDE2',horn:'cow'},
+ {n:'彩虹虎',c:'#FFB443',ear:'round',stripe:1},{n:'彩虹兔',c:'#FFE0E9',ear:'long'},
+ {n:'彩虹龙',c:'#7BD389',horn:'dragon'},{n:'彩虹蛇',c:'#9BE0C8',ear:'none'},
+ {n:'彩虹马',c:'#DEA877',ear:'small',mane:1},{n:'彩虹羊',c:'#FFF3D6',horn:'sheep'},
+ {n:'彩虹猴',c:'#E8B98A',ear:'side'},{n:'彩虹鸡',c:'#FFD93D',comb:1},
+ {n:'彩虹狗',c:'#CFAF85',ear:'droop'},{n:'彩虹猪',c:'#FFC2D1',ear:'small',nose:'big'}];
+const KNOW=[
+ {l:['影子是光走直线留下的证据。','太阳低的时候影子长，太阳高的时候影子短。','影子的方向永远和太阳相反。'],k:'记住这句话：影子会跟着太阳跑'},
+ {l:['红光+绿光，会变成黄光。','绿光+蓝光变成青光，红光+蓝光变成品红。','三种原色光全加在一起，就是白光。'],k:'记住这句话：色光越混越亮'},
+ {l:['白光里其实混着七种颜色。','穿过棱镜时它们分开，这叫色散。','雨后的小水珠就是天然的棱镜。'],k:'记住这句话：彩虹是阳光变出来的'},
+ {l:['叶子里的叶绿素要吃光做饭。','它吃掉红光和蓝紫光。','绿光被它推回来，所以我们看到叶子是绿的。'],k:'记住这句话：叶子把绿光让给了我们'},
+ {l:['有的花爱晒太阳，有的花怕晒。','向日葵、薰衣草最爱晒；君子兰、蝴蝶兰怕暴晒。','放对了地方，花才会开。'],k:'记住这句话：先问阳光，再选花'},
+ {l:['红、绿、蓝是光的三原色。','红+绿=黄，绿+蓝=青，红+蓝=品红。','三种全加在一起，就是白光。'],k:'记住这句话：三色光能合成白光'},
+ {l:['光的颜色会“说话”。','红绿灯用红黄绿告诉我们停、等、走。','灯塔、路灯、信号灯都在用光传递消息。'],k:'记住这句话：光的颜色会说话'}
+];
+const LEVELS=[
+ {t:'影子捉迷藏',d:'5 道题：看影子，猜太阳在哪',c:'#FF5A5F',ic:'☀️'},
+ {t:'彩虹记忆翻牌',d:'翻出两颗一样颜色的光球',c:'#FFA94D',ic:'🃏'},
+ {t:'追光小能手',d:'限时点中指定颜色的光球',c:'#E8B70A',ic:'💡'},
+ {t:'叶子大转盘',d:'5 个任务：转到叶子要的那束光',c:'#3FB877',ic:'🍃'},
+ {t:'花花晒太阳',d:'5 株植物：送它们去晒太阳或乘凉',c:'#2FC5C0',ic:'🌸'},
+ {t:'调色魔法锅',d:'计时挑战：依次调出 5 种色光',c:'#3E8BFF',ic:'🍲'},
+ {t:'彩虹点灯',d:'记住亮灯顺序，按顺序点亮彩虹',c:'#8A5CFF',ic:'🏮'}];
+
+/* ---------- 数据 ---------- */
+const DBK='gy_players_v2',MEK='gy_me_v2',OLDK='gy_players_v1';
+const loadDB=()=>{try{return JSON.parse(localStorage.getItem(DBK)||'{}')}catch(e){return{}}};
+const saveDB=d=>localStorage.setItem(DBK,JSON.stringify(d));
+let DB=loadDB(), ME=null, REG_BACK=null;
+/* 老版本进度迁移：只搬星星总数，关卡记录按新玩法重新开始 */
+(function migrate(){
+  try{
+    const old=JSON.parse(localStorage.getItem(OLDK)||'{}');
+    Object.keys(old).forEach(k=>{
+      if(DB[k])return;
+      DB[k]={stars:Math.max(0,old[k].stars|0),cleared:{},ts:old[k].ts||Date.now()};
+    });
+    if(!localStorage.getItem(MEK)&&localStorage.getItem('gy_me_v1')){
+      const m=localStorage.getItem('gy_me_v1');
+      if(DB[m])localStorage.setItem(MEK,m);
+    }
+    saveDB(DB);
+  }catch(e){}
+})();
+const DEMO=[['小光子',42,{}],['追光猫',31,{}],['小树苗',18,{}]];
+(function seedDemo(){
+  const now=Date.now();let add=0;
+  DEMO.forEach((d,i)=>{
+    if(!DB[d[0]]){DB[d[0]]={stars:d[1],cleared:d[2],ts:now-i*60000,demo:1};add++;}
+  });
+  if(add)saveDB(DB);
+})();
+function stars(p){return p?p.stars|0:0;}
+function zodiacOf(s){return Math.min(12,Math.floor(s/CYCLE));}
+function nextGap(s){const c=s%CYCLE;return CYCLE-c;}
+
+/* 进度码：把当前玩家的进度变成一串字符，可复制到别的设备找回进度 */
+function encodeCode(n,d){try{return 'GY1-'+btoa(unescape(encodeURIComponent(JSON.stringify({n:n,d:d})))).replace(/=+$/,'')}catch(e){return ''}}
+function decodeCode(s){try{
+    let t=s.trim().replace(/^GY1-/,'');t+='==='.slice(0,(4-t.length%4)%4);
+    const o=JSON.parse(decodeURIComponent(escape(atob(t))));
+    return (o&&o.n&&o.d&&typeof o.d.stars==='number')?o:null;
+  }catch(e){return null}}
+function showCode(){
+  if(!ME)return;
+  const c=encodeCode(ME,DB[ME]);
+  showPop(`<h2>「${ME}」的进度码</h2>
+    <textarea readonly id="codeTa" style="width:100%;height:84px;font-size:13px;border:2px solid var(--line);border-radius:12px;padding:8px">${c}</textarea>
+    <p class="muted">复制这串字符保存好。在别的设备打开乐园，点「用进度码找回」，粘贴即可继续玩。</p>
+    <div class="row" style="margin-top:10px">
+      <button class="btn p" onclick="copyCode()">一键复制</button>
+      <button class="btn" onclick="closePop()">好</button></div>`);
+  const ta=$('#codeTa');ta.focus();ta.select();
+}
+function copyCode(){const ta=$('#codeTa');ta.select();
+  (navigator.clipboard?navigator.clipboard.writeText(ta.value):Promise.reject())
+    .then(()=>{ta.blur();toast('复制好啦，去粘贴保存吧');})
+    .catch(()=>{try{document.execCommand('copy');toast('复制好啦，去粘贴保存吧')}catch(e){}});}
+function askCode(){
+  showPop(`<h2>用进度码找回进度</h2>
+    <textarea id="codeIn" placeholder="把进度码粘贴到这里" style="width:100%;height:84px;font-size:13px;border:2px solid var(--line);border-radius:12px;padding:8px"></textarea>
+    <div class="row" style="margin-top:10px">
+      <button class="btn p" onclick="doImportCode()">找回</button>
+      <button class="btn" onclick="closePop()">算了</button></div>`);
+}
+function doImportCode(){
+  const o=decodeCode($('#codeIn').value||'');
+  if(!o){$('#codeIn').value='';$('#codeIn').placeholder='这串码好像不对，再检查一下？';return;}
+  DB[o.n]=o.d;saveDB(DB);localStorage.setItem(MEK,o.n);
+  closePop();enter(o.n);toast('欢迎回来，'+o.n+'！');
+}
+
+function renderReg(){
+  const keys=Object.keys(DB);
+  $('#backBox').innerHTML=REG_BACK?
+    `<div style="margin:10px 0"><button class="btn o" onclick="backToMe()">返回，继续用「${REG_BACK}」</button></div>`:'';
+  $('#oldList').innerHTML=keys.length?
+    keys.sort((a,b)=>DB[b].stars-DB[a].stars).map(k=>
+      `<div class="pick" onclick="pickPlayer('${String(k).replace(/['"\\\\]/g,'')}')">${k} · ${DB[k].stars} 星</div>`).join('')
+    :'<div class="muted">还没有人创建过玩家，先在上面取个名字吧</div>';
+}
+function doReg(){
+  const n=$('#nameIn').value.trim();
+  if(!n){$('#regMsg').className='msg err';$('#regMsg').textContent='先写一个名字吧';return;}
+  if(DB[n]){$('#regMsg').className='msg err';$('#regMsg').textContent='这个名字已经被用啦，换一个试试';return;}
+  DB[n]={stars:0,cleared:{},ts:Date.now()};saveDB(DB);
+  localStorage.setItem(MEK,n);REG_BACK=null;enter(n);
+}
+function enter(n){ME=n;DB=loadDB();if(!DB[n])return logout();renderHome();go('sHome');}
+function pickPlayer(n){REG_BACK=null;localStorage.setItem(MEK,n);enter(n);}
+function backToMe(){REG_BACK=null;if(ME&&DB[ME]){renderHome();go('sHome');}else{renderReg();go('sReg');}}
+function logout(){REG_BACK=ME;$('#nameIn').value='';$('#regMsg').textContent='';$('#regMsg').className='msg';renderReg();go('sReg');}
+function popZodiac(z){
+  showPop(`<h2>新伙伴：${ZODIAC[z-1].n}</h2>${zodiacSVG(z-1,1,120)}
+    <p class="muted">又攒满 ${CYCLE} 颗星星，第 ${z} 位穿彩虹衣的萌宝来报到啦！${z<12?('继续加油，集齐 12 只！'):('十二只萌宝全部到齐，你是最棒的星辰魔法师！')}</p>
+    <button class="btn p" onclick="closePop()">太好了</button>`);
+}
+function toast(m){showPop(`<h2>${m}</h2><button class="btn p" onclick="closePop()">继续</button>`);}
+function showPop(h){$('#popCard').innerHTML=h;$('#pop').classList.add('on');}
+function closePop(){$('#pop').classList.remove('on');}
+function go(id){$$('.scene').forEach(e=>e.classList.remove('on'));$('#'+id).classList.add('on');}
+const $$=s=>[...document.querySelectorAll(s)];
+
+/* ---------- 美术生成 ---------- */
+function badgeSVG(t,on,size){
+  const x=TIERS[t-1],c=on?x.c:'#E6E0DA',c2=on?shade(x.c,30):'#F2EDE6';
+  let pet='';
+  for(let k=0;k<6;k++){
+    pet+=`<ellipse cx="50" cy="29" rx="15" ry="21" fill="${k%2?c2:c}"
+      transform="rotate(${k*60} 50 50)" stroke="#fff" stroke-width="2.5"/>`;
+  }
+  return `<svg viewBox="0 0 100 100" width="${size}" height="${size}">
+   <g>${pet}</g>
+   <circle cx="50" cy="50" r="20" fill="#fff"/>
+   <circle cx="50" cy="50" r="15.5" fill="${on?c:'#EDE7E0'}"/>
+   <text x="50" y="57" text-anchor="middle" font-size="19" font-weight="700" fill="#fff">${on?t:''}</text>
+  </svg>`;
+}
+function shade(hex,amt){
+  const n=parseInt(hex.slice(1),16),r=Math.max(0,Math.min(255,(n>>16)+amt)),
+  g=Math.max(0,Math.min(255,((n>>8)&255)+amt)),b=Math.max(0,Math.min(255,(n&255)+amt));
+  return '#'+((r<<16)|(g<<8)|b).toString(16).padStart(6,'0');
+}
+function zodiacSVG(i,unlocked,size){
+  const z=ZODIAC[i],c=unlocked?z.c:'#E6E0DA',eye=unlocked?'#3A3355':'#C3BCB4';
+  let ears='';
+  if(z.ear==='long')ears=`<ellipse cx="33" cy="24" rx="8" ry="19" fill="${c}" transform="rotate(-8 33 24)"/>
+    <ellipse cx="67" cy="24" rx="8" ry="19" fill="${c}" transform="rotate(8 67 24)"/>
+    <ellipse cx="33" cy="24" rx="3.5" ry="12" fill="#FFC2D1"/><ellipse cx="67" cy="24" rx="3.5" ry="12" fill="#FFC2D1"/>`;
+  else if(z.ear==='round')ears=`<circle cx="30" cy="24" r="12" fill="${c}"/><circle cx="70" cy="24" r="12" fill="${c}"/>
+    <circle cx="30" cy="24" r="6" fill="#FFC2D1"/><circle cx="70" cy="24" r="6" fill="#FFC2D1"/>`;
+  else if(z.ear==='small')ears=`<circle cx="33" cy="26" r="8" fill="${c}"/><circle cx="67" cy="26" r="8" fill="${c}"/>`;
+  else if(z.ear==='droop')ears=`<ellipse cx="26" cy="46" rx="10" ry="17" fill="${c}"/><ellipse cx="74" cy="46" rx="10" ry="17" fill="${c}"/>`;
+  else if(z.ear==='side')ears=`<circle cx="22" cy="44" r="13" fill="${c}"/><circle cx="78" cy="44" r="13" fill="${c}"/>
+    <circle cx="22" cy="44" r="6" fill="#FFC2D1"/><circle cx="78" cy="44" r="6" fill="#FFC2D1"/>`;
+  let extra='';
+  if(z.horn==='cow')extra=`<path d="M30 22 q-10 -12 -16 -4" stroke="#F0D9B5" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M70 22 q10 -12 16 -4" stroke="#F0D9B5" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+  if(z.horn==='sheep')extra=`<path d="M32 20 q-12 -6 -14 6" stroke="#EFE0C4" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M68 20 q12 -6 14 6" stroke="#EFE0C4" stroke-width="6" fill="none" stroke-linecap="round"/>`;
+  if(z.horn==='dragon')extra=`<path d="M34 18 l-6 -14 l12 6" stroke="#F5C84A" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M66 18 l6 -14 l-12 6" stroke="#F5C84A" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+  if(z.comb)extra=`<path d="M40 14 q4 -10 10 -4 q4 -8 8 2" fill="#FF5A5F"/>`;
+  if(z.stripe)extra+=`<path d="M28 34 l6 8 M72 34 l-6 8" stroke="#F08A3C" stroke-width="3" stroke-linecap="round"/>`;
+  if(z.mane)extra+=`<path d="M30 30 q20 -14 40 0" stroke="#B9835A" stroke-width="6" fill="none" stroke-linecap="round"/>`;
+  const nose=z.nose==='big'?`<ellipse cx="50" cy="52" rx="9" ry="6" fill="#FF9FB4"/><circle cx="46.5" cy="52" r="2" fill="#E87A94"/><circle cx="53.5" cy="52" r="2" fill="#E87A94"/>`
+    :`<circle cx="50" cy="52" r="3.4" fill="${eye}" opacity=".8"/>`;
+  return `<svg viewBox="0 0 100 108" width="${size}" height="${size*1.08}">
+   <defs><clipPath id="zb${i}${unlocked}"><ellipse cx="50" cy="76" rx="31" ry="27"/></clipPath></defs>
+   <ellipse cx="50" cy="80" rx="26" ry="10" fill="rgba(120,90,160,.13)"/>
+   ${ears}
+   <ellipse cx="50" cy="76" rx="31" ry="27" fill="${c}"/>
+   <g clip-path="url(#zb${i}${unlocked})">
+     <rect x="19" y="66" width="62" height="38" fill="#fff"/>
+     ${RAINBOW.map((k,j)=>`<rect x="19" y="${66+j*5.4}" width="62" height="5.4" fill="${k}" opacity="${unlocked?0.9:0.25}"/>`).join('')}
+   </g>
+   <ellipse cx="50" cy="76" rx="31" ry="27" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="2"/>
+   <circle cx="50" cy="44" r="27" fill="${c}"/>
+   ${extra}
+   <circle cx="39" cy="42" r="5.6" fill="#fff"/><circle cx="61" cy="42" r="5.6" fill="#fff"/>
+   <circle cx="39.5" cy="42.5" r="3.2" fill="${eye}"/><circle cx="61.5" cy="42.5" r="3.2" fill="${eye}"/>
+   <circle cx="38" cy="41" r="1.1" fill="#fff"/><circle cx="60" cy="41" r="1.1" fill="#fff"/>
+   <circle cx="32" cy="50" r="4.6" fill="#FF9FB4" opacity=".7"/><circle cx="68" cy="50" r="4.6" fill="#FF9FB4" opacity=".7"/>
+   ${nose}
+   <path d="M44 58 q6 6 12 0" stroke="${eye}" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+   ${unlocked?'':'<circle cx="50" cy="60" r="13" fill="rgba(255,255,255,.85)"/><text x="50" y="65" text-anchor="middle" font-size="14">?</text>'}
+  </svg>`;
+}
+
+/* ---------- 百科数据 ---------- */
+const LIGHT=[
+ {q:'光到底是什么？',a:'光是一种能量，跑得飞快。我们之所以能看见东西，就是因为光进了眼睛。',t:'光的本质'},
+ {q:'太阳的光是怎么来的？',a:'太阳中心热到一千五百万度，氢原子在那里挤成氦原子，多出来的能量就变成光。',t:'核聚变'},
+ {q:'阳光跑到地球要多久？',a:'大约 8 分 20 秒。所以我们此刻看到的阳光，是 8 分钟前从太阳出发的。',t:'光速'},
+ {q:'光每秒跑多远？',a:'大约 30 万公里，一秒钟能绕地球七圈半。声音每秒只跑 340 米，所以先看到闪电再听到雷声。',t:'光速'},
+ {q:'影子是怎么来的？',a:'光沿直线走，遇到挡路的东西就过不去，后面那块照不到的地方就是影子。',t:'影子'},
+ {q:'影子为什么会变长变短？',a:'太阳低的时候光斜着照，影子被拉得很长；太阳升到头顶，影子就缩到脚下。',t:'影子'},
+ {q:'影子是纯黑的吗？',a:'不是。周围有天空散射来的光会照进影子里，所以影子是有颜色的，只是比较暗。',t:'影子'},
+ {q:'影子能比人还大吗？',a:'能。傍晚太阳很低的时候，影子能被拉出好几米长。',t:'影子'},
+ {q:'光会拐弯吗？',a:'会。撞到镜子、水面、金属就会被弹回去，这叫反射。',t:'反射'},
+ {q:'反射有什么规律？',a:'撞进来的角度和弹出去的角度一样大，科学家叫它"入射角等于反射角"。',t:'反射'},
+ {q:'为什么镜子里的字是反的？',a:'镜子把光原路弹回来，左右就调了个个儿，上下并没有变。',t:'反射'},
+ {q:'筷子放进水里为什么像断了？',a:'光从水进空气时会拐一下，这叫折射；眼睛却以为光一直是直的。',t:'折射'},
+ {q:'彩虹是怎么来的？',a:'阳光钻进小水珠，在里面弹一下再出来，不同颜色拐弯程度不同，就被分开了。',t:'色散'},
+ {q:'天空为什么是蓝的？',a:'阳光里蓝光最容易被空气里的小分子撞散，散得到处都是，天就蓝了。',t:'散射'},
+ {q:'晚霞为什么是红的？',a:'傍晚阳光要走更长的路，蓝光半路就散光了，剩下红橙光到达我们的眼睛。',t:'散射'},
+ {q:'日食是怎么回事？',a:'月亮跑到太阳和地球中间，把阳光挡住了，地上就出现月亮的影子。',t:'影子'},
+ {q:'光能穿过哪些东西？',a:'玻璃、水、空气能穿过（透明）；毛玻璃只穿过一部分（半透明）；木头、金属穿不过（不透明）。',t:'透光'},
+ {q:'叶子为什么是绿的？',a:'叶绿素吃掉红光和蓝紫光，把绿光推回来，所以我们看到的叶子是绿的。',t:'植物与光'},
+ {q:'花为什么有那么多颜色？',a:'花瓣里有不同色素，还能反射不同的光，为的是吸引昆虫来帮它传粉。',t:'植物与光'},
+ {q:'我们是怎么看见颜色的？',a:'眼睛里有三种感光细胞，分别对红、绿、蓝光最敏感，三种合起来就有了全部颜色。',t:'视觉'},
+ {q:'为什么晚上看不见东西？',a:'没有光进眼睛，感光细胞就收不到信号。',t:'视觉'},
+ {q:'太阳能板是怎么发电的？',a:'阳光照在特殊的硅片上，把里面的电子推着跑起来，就产生了电。',t:'光的应用'},
+ {q:'光有重量吗？',a:'光没有静止的重量，但它有能量，能推动很轻的东西，这叫光压。',t:'光的本质'},
+ {q:'怎样用影子做游戏？',a:'手挡住光，墙上就会出现手影，能变出小狗、小鸟的样子。',t:'影子'}];
+
+const FLOWERS=[
+{n:'月季',fam:'蔷薇科',c:'#FF5A7A',sh:'double',p:24,f:'5–10月',sun:'喜阳',wt:'保持湿润',h:'60–150 厘米',u:'花坛·庭院·切花',k:'和玫瑰是亲戚，但月季一年能开好几茬。它的刺和枝条连得紧，用手剥不下来——这是分辨月季和玫瑰最省事的办法。'},
+{n:'玫瑰',fam:'蔷薇科',c:'#E8384F',sh:'double',p:20,f:'5–6月',sun:'喜阳',wt:'耐旱怕涝',h:'1–2 米',u:'香料·花茶·切花',k:'玫瑰的刺是一片薄薄的皮刺，能整片剥下来。花瓣可以吃，常被做成玫瑰酱和玫瑰花茶。'},
+{n:'向日葵',fam:'菊科',c:'#FFC31E',sh:'single',p:30,f:'7–9月',sun:'极喜阳',wt:'耐旱',h:'1–3 米',u:'观赏·瓜子·油料',k:'花盘小时候跟着太阳从东转到西；长大以后就固定朝东了，这样清晨第一缕阳光能最快把花盘晒暖，吸引更多蜜蜂。'},
+{n:'郁金香',fam:'百合科',c:'#FF6B9D',sh:'single',p:6,f:'3–5月',sun:'喜阳',wt:'适中怕涝',h:'30–60 厘米',u:'盆栽·花坛·切花',k:'夜里花瓣合上、白天张开，天太热还会"赖床"不起来。它其实是被温度指挥的：暖了就开，冷了就拢。'},
+{n:'牡丹',fam:'毛茛科',c:'#F0577A',sh:'double',p:30,f:'4–5月',sun:'喜阳',wt:'耐旱怕涝',h:'1–2 米',u:'观赏·药用',k:'被称为"花王"，一朵能有几十片花瓣。它的根皮可以入药，中药里叫丹皮。'},
+{n:'芍药',fam:'毛茛科',c:'#F58BA6',sh:'double',p:26,f:'5–6月',sun:'喜阳',wt:'适中',h:'60–100 厘米',u:'切花·药用',k:'芍药是草，冬天地上部分会整片枯死；牡丹是木本，枝干会一年年变粗。如果冬天看到它"死"了，别急着拔。'},
+{n:'荷花',fam:'莲科',c:'#FF9EC0',sh:'single',p:20,f:'6–9月',sun:'极喜阳',wt:'水生',h:'高出水面 30–150 厘米',u:'观赏·食用·药材',k:'叶子一点也不沾水，水珠在上面滚来滚去还能带走灰尘。科学家照着它做出了防水面料，这叫"荷叶效应"。'},
+{n:'菊花',fam:'菊科',c:'#FFB81E',sh:'double',p:32,f:'9–11月',sun:'喜阳',wt:'耐旱',h:'30–90 厘米',u:'观赏·菊花茶',k:'看起来是一朵花，其实是上百朵小花组成的"花序"：外面一圈是舌头状的舌状花，中间那些细细的小管子才是管状花。'},
+{n:'梅花',fam:'蔷薇科',c:'#F27A9E',sh:'single',p:5,f:'1–3月',sun:'喜阳',wt:'耐旱',h:'3–6 米（小乔木）',u:'观赏·果用',k:'在最冷的时节开花，和松、竹并称"岁寒三友"。它结的果子很酸，加工后就是我们吃的梅子。'},
+{n:'桃花',fam:'蔷薇科',c:'#FF9BB3',sh:'single',p:5,f:'3–4月',sun:'喜阳',wt:'耐旱怕涝',h:'3–8 米',u:'观赏·果用',k:'花瓣顶端有一个小缺口，这是认桃花最准的办法。一棵树能开上千朵花，但最后只有一小部分会真的结出桃子。'},
+{n:'樱花',fam:'蔷薇科',c:'#FFC0D3',sh:'single',p:5,f:'3–4月',sun:'喜阳',wt:'适中怕涝',h:'4–16 米',u:'观赏·行道树',k:'花瓣顶端也有缺口，容易和桃花认混。看树皮就能分开：樱花树皮有一道道横向的纹路，像被刻了一圈圈横线。'},
+{n:'杏花',fam:'蔷薇科',c:'#FFB3C7',sh:'single',p:5,f:'3–4月',sun:'喜阳',wt:'耐旱',h:'4–10 米',u:'观赏·果用',k:'花萼是红色的，而且开放时会整个往后翻过来——看到红萼翻卷，基本就是杏花。'},
+{n:'梨花',fam:'蔷薇科',c:'#F4F7FF',sh:'single',p:5,f:'3–4月',sun:'喜阳',wt:'适中',h:'5–10 米',u:'观赏·果用',k:'花瓣雪白，但花药是紫红色的，凑近看特别明显，一眼就能和樱花分开。'},
+{n:'玉兰',fam:'木兰科',c:'#FFF3E0',sh:'single',p:9,f:'2–4月',sun:'喜阳',wt:'适中怕涝',h:'8–15 米',u:'观赏·行道树',k:'先开花、后长叶，满树白花像落了一层雪。它的花芽在头一年秋天就长好了，外面裹着一层毛茸茸的"外套"过冬。'},
+{n:'海棠',fam:'蔷薇科',c:'#FF8FAE',sh:'single',p:5,f:'4–5月',sun:'喜阳',wt:'适中',h:'3–8 米',u:'观赏·庭院',k:'花梗细细长长，风一吹整朵花一起轻轻晃。古人说"海棠无香"，其实部分品种是有淡淡香味的。'},
+{n:'桂花',fam:'木犀科',c:'#FFD98A',sh:'cluster',p:0,f:'9–10月',sun:'喜阳耐半阴',wt:'喜湿润',h:'3–10 米',u:'观赏·食用·香料',k:'花小到几乎看不见，香味却能飘出很远。风一吹，整条街都闻得到，这叫"十里飘香"。'},
+{n:'茉莉',fam:'木犀科',c:'#FFFDF3',sh:'single',p:8,f:'5–8月',sun:'喜阳也耐半阴',wt:'喜湿润',h:'50–150 厘米',u:'盆栽·茉莉花茶',k:'傍晚才开放，夜里香味最浓。摘下来的花常被窨进茶叶里，就成了茉莉花茶。'},
+{n:'栀子',fam:'茜草科',c:'#FFFCE8',sh:'double',p:12,f:'5–7月',sun:'半日照',wt:'喜湿润',h:'1–3 米',u:'盆栽·庭院·香料',k:'刚开时洁白，谢掉时会慢慢变成黄褐色。它喜欢偏酸的土壤，土偏碱叶子就会发黄。'},
+{n:'百合',fam:'百合科',c:'#FFF0F5',sh:'single',p:6,f:'5–8月',sun:'半日照',wt:'适中怕涝',h:'60–150 厘米',u:'切花·食用·药用',k:'花被片一共有 6 片，中间那根长长的"天线"是花柱。地下长着一层层的鳞茎，是可以吃的百合。'},
+{n:'康乃馨',fam:'石竹科',c:'#FF7A9C',sh:'double',p:20,f:'5–8月',sun:'喜阳',wt:'耐旱怕涝',h:'40–80 厘米',u:'切花·花坛',k:'花瓣边缘有细细的锯齿。它是母亲节最常送的花，不同颜色代表不同的心意。'},
+{n:'水仙',fam:'石蒜科',c:'#FFF6D0',sh:'single',p:6,f:'1–3月',sun:'喜阳（室内可半阴）',wt:'水培',h:'20–40 厘米',u:'室内盆栽',k:'只要一个浅盘子加点水就能开花，连土都不需要。养分全藏在那个像大蒜头的鳞茎里。'},
+{n:'风信子',fam:'天门冬科',c:'#9B8BE8',sh:'spike',p:0,f:'3–4月',sun:'喜阳',wt:'适中',h:'20–40 厘米',u:'盆栽·切花',k:'一串小花从下往上依次开放，整个花序像一支小小的玉米棒。香味很浓，放一盆满屋都能闻到。'},
+{n:'蝴蝶兰',fam:'兰科',c:'#E58FD0',sh:'single',p:5,f:'1–4月',sun:'半阴（不能直晒）',wt:'喜湿润怕积水',h:'30–70 厘米',u:'室内盆栽',k:'看着像花瓣的那几片里，有一片其实是"嘴唇"，专门给昆虫当落脚的踏板。它的根是绿灰色的，能在空气里吸水。'},
+{n:'君子兰',fam:'石蒜科',c:'#FF8A3C',sh:'cluster',p:0,f:'12–4月',sun:'耐阴',wt:'适中怕涝',h:'30–60 厘米',u:'室内盆栽',k:'叶子两两对生，长得整整齐齐像一把打开的扇子。它很怕强光直晒，放在明亮的散光处最好。'},
+{n:'杜鹃',fam:'杜鹃花科',c:'#F2557C',sh:'single',p:5,f:'4–6月',sun:'半日照',wt:'喜湿润',h:'1–3 米',u:'盆栽·庭院',k:'最喜欢酸性土，土壤偏碱就长不好、叶子发黄。养护时常要浇一点硫酸亚铁水来"养酸"。'},
+{n:'山茶',fam:'山茶科',c:'#E94B6A',sh:'double',p:24,f:'11–4月',sun:'半日照',wt:'喜湿润',h:'2–6 米',u:'观赏·油用',k:'谢的时候整朵花一起掉下来，不像别的花一片片落。种子可以榨油，就是山茶油。'},
+{n:'紫薇',fam:'千屈菜科',c:'#C77DE0',sh:'cluster',p:0,f:'6–9月',sun:'喜阳',wt:'耐旱',h:'3–7 米',u:'观赏·行道树',k:'摸一摸树干，整棵树会轻轻抖动，所以又叫"痒痒树"。它的花期特别长，能开整整一个夏天。'},
+{n:'木槿',fam:'锦葵科',c:'#FF9EC7',sh:'single',p:5,f:'7–10月',sun:'喜阳',wt:'耐旱',h:'2–4 米',u:'观赏·绿篱·食用',k:'一朵花只开一天，早上张开晚上就谢了，所以也叫"朝开暮落"。花朵可以炸着吃，口感滑滑的。'},
+{n:'扶桑',fam:'锦葵科',c:'#FF4F6E',sh:'single',p:5,f:'几乎全年',sun:'极喜阳',wt:'喜湿润',h:'1–3 米',u:'观赏·盆栽',k:'花蕊伸得特别长，像一根小棒子从花心探出来。只要够暖，它一年到头都能开花。'},
+{n:'三角梅',fam:'紫茉莉科',c:'#E8467E',sh:'single',p:3,f:'3–7月',sun:'极喜阳',wt:'耐旱',h:'2–10 米（攀援）',u:'观赏·花墙·绿篱',k:'我们看到的"花"其实是三片变了色的叶子，真正的花是中间那三根小小的白管子。'},
+{n:'一串红',fam:'唇形科',c:'#E63946',sh:'spike',p:0,f:'7–10月',sun:'喜阳也耐半阴',wt:'适中',h:'30–80 厘米',u:'花坛·盆栽',k:'一串串红花里藏着甜甜的花蜜，摘下根部吸一口是甜的，很多孩子小时候都试过。'},
+{n:'矮牵牛',fam:'茄科',c:'#B07BE8',sh:'single',p:5,f:'4–10月',sun:'喜阳',wt:'适中怕涝',h:'20–40 厘米',u:'花坛·吊盆',k:'和喇叭花是亲戚，花朵像个精致的小喇叭。它怕雨淋，大雨过后花瓣容易烂。'},
+{n:'三色堇',fam:'堇菜科',c:'#8B6BE0',sh:'single',p:5,f:'3–6月',sun:'喜阳也耐半阴',wt:'喜湿润',h:'15–25 厘米',u:'花坛·盆栽',k:'一朵花上常常有三种颜色，像一张戴着面具的小脸。它很耐寒，冬天也能开花。'},
+{n:'雏菊',fam:'菊科',c:'#FFFBF0',sh:'single',p:16,f:'3–6月',sun:'喜阳',wt:'适中',h:'10–25 厘米',u:'花坛·地被',k:'花瓣一到晚上会竖起来合拢，像睡着了一样，第二天太阳出来再张开。'},
+{n:'波斯菊',fam:'菊科',c:'#FF87AE',sh:'single',p:8,f:'6–10月',sun:'极喜阳',wt:'耐旱',h:'60–150 厘米',u:'花海·花坛',k:'撒一把种子就能长出一大片。它很耐贫瘠，土太肥反而只长叶子不开花。'},
+{n:'薰衣草',fam:'唇形科',c:'#A48BE8',sh:'spike',p:0,f:'6–8月',sun:'极喜阳',wt:'耐旱怕湿',h:'40–80 厘米',u:'观赏·香料·干花',k:'紫色的一串串，晒干以后香味能留很久。它最怕根部积水，养在高处、少浇水反而长得更好。'},
+{n:'鸡冠花',fam:'苋科',c:'#E6395A',sh:'spike',p:0,f:'7–10月',sun:'极喜阳',wt:'耐旱',h:'30–80 厘米',u:'花坛·干花',k:'花穗扁扁的形状扁奇妙，真像公鸡头上的冠子。晒干以后形状颜色都不变，是很受欢迎的干花。'},
+{n:'万寿菊',fam:'菊科',c:'#FF9F1C',sh:'double',p:28,f:'7–10月',sun:'极喜阳',wt:'耐旱',h:'30–90 厘米',u:'花坛·驱虫伴生',k:'味道很冲，虫子不爱靠近，所以常被种在菜地边当"护卫"。它的花期长到能开到霜降。'},
+{n:'石竹',fam:'石竹科',c:'#FF6F91',sh:'single',p:5,f:'5–9月',sun:'喜阳',wt:'耐旱',h:'20–50 厘米',u:'花坛·盆栽',k:'花瓣边缘有锯齿，摸起来毛毛的。它特别皮实，路边花坛里常见它的身影。'},
+{n:'满天星',fam:'石竹科',c:'#FBFBFF',sh:'cluster',p:0,f:'5–8月',sun:'喜阳',wt:'耐旱',h:'40–90 厘米',u:'配花·干花',k:'一朵朵小白花挤在一起，常给别的花当配角。其实它单独看也很可爱，像撒了一把小星星。'},
+{n:'蒲公英',fam:'菊科',c:'#FFD93D',sh:'cluster',p:0,f:'4–9月',sun:'喜阳',wt:'耐旱',h:'10–30 厘米',u:'野花·药用',k:'种子上顶着一把小伞，风一吹就飞走了。它能飞很远才落地，这是植物传播种子的聪明办法。'},
+{n:'含羞草',fam:'豆科',c:'#E88FC8',sh:'cluster',p:0,f:'7–10月',sun:'喜阳',wt:'喜湿润',h:'30–60 厘米',u:'盆栽·趣味植物',k:'碰一下叶子就合起来，过一会儿又悄悄张开。这其实是它在夜里和遇到风雨时的自我保招。'}];
+
+const TREES=[
+{n:'银杏',fam:'银杏科',c:'#FFD666',cr:'round',ev:'落叶',sun:'喜阳',h:'20–40 米',u:'行道树·观赏·药用',au:'金黄',k:'叶子像一把小扇子，是两亿年前就有的"活化石"。秋天整树金黄，落叶铺得像一层地毯。'},
+{n:'香樟',fam:'樟科',c:'#4CAF6E',cr:'round',ev:'常绿',sun:'喜阳（幼苗耐阴）',h:'20–30 米',u:'行道树·庭荫树·樟脑',au:'不落叶',k:'叶子揉碎有一股清凉的香味，虫子不爱靠近，古人用它做樟木箱子防蛀。'},
+{n:'悬铃木',fam:'悬铃木科',c:'#6FB85E',cr:'umbrella',ev:'落叶',sun:'喜阳',h:'25–35 米',u:'行道树·庭荫树',au:'黄褐',k:'大家都叫它"法国梧桐"，其实它的老家在欧洲和美洲，只是最早种在法租界，名字就这么留下了。'},
+{n:'红枫',fam:'槭树科',c:'#E8552F',cr:'round',ev:'落叶',sun:'半日照（怕暴晒）',h:'3–10 米',u:'庭院·盆栽·观赏',au:'鲜红',k:'秋天叶子里糖分越积越多，被太阳一晒就慢慢变红。夏天它反而怕暴晒，叶子会被烤焦。'},
+{n:'垂柳',fam:'杨柳科',c:'#7FC45E',cr:'weeping',ev:'落叶',sun:'极喜阳',h:'10–18 米',u:'水岸绿化·观赏',au:'淡黄',k:'枝条垂到水面，风一吹像在洗头。古人折柳送别，"柳"和"留"谐音，是舍不得的意思。'},
+{n:'毛白杨',fam:'杨柳科',c:'#6BA85A',cr:'round',ev:'落叶',sun:'极喜阳',h:'20–30 米',u:'防护林·行道树',au:'黄色',k:'长得特别快，几年就能蹿成一棵大树。春天飘的白絮是它的种子，外面裹着一层白毛。'},
+{n:'油松',fam:'松科',c:'#3E7A4E',cr:'cone',ev:'常绿',sun:'极喜阳',h:'15–25 米',u:'造林·观赏·盆景',au:'不落叶',k:'叶子是两根一束的针，冬天也不落。针叶上有一层蜡质，能减少水分蒸发，所以很耐旱。'},
+{n:'侧柏',fam:'柏科',c:'#4E8A57',cr:'cone',ev:'常绿',sun:'喜阳也耐阴',h:'10–20 米',u:'绿篱·造林·盆景',au:'不落叶',k:'叶子是小小的鳞片，一片片紧紧贴在小枝上，不像松树那样是针。它寿命很长，古庙前常有一两百年的老柏树。'},
+{n:'水杉',fam:'杉科',c:'#5E9C58',cr:'cone',ev:'落叶',sun:'喜阳',h:'30–40 米',u:'造林·水岸绿化',au:'红褐',k:'曾经被认为早已灭绝，1941 年在中国湖北被重新发现。它是落叶針葉树里很少见的种类。'},
+{n:'国槐',fam:'豆科',c:'#6FAE5C',cr:'round',ev:'落叶',sun:'喜阳',h:'15–25 米',u:'行道树·庭荫树',au:'淡黄',k:'一串串白花落下来，能把整条路面铺成白色。花蕾晒干后可以入药，也能做黄色染料。'},
+{n:'榆树',fam:'榆科',c:'#6BA455',cr:'round',ev:'落叶',sun:'喜阳',h:'20–30 米',u:'行道树·防护林',au:'黄色',k:'种子圆圆的像一枚枚小铜钱，俗称"榆钱儿"，嫩的时候可以生吃，甜甜的。'},
+{n:'榕树',fam:'桑科',c:'#4FA36A',cr:'umbrella',ev:'常绿',sun:'喜阳',h:'15–25 米（冠幅更大）',u:'庭荫树·行道树',au:'不落叶',k:'树枝上会垂下一条条气根，扎进土里以后会长粗变成新的树干，一棵树能长成一小片林子。'},
+{n:'白桦',fam:'桦木科',c:'#8DC46E',cr:'round',ev:'落叶',sun:'极喜阳',h:'15–25 米',u:'观赏·造林',au:'金黄',k:'树皮是白的，上面一道道黑纹像一只只眼睛。它的树皮很轻、油性大，以前人们用它引火。'},
+{n:'麻栎',fam:'壳斗科',c:'#5E9A55',cr:'round',ev:'落叶',sun:'喜阳',h:'20–30 米',u:'造林·用材',au:'褐红',k:'结的果子叫橡子，头顶戴着一顶有花纹的"小帽子"。它是松鼠最爱囤的过冬粮。'},
+{n:'合欢',fam:'豆科',c:'#7FBF6B',cr:'umbrella',ev:'落叶',sun:'喜阳',h:'6–15 米',u:'行道树·观赏',au:'黄色',k:'叶子到了傍晚会成对合起来，像睡着了，所以也叫"夜合欢"。粉红色的花像一把把小绒扇。'},
+{n:'广玉兰',fam:'木兰科',c:'#3F8A5B',cr:'round',ev:'常绿',sun:'半日照（幼苗耐阴）',h:'15–25 米',u:'行道树·庭荫树',au:'不落叶',k:'叶子厚厚亮亮的，背面有一层锈色的绒毛。它会春末开出很大的白花，藏在绿叶中间很难发现。'},
+{n:'女贞',fam:'木犀科',c:'#4E9457',cr:'round',ev:'常绿',sun:'耐阴',h:'8–15 米',u:'绿篱·行道树',au:'不落叶',k:'冬天会结出一串串紫黑色的小果子，是很多鸟的越冬口粮。它很耐修剪，常被种成一排排绿墙。'},
+{n:'泡桐',fam:'玄参科',c:'#77B75F',cr:'round',ev:'落叶',sun:'喜阳',h:'15–25 米',u:'速生林·行道树',au:'黄色',k:'长得极快，有"一年一棵苗，三年能成材"的说法。而且是先开一串串紫花，花谢了才长叶子。'},
+{n:'苦楝',fam:'楝科',c:'#6FAE63',cr:'round',ev:'落叶',sun:'喜阳',h:'10–20 米',u:'行道树·乡土树种',au:'黄色',k:'果子一串串金黄挂在树枝上，整个冬天都不落。名字里的"苦"是因为树皮和果子都很苦，虫子不爱吃。'},
+{n:'桑树',fam:'桑科',c:'#5FA55B',cr:'round',ev:'落叶',sun:'喜阳',h:'10–20 米',u:'蚕桑·果用',au:'黄色',k:'叶子是蚕宝宝唯一的食物。一串串紫黑色的桑葚，其实是很多小果子挤在一起长成的。'},
+{n:'石榴',fam:'石榴科',c:'#6BAE5C',cr:'round',ev:'落叶',sun:'极喜阳',h:'3–6 米',u:'果树·观赏',au:'金黄',k:'花是火红火红的，像一个个小喇叭。果皮里面藏着上百颗种子，一粒粒挤得整整齐齐。'},
+{n:'柿树',fam:'柿科',c:'#6EA95C',cr:'round',ev:'落叶',sun:'喜阳',h:'8–15 米',u:'果树·观赏',au:'橙红',k:'刚摘下来的柿子很涩，放软了才甜。秋天叶子落尽、满树橙红的果子挂在枝头，特别好看。'},
+{n:'枣树',fam:'鼠李科',c:'#77AE60',cr:'round',ev:'落叶',sun:'极喜阳',h:'8–15 米',u:'果树',au:'黄色',k:'花小得像米粒，却特别招蜜蜂，是重要的蜜源植物。枣树枝上有刺，摘枣要小心扎手。'},
+{n:'核桃',fam:'胡桃科',c:'#6BA55B',cr:'round',ev:'落叶',sun:'喜阳',h:'15–25 米',u:'果树·用材',au:'黄色',k:'我们吃的核桃仁，其实是它的种子。外面那层绿色的厚壳要去掉，里面硬邦邦的才是核桃。"核桃像大脑"的形状巧合让它有了补脑的说法。'},
+{n:'板栗',fam:'壳斗科',c:'#5E9C58',cr:'round',ev:'落叶',sun:'喜阳',h:'10–20 米',u:'果树·用材',au:'黄褐',k:'果子外面裹着一层全是尖刺的壳，掉下来要小心踩。一个刺球里通常藏着三颗栗子。'},
+{n:'棕榈',fam:'棕榈科',c:'#4FA36A',cr:'palm',ev:'常绿',sun:'喜阳也耐半阴',h:'5–10 米',u:'观赏·行道树',au:'不落叶',k:'叶子又大又圆，像一把把竖起来的扇子。它其实不是我们常说的"树"，属于棕榈科，茎里没有年轮。'},
+{n:'椰子树',fam:'棕榈科',c:'#46A06A',cr:'palm',ev:'常绿',sun:'极喜阳',h:'15–25 米',u:'海岸绿化·果用',au:'不落叶',k:'果实外面有一层厚厚的纤维，掉进海里能漂很久都不坏，靠海水把种子送到别的沙滩。'},
+{n:'桉树',fam:'桃金娘科',c:'#6FAE63',cr:'round',ev:'常绿',sun:'极喜阳',h:'20–40 米',u:'速生林·用材',au:'不落叶',k:'长得飞快，叶子揉碎有一股清凉的味道，提炼出来的油就是风油精里的桉叶油。'},
+{n:'皂荚',fam:'豆科',c:'#6BA455',cr:'round',ev:'落叶',sun:'喜阳',h:'15–30 米',u:'乡土树种·洗涤原料',au:'黄色',k:'荚果里的皂素能起泡，古人把它捣碎了洗衣服，是最早的"肥皂"。树枝上长着一簇簇分叉的粗刺。'},
+{n:'樱花树',fam:'蔷薇科',c:'#7FBF6B',cr:'round',ev:'落叶',sun:'喜阳',h:'4–16 米',u:'观赏·行道树',au:'橙红',k:'春天先开花后长叶，满树像一片粉白色的云。花期很短，常常一阵风雨就落尽了。'}];
+
+const LIGHTMAP=[
+ {k:'光的来源',c:'#FFA94D',pts:[
+  {t:'太阳',d:'太阳中心高达一千五百万度，氢原子在那里挤成氦原子，多出来的能量就变成光。这是地球上几乎所有能量的源头。'},
+  {t:'人造光源',d:'白炽灯靠加热灯丝发光，LED 灯靠半导体直接把电变成光，比白炽灯省电得多。'},
+  {t:'火与烛光',d:'燃烧时物质被加热到很高温度，就会发光，这叫热辐射。'},
+  {t:'生物发光',d:'萤火虫、有些深海鱼和会发光的蘑菇，靠身体里的化学反应发光，几乎不发热。'},
+  {t:'激光',d:'激光是一种特别整齐的光，所有光波排着队往同一个方向走，所以能量集中、能切割金属。'}]},
+ {k:'光怎么走',c:'#FFD93D',pts:[
+  {t:'直线传播',d:'光在同样的物质里走直线，所以会有影子；一旦光斜着穿过不同物质就会偏折。'},
+  {t:'光速',d:'光每秒跑约 30 万公里，能绕地球七圈半。相比之下声音每秒只有 340 米，所以先看到闪电后听到雷声。'},
+  {t:'8 分 20 秒',d:'太阳到地球约 1.5 亿公里，阳光要跑 8 分多钟才到。我们看到的阳光，其实是 8 分钟前出发的。'},
+  {t:'反射',d:'光撞到镜子、水面、亮金属会被弹回去，撞进来的角度和弹出去的角度一样大。'},
+  {t:'折射',d:'光从水进空气、或从空气进玻璃时会拐一下，筷子放进水杯里看着像断了一样。'},
+  {t:'散射',d:'空气里的小分子会把光撞散。蓝光最容易被撞散，所以天空是蓝色的。'}]},
+ {k:'遇见东西',c:'#7BD389',pts:[
+  {t:'透明',d:'玻璃、清水、空气，光能几乎全部穿过去，我们能看清后面的东西。'},
+  {t:'半透明',d:'毛玻璃、白纸，光只能穿过一部分，看得见影子却看不清细节。'},
+  {t:'不透明',d:'木头、金属、砖墙，光穿不过去，就在后面留下影子。'},
+  {t:'影子的颜色',d:'影子不是纯黑的。周围的天空会把光散射进影子里，所以影子其实是有颜色的，只是比较暗。'},
+  {t:'日食与月食',d:'月亮跑到太阳和地球中间挡住阳光就是日食；地球的影子落在月亮上就是月食。'},
+  {t:'手影游戏',d:'手挡住光，墙上就会出现手的轮廓，改变手势就能变出小狗、小鸟。'}]},
+ {k:'光的颜色',c:'#4ECDC4',pts:[
+  {t:'白光里藏着七色',d:'阳光看着是白的，其实混着红橙黄绿蓝靛紫七种颜色，牛顿用棱镜第一次把它们分开。'},
+  {t:'色散',d:'不同颜色的光折射程度不同，穿过棱镜就会被拉开，这就是彩虹的原理。'},
+  {t:'色光三原色',d:'红、绿、蓝是光的三原色。红+绿=黄，绿+蓝=青，红+蓝=品红，三色全加=白光。'},
+  {t:'颜料不一样',d:'画画用的颜料三原色是红黄蓝，越混越暗；而色光越混越亮，完全不同。'},
+  {t:'东西为什么有颜色',d:'一个东西的颜色，是它反射出来的那部分光。红苹果吸收了别的颜色，只把红光推回来。'},
+  {t:'晚霞为什么红',d:'傍晚阳光在路上走得更远，蓝光半路就散光了，只剩下红橙光到达我们眼睛。'}]},
+ {k:'光和植物',c:'#5B9DF9',pts:[
+  {t:'光合作用',d:'植物用阳光做动力，把二氧化碳和水变成养分，同时放出氧气。这是地球上氧气的来源。'},
+  {t:'叶子为什么是绿的',d:'叶绿素吃掉红光和蓝紫光，把绿光推回来，所以我们看到的叶子是绿色的。'},
+  {t:'向光性',d:'植物会朝着光的方向弯过去，窗台上的花总是歪向窗户，就是它在追光。'},
+  {t:'喜阳和耐阴',d:'有的植物要全天日照（向日葵），有的只要半日照（杜鹃），还有的怕晒（玉簪、蕨类）。种之前一定要先问阳光。'},
+  {t:'秋天叶子变色',d:'天气变冷，叶绿素慢慢退场，藏在叶子里的黄色和红色就露出来了。'}]},
+ {k:'光和眼睛',c:'#A78BFA',pts:[
+  {t:'我们怎么看见',d:'光进到眼睛里，视网膜上的感光细胞把光变成信号，传给大脑就看见了。'},
+  {t:'三种感光细胞',d:'眼睛里有三种视锥细胞，分别对红、绿、蓝光最敏感，三种加起来就有了全部颜色。'},
+  {t:'夜里为什么看不见',d:'没有光进到眼睛，感光细胞收不到信号，人就看不见东西。'},
+  {t:'瞳孔会变',d:'光线强时瞳孔缩小，光线弱时瞳孔放大，像照相机的光圈自动调节。'},
+  {t:'色盲',d:'有的人缺少某一种感光细胞，就分不清某些颜色，这叫色盲。'}]},
+ {k:'人类用光',c:'#FF6B9D',pts:[
+  {t:'太阳能发电',d:'阳光照在硅片上，把里面的电子推着跑起来，就产生了电，这叫光伏效应。'},
+  {t:'光纤通信',d:'光在细细的玻璃丝里不断反射着往前跑，能把信息以极快的速度传得很远。'},
+  {t:'镜子与眼镜',d:'镜子用反射让我们看清自己；眼镜用折射帮我们把光准确地聚焦在视网膜上。'},
+  {t:'影子与日晷',d:'古人看太阳影子的方向来计时，这就是日晷；影子跟着太阳走，早上朝西、傍晚朝东。'},
+  {t:'光也能治病',d:'医院用特定波段的光照新生儿黄疸， dentist 用的蓝光能快速固化补牙材料。'}]}];
+
+/* 题库：cat = light 光影 / plant 植物 / mix 生活；fp 配花卉图、tp 配树木图 */
+const QUIZ=[
+/* —— 光影 —— */
+{q:'阳光从太阳跑到地球，大约要多久？',cat:'light',o:['8 分 20 秒','8 秒钟','8 小时'],a:0,e:'光跑完这段路要 8 分多钟，所以我们看到的阳光是 8 分钟前出发的。'},
+{q:'影子是怎么产生的？',cat:'light',o:['光被挡住了','光变色了','光跑慢了'],a:0,e:'光沿直线走，遇到挡路的东西过不去，后面那块照不到的地方就是影子。'},
+{q:'彩虹是怎么形成的？',cat:'light',o:['阳光在小水珠里被分开','天空被染了色','云本来就是彩色的'],a:0,e:'阳光钻进小水珠，不同颜色拐弯的程度不同，就被分成七色。'},
+{q:'叶子为什么看起来是绿的？',cat:'light',o:['把绿光反射回来了','把绿光吃掉了','叶子涂了绿颜料'],a:0,e:'叶绿素吃掉红光和蓝紫光，把绿光推回来，所以叶子是绿的。'},
+{q:'光撞到镜子时，入射角和反射角是什么关系？',cat:'light',o:['一样大','一个大一个小','加起来是 90 度'],a:0,e:'撞进来和弹出去的角度一样大，这叫反射定律。'},
+{q:'天空为什么是蓝色的？',cat:'light',o:['蓝光最容易被空气散射','天空是蓝色的布','海水映上去的'],a:0,e:'阳光里蓝光最容易被空气里的小分子撞散，散得到处都是。'},
+{q:'光每秒大约能跑多远？',cat:'light',o:['30 万公里','340 米','3 万公里'],a:0,e:'一秒钟能绕地球七圈半，所以先看见闪电、后听到雷声。'},
+{q:'一天里什么时候影子最长？',cat:'light',o:['太阳低的时候，比如傍晚','正午','阴天'],a:0,e:'太阳越低，光越斜，影子被拉得越长。'},
+{q:'太阳能板是靠什么发电的？',cat:'light',o:['阳光推着电子跑起来','烧水产生蒸汽','风吹动叶片'],a:0,e:'阳光照在硅片上把电子推动起来，这叫光伏效应。'},
+{q:'傍晚的晚霞为什么偏红？',cat:'light',o:['蓝光半路就被散光了','太阳自己变红了','云是红色的'],a:0,e:'傍晚阳光走的路更长，蓝光半路散掉，剩下红橙光到达我们眼睛。'},
+{q:'影子是纯黑色的吗？',cat:'light',o:['不是，里面有散射光','是纯黑的','是彩色的'],a:0,e:'天空散射的光会照进影子里，所以影子有颜色，只是比较暗。'},
+{q:'为什么镜子里的字是反的？',cat:'light',o:['光被原路弹回，左右调换了','镜子坏了','眼睛看错了'],a:0,e:'镜子把光原路弹回来，左右对调，上下并不变。'},
+{q:'白光穿过三棱镜后会怎么样？',cat:'light',o:['分成一条七色光带','变成一束更亮的白光','被吸住出不来了'],a:0,e:'不同颜色拐弯的角度不同，白色阳光就被拆成红橙黄绿蓝靛紫。'},
+{q:'把筷子插进装水的杯子里，看起来像折断了，这是？',cat:'light',o:['光的折射','光的反射','筷子真的断了'],a:0,e:'光从水进入空气时方向会拐一下，我们的眼睛还以为光是直着来的。'},
+{q:'为什么总是先看见闪电、后听到雷声？',cat:'light',o:['光比声音跑得快得多','闪电在雷声前面发生','眼睛比耳朵灵'],a:0,e:'光一秒跑 30 万公里，声音一秒只跑 340 米，所以光总是先到。'},
+{q:'太阳光里，哪种颜色的光拐弯（折射）拐得最少？',cat:'light',o:['红光','紫光','蓝光'],a:0,e:'红光偏折最小、紫光最大，所以彩虹里红色总在最外圈。'},
+{q:'站在太阳下面，你的影子在你的哪一边？',cat:'light',o:['和太阳相反的那一边','和太阳同一边','正下方'],a:0,e:'光是直着走的，身体挡住的那块地方在背对太阳的一侧。'},
+{q:'红色光和绿色光混在一起，会得到什么颜色？',cat:'light',o:['黄色','紫色','白色'],a:0,e:'红+绿=黄，绿+蓝=青，红+蓝=品红，这叫色光三原色。'},
+/* —— 植物 —— */
+{q:'向日葵长大以后，花盘朝向哪里？',cat:'plant',o:['固定朝东','一直跟着太阳转','朝北'],fp:2,a:0,e:'小时候跟着太阳从东转到西；长大就固定朝东，这样清晨能最快晒暖，招来更多蜜蜂。'},
+{q:'荷花叶子为什么不沾水？',cat:'plant',o:['叶面有极小的凸起和一层蜡','叶子涂了油','水是特殊的水'],fp:6,a:0,e:'水珠在上面滚来滚去还能带走灰尘，科学家照它做出防水面料，叫荷叶效应。'},
+{q:'碰一下叶子就会合起来的是哪种植物？',cat:'plant',o:['含羞草','向日葵','仙人掌'],fp:41,a:0,e:'过一会儿又悄悄张开，这是它夜里和遇到风雨时的自我保护。'},
+{q:'摸一摸树干、整棵树都会轻轻抖的"痒痒树"是？',cat:'plant',o:['紫薇','银杏','垂柳'],fp:26,a:0,e:'它的花期特别长，能开整整一个夏天。'},
+{q:'叶子像一把小扇子、被称为"活化石"的树是？',cat:'plant',o:['银杏','梧桐','白桦'],tp:0,a:0,e:'两亿年前就有它了，秋天整树金黄，落叶像铺了一层地毯。'},
+{q:'三角梅那三片红红的"花瓣"，其实是？',cat:'plant',o:['变了色的叶子','真正的花瓣','果实'],fp:29,a:0,e:'真正的花是中间那三根小小的白管子。'},
+{q:'在最冷的时节开花、和松竹并称"岁寒三友"的是？',cat:'plant',o:['梅花','桃花','荷花'],fp:8,a:0,e:'它结的果子很酸，加工后就是我们吃的梅子。'},
+{q:'蒲公英的种子靠什么去远方？',cat:'plant',o:['风','小鸟吃掉','自己弹出去'],fp:40,a:0,e:'种子上顶着一把小伞，风一吹就飞走，能飞很远才落地。'},
+{q:'君子兰最怕什么？',cat:'plant',o:['强光直晒','浇一点水','放在室内'],fp:23,a:0,e:'它很耐阴，放在明亮的散光处最好，暴晒会把叶子烤黄。'},
+{q:'蝴蝶兰那片像"嘴唇"的花瓣，是给谁准备的踏板？',cat:'plant',o:['来采蜜的昆虫','路过的小朋友','给叶子挡雨'],fp:22,a:0,e:'它的根是绿灰色的，能在空气里吸水，所以不能浇太多水。'},
+{q:'古人用香樟木做箱子，是为了什么？',cat:'plant',o:['防蛀虫','更轻便','更好看'],tp:1,a:0,e:'香樟叶揉碎有清凉香味，虫子不爱靠近。'},
+{q:'大家都叫它"法国梧桐"，它真正的名字是？',cat:'plant',o:['悬铃木','梧桐','枫杨'],tp:2,a:0,e:'它老家在欧洲和美洲，最早种在法租界，名字就这么留下了。'},
+{q:'红枫的叶子秋天为什么会变红？',cat:'plant',o:['糖分积得多，被太阳一晒就红了','被人涂了色','叶子冻坏了'],tp:3,a:0,e:'夏天它反而怕暴晒，叶子会被烤焦，所以它其实是半日照植物。'},
+{q:'哪种树会垂下一条条气根，一棵树长成一小片林子？',cat:'plant',o:['榕树','松树','银杏'],tp:11,a:0,e:'气根扎进土里会越长越粗，变成新的树干。'},
+{q:'古人把皂荚捣碎洗衣服，是因为它含有？',cat:'plant',o:['皂素','糖分','淀粉'],tp:28,a:0,e:'皂素能起泡，是最早的"肥皂"。它的树枝上还长着一簇簇分叉的粗刺。'},
+{q:'桑树的叶子是谁唯一的食物？',cat:'plant',o:['蚕宝宝','蝴蝶','蜜蜂'],tp:19,a:0,e:'一串串紫黑色的桑葚，其实是很多小果子挤在一起长成的。'},
+{q:'木槿一朵花能开多久？',cat:'plant',o:['一天','一个月','一整年'],fp:27,a:0,e:'早上张开、晚上就谢，所以也叫"朝开暮落"。'},
+{q:'万寿菊常被种在菜地边上，是为了？',cat:'plant',o:['味道冲，虫子不爱靠近','给菜地挡风','让菜长得更甜'],fp:37,a:0,e:'它的花期长到能开到霜降，是很实用的"护卫花"。'},
+/* —— 生活 —— */
+{q:'过马路时，红绿灯亮红灯表示什么？',cat:'mix',o:['停下等一等','快点走过去','可以转弯'],a:0,e:'红灯停、绿灯行、黄灯等一等，这是我们和所有司机约定好的"光的语言"。'},
+{q:'阴天没有太阳的时候，还会有影子吗？',cat:'mix',o:['有，只是淡淡的','完全没有','影子会变彩色'],a:0,e:'云把阳光散得到处都是，光从四面八方来，影子就被"填"得很淡。'},
+{q:'晚上在路灯下走，你离灯越远，影子会？',cat:'mix',o:['越长','越短','没有变化'],a:0,e:'离灯越远，光越斜地照过来，影子就被拉得越长。'},
+{q:'看电视或看书的时候，房间里最好？',cat:'mix',o:['开一盏小灯，别全黑','关掉所有的灯','开最亮的灯直照屏幕'],a:0,e:'全黑时只有屏幕亮，眼睛最累；有一点点背景光，眼睛才舒服。'},
+{q:'能不能用眼睛直接看太阳？',cat:'mix',o:['绝对不能，会伤眼睛','看一小会儿没关系','戴上墨镜就能看'],a:0,e:'太阳光太强，会烧坏眼睛里最娇嫩的地方，而且不疼，等发现就晚了。'},
+{q:'想看到彩虹，应该朝哪个方向看？',cat:'mix',o:['背对着太阳的那一边','正对着太阳','抬头看正上方'],a:0,e:'阳光要从你身后照到前面的水雾上，再弹回你眼睛里，所以彩虹总在背对太阳那边。'},
+{q:'用放大镜在太阳下对着纸，会发生什么？',cat:'mix',o:['光聚成一点会发热，甚至烧起来','纸会变成彩色','什么也不会发生'],a:0,e:'放大镜把光聚到一个小点上，能量都挤在一起，温度升得很高。玩这个一定要有大人在。'},
+{q:'夏天在太阳底下，穿什么颜色的衣服最凉快？',cat:'mix',o:['浅色的，比如白色','深色的，比如黑色','颜色深浅都一样'],a:0,e:'浅色把阳光反射回去，深色把阳光吸住变成热，所以夏天浅色更凉快。'},
+{q:'白天家里采光最好的房间，一般是朝哪一面的？',cat:'mix',o:['朝南','朝北','朝西的地下室'],a:0,e:'太阳一整天都在南边天空走，朝南的窗户晒到的时间最长。'},
+{q:'为什么教室的窗帘多用浅色的？',cat:'mix',o:['能把阳光柔和地散开来','因为浅色更便宜','因为浅色更厚'],a:0,e:'浅色窗帘既挡强光又能让光漫进来，教室里就不会一边太亮一边太暗。'},
+{q:'晚上开车，对方车灯太亮晃眼，是因为？',cat:'mix',o:['强光直射进眼睛','灯光会拐弯','眼睛太累了'],a:0,e:'所以会车时要换成近光灯，让光往下照，不直接射进对方眼睛。'},
+{q:'医生的手术灯为什么有好几个灯头？',cat:'mix',o:['让影子被别的光填掉，不留阴影','为了更亮一点','为了好看'],a:0,e:'一个灯头会投下影子，好几个从不同方向照，影子就被互相填平了。'},
+{q:'为什么晚上看手机，屏幕会自己变暗？',cat:'mix',o:['它在保护我们的眼睛','手机快没电了','屏幕坏了'],a:0,e:'环境变暗时，屏幕跟着调暗，眼睛就不用一下适应那么大的亮度差。'},
+{q:'玩手影游戏时，墙上的"小狗"其实是？',cat:'mix',o:['手挡住光留下的影子','手发出的光','墙上的图画'],a:0,e:'手离灯越近影子越大，离墙越近影子越清楚，你可以自己试试。'},
+{q:'楼道的声控灯为什么要"听声音"？',cat:'mix',o:['有人经过才亮，人走了就灭，很省电','因为灯喜欢热闹','声音能让灯更亮'],a:0,e:'传感器听到脚步声就通电，安静一会儿自动关掉，这样电就不会白白浪费。'},
+{q:'拍照时眼睛变成红色，是因为？',cat:'mix',o:['闪光从眼底血管上反射回来','眼睛真的变红了','相机坏了'],a:0,e:'黑暗中瞳孔放得很大，闪光一下子照到眼底丰富的血管，红光又被弹回镜头里。'},
+{q:'一天里影子最短的时候是？',cat:'mix',o:['正午','清晨','傍晚'],a:0,e:'正午太阳升到最高，光几乎是直着照下来的，影子就缩到最短。'},
+{q:'舞台上的灯为什么有那么多颜色？',cat:'mix',o:['不同颜色的光叠在一起能变出各种气氛','灯泡本来就是彩色的','为了照得更亮'],a:0,e:'红、绿、蓝三种光按不同多少混在一起，能变出几乎任何颜色，这就是舞台灯光的秘密。'}];
+
+function flowerSVG(o,size){
+  const s=size,cx=s/2,cy=s/2,c=o.c,c2=shade(c,30);let g='';
+  if(o.sh==='spike'){
+    g+=`<line x1="${cx}" y1="${s*0.96}" x2="${cx}" y2="${s*0.16}" stroke="#6FAE5C" stroke-width="${s*0.05}" stroke-linecap="round"/>`;
+    for(let i=0;i<6;i++){const y=s*0.20+i*s*0.115;
+      g+=`<ellipse cx="${cx-s*0.085}" cy="${y}" rx="${s*0.075}" ry="${s*0.055}" fill="${i%2?c2:c}"/>`;
+      g+=`<ellipse cx="${cx+s*0.085}" cy="${y+s*0.035}" rx="${s*0.075}" ry="${s*0.055}" fill="${i%2?c:c2}"/>`;}
+  }else if(o.sh==='cluster'){
+    for(let i=0;i<12;i++){const a=i*Math.PI*2/12,r=s*(i%2?0.15:0.26);
+      g+=`<circle cx="${cx+r*Math.cos(a)}" cy="${cy-4+r*Math.sin(a)}" r="${s*0.075}" fill="${i%2?c:c2}"/>`;}
+    g+=`<circle cx="${cx}" cy="${cy-4}" r="${s*0.07}" fill="${shade(c,-25)}"/>`;
+  }else{
+    const L=o.sh==='double'?2:1;
+    for(let k=0;k<L;k++){
+      const cnt=k?Math.round(o.p*0.6):o.p,rr=s*(k?0.15:0.235),pr=s*(k?0.07:0.10);
+      for(let i=0;i<cnt;i++){const a=i*360/cnt+k*17;
+        g+=`<ellipse cx="${cx}" cy="${cy-rr}" rx="${pr}" ry="${pr*1.95}" fill="${k?c2:c}" transform="rotate(${a} ${cx} ${cy})"/>`;}
+    }
+    g+=`<circle cx="${cx}" cy="${cy}" r="${s*(o.sh==='double'?0.11:0.13)}" fill="#FFF3C4"/>`;
+    g+=`<circle cx="${cx}" cy="${cy}" r="${s*0.05}" fill="${shade(c,-30)}"/>`;
+  }
+  return `<svg viewBox="0 0 ${s} ${s}" width="${s}" height="${s}">${g}</svg>`;
+}
+function treeSVG(o,size){
+  const s=size,cx=s/2,c=o.c,c2=shade(c,-24);let cr='';
+  if(o.cr==='cone'){
+    cr=`<path d="M${cx} ${s*0.12} L${s*0.83} ${s*0.74} L${s*0.17} ${s*0.74} Z" fill="${c}"/>
+      <path d="M${cx} ${s*0.30} L${s*0.74} ${s*0.88} L${s*0.26} ${s*0.88} Z" fill="${c2}"/>`;
+  }else if(o.cr==='palm'){
+    for(let i=0;i<7;i++){const a=(-155+i*31)*Math.PI/180;
+      cr+=`<path d="M${cx} ${s*0.36} q${Math.cos(a)*s*0.34} ${Math.sin(a)*s*0.34-s*0.06} ${Math.cos(a)*s*0.60} ${Math.sin(a)*s*0.40}" stroke="${i%2?c:c2}" stroke-width="${s*0.075}" fill="none" stroke-linecap="round"/>`;}
+  }else if(o.cr==='weeping'){
+    cr=`<ellipse cx="${cx}" cy="${s*0.34}" rx="${s*0.34}" ry="${s*0.21}" fill="${c}"/>`;
+    for(let i=0;i<6;i++){const x=s*0.22+i*s*0.112;
+      cr+=`<path d="M${x} ${s*0.43} q${s*0.035} ${s*0.22} ${-s*0.012} ${s*0.40}" stroke="${c2}" stroke-width="${s*0.03}" fill="none" stroke-linecap="round"/>`;}
+  }else if(o.cr==='umbrella'){
+    cr=`<ellipse cx="${cx}" cy="${s*0.34}" rx="${s*0.42}" ry="${s*0.25}" fill="${c}"/>
+      <ellipse cx="${cx-s*0.18}" cy="${s*0.28}" rx="${s*0.16}" ry="${s*0.12}" fill="${c2}" opacity=".5"/>
+      <ellipse cx="${cx+s*0.17}" cy="${s*0.30}" rx="${s*0.14}" ry="${s*0.10}" fill="${c2}" opacity=".4"/>`;
+  }else{
+    cr=`<circle cx="${cx}" cy="${s*0.35}" r="${s*0.30}" fill="${c}"/>
+      <circle cx="${cx-s*0.16}" cy="${s*0.29}" r="${s*0.15}" fill="${c2}" opacity=".45"/>
+      <circle cx="${cx+s*0.14}" cy="${s*0.31}" r="${s*0.13}" fill="${c2}" opacity=".35"/>`;
+  }
+  const trunk=`<rect x="${cx-s*0.055}" y="${s*0.50}" width="${s*0.11}" height="${s*0.36}" rx="${s*0.03}" fill="#A9764C"/>`;
+  const grass=`<ellipse cx="${cx}" cy="${s*0.90}" rx="${s*0.36}" ry="${s*0.06}" fill="#BFEBC0"/>`;
+  return `<svg viewBox="0 0 ${s} ${s}" width="${s}" height="${s}">${grass}${trunk}${cr}</svg>`;
+}
+
+/* ---------- 主页 ---------- */
+/* ---------- 六个游戏的 Q 版图标 ---------- */
+function lvIcon(n,size){
+  const S=g=>`<svg viewBox="0 0 100 100" width="${size}" height="${size}">${g}</svg>`;
+  if(n===1){let g='';
+    for(let i=0;i<8;i++){const a=i*45*Math.PI/180;
+      g+=`<line x1="${27+17*Math.cos(a)}" y1="${27+17*Math.sin(a)}" x2="${27+23*Math.cos(a)}" y2="${27+23*Math.sin(a)}"
+        stroke="#FFC61A" stroke-width="3.4" stroke-linecap="round"/>`;}
+    g+=`<circle cx="27" cy="27" r="13" fill="#FFD93D"/>`;
+    g+=`<rect x="0" y="80" width="100" height="20" fill="#DFF3E0"/>`;
+    g+=`<path d="M52 82 L80 93 L97 86 L69 77 Z" fill="#3B3355" opacity=".22"/>`;
+    g+=`<rect x="43" y="56" width="9" height="26" rx="4" fill="#B77E4A"/>`;
+    g+=`<circle cx="47.5" cy="48" r="17" fill="#3FC97A"/><circle cx="36" cy="55" r="11" fill="#34B86C"/>
+        <circle cx="59" cy="54" r="11" fill="#5BD98F"/>`;
+    g+=`<circle cx="42" cy="45" r="2" fill="#3B3355"/><circle cx="53" cy="45" r="2" fill="#3B3355"/>`;
+    return S(g);}
+  if(n===2){let g='';
+    g+=`<rect x="0" y="80" width="100" height="20" fill="#F5EADF"/>`;
+    g+=`<circle cx="13" cy="62" r="14" fill="#FFD93D" opacity=".22"/><circle cx="13" cy="62" r="9" fill="#FFD93D"/>`;
+    g+=`<polyline points="15,62 58,62 84,36" fill="none" stroke="#FFC61A" stroke-width="7"
+        stroke-linejoin="round" stroke-linecap="round"/>`;
+    g+=`<rect x="41" y="57" width="34" height="10" rx="5" fill="#CFE6FA" stroke="#3E8BFF" stroke-width="3"
+        transform="rotate(-45 58 62)"/>`;
+    g+=`<rect x="83" y="38" width="4" height="16" rx="2" fill="#3FC97A"/>`;
+    g+=`<ellipse cx="85" cy="34" rx="9" ry="11" fill="#FF5C8A"/>`;
+    g+=`<circle cx="82" cy="31" r="1.6" fill="#3B3355"/><circle cx="88" cy="31" r="1.6" fill="#3B3355"/>`;
+    return S(g);}
+  if(n===3){let g='';
+    g+=`<line x1="3" y1="46" x2="40" y2="46" stroke="#CFC7E0" stroke-width="8" stroke-linecap="round"/>`;
+    g+=`<polygon points="52,28 38,64 66,64" fill="#DCEEFC" stroke="#3E8BFF" stroke-width="2.5"/>`;
+    RAINBOW.forEach((c,i)=>{
+      g+=`<line x1="58" y1="50" x2="97" y2="${13+i*12}" stroke="${c}" stroke-width="${7-i*0.45}"
+        stroke-linecap="round"/>`;});
+    return S(g);}
+  if(n===4){let g='';
+    const CX=50,CY=56,R=33,seg=120,cols=['#3FC97A','#FFC61A','#FF5C8A'];
+    cols.forEach((c,i)=>{
+      const a0=-90+i*seg,a1=-90+(i+1)*seg;
+      const P=a=>[CX+R*Math.cos(a*Math.PI/180),CY+R*Math.sin(a*Math.PI/180)];
+      const A=P(a0),B=P(a1);
+      g+=`<path d="M${CX} ${CY} L${A[0]} ${A[1]} A${R} ${R} 0 0 1 ${B[0]} ${B[1]} Z" fill="${c}" stroke="#fff" stroke-width="3"/>`;});
+    g+=`<circle cx="${CX}" cy="${CY}" r="11" fill="#fff"/>`;
+    g+=`<path d="M${CX} ${CY+7} q11 -11 0 -20 q-11 9 0 20 Z" fill="#2FB26A"/>`;
+    g+=`<path d="M50 22 l9 -15 l-18 0 Z" fill="#3B3355"/>`;
+    return S(g);}
+  if(n===5){let g='';
+    g+=`<rect x="0" y="80" width="100" height="20" fill="#EDE4D6"/>`;
+    g+=`<line x1="50" y1="54" x2="50" y2="36" stroke="#47B25C" stroke-width="4.5" stroke-linecap="round"/>`;
+    g+=`<path d="M50 40 q-10 -5 -8 -15 q8 2 8 11 Z" fill="#5BD98F"/>`;
+    for(let i=0;i<6;i++){const a=i*60*Math.PI/180;
+      g+=`<ellipse cx="${50+11*Math.cos(a)}" cy="${25+11*Math.sin(a)}" rx="6.5" ry="6.5" fill="#FF7EB0"/>`;}
+    g+=`<circle cx="50" cy="25" r="6" fill="#FFC61A"/>`;
+    g+=`<path d="M31 58 L69 58 L64 83 L36 83 Z" fill="#F09A62" stroke="#D37B45" stroke-width="2.5"/>`;
+    g+=`<rect x="27" y="51" width="46" height="11" rx="5" fill="#FFB07C"/>`;
+    return S(g);}
+  let g='';
+  ['#FF3B30','#34C759','#0A84FF'].forEach((c,i)=>{
+    g+=`<circle cx="${26+i*24}" cy="24" r="11" fill="${c}"/>`;
+    g+=`<line x1="${26+i*24}" y1="36" x2="50" y2="56" stroke="${c}" stroke-width="3.2" opacity=".45"/>`;});
+  g+=`<circle cx="50" cy="57" r="10" fill="#fff" stroke="#DCD2EE" stroke-width="2.5"/>`;
+  g+=`<ellipse cx="50" cy="92" rx="27" ry="4" fill="#3B3355" opacity=".12"/>`;
+  g+=`<path d="M26 66 q24 -9 48 0 l-7 19 a30 30 0 0 1 -34 0 Z" fill="#9B84C9" stroke="#7A63A8" stroke-width="2.5"/>`;
+  g+=`<ellipse cx="50" cy="66" rx="24" ry="5" fill="#B7A2DE"/>`;
+  return S(g);
+}
+
+/* ---------- 光影花园（首页大地图） ---------- */
+function gardenMapSVG(){
+  const p=DB[ME],z=zodiacOf(p.stars);
+  const flowerBig=(i,x,y)=>{
+    const L=LEVELS[i],c=RAINBOW[i];
+    const best=(p.best&&p.best[i+1])||0;
+    const stTxt=best?('★'.repeat(best)+'☆'.repeat(3-best)):'未挑战';
+    return `<g class="mk" onclick="start(${i+1})">
+      <g class="lift">
+       <ellipse cx="${x}" cy="${y+70}" rx="42" ry="7" fill="#4E3F70" opacity=".12"/>
+       <g class="sway ${['','sway2','sway3','sway4'][i%4]}">
+        <path d="M${x} ${y+64} q-5 -26 0 -46" stroke="#47B25C" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M${x-2} ${y+42} q-19 -6 -23 -21 q19 2 23 21Z" fill="#5BD98F"/>
+        <path d="M${x+2} ${y+50} q19 -6 23 -21 q-19 2 -23 21Z" fill="#5BD98F"/>
+        ${[0,1,2,3,4,5].map(k=>`<ellipse cx="${x}" cy="${y-10}" rx="13" ry="19" fill="${k%2?shade(c,28):c}" transform="rotate(${k*60} ${x} ${y-22})" stroke="#fff" stroke-width="2"/>`).join('')}
+        <circle cx="${x}" cy="${y-22}" r="13.5" fill="#FFF3C4" stroke="${c}" stroke-width="2.5"/>
+        <circle cx="${x-4.5}" cy="${y-24}" r="1.7" fill="#7A5A30"/><circle cx="${x+4.5}" cy="${y-24}" r="1.7" fill="#7A5A30"/>
+        <path d="M${x-4.5} ${y-19} q4.5 4.5 9 0" stroke="#7A5A30" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+       </g>
+       <rect x="${x-64}" y="${y+74}" width="128" height="46" rx="17" fill="#fff" opacity=".97" stroke="${c}" stroke-width="2.5"/>
+       <text x="${x}" y="${y+93}" text-anchor="middle" font-size="14.5" font-weight="700"
+         fill="${c==='#FFD93D'?'#C98A0A':c}">${L.ic} ${L.t}</text>
+       <text x="${x}" y="${y+112}" text-anchor="middle" font-size="11.5" font-weight="600" fill="#FFB43D">${stTxt}</text>
+      </g></g>`;
+  };
+  const house=(x,y,roofC,bodyC,strokeC,onclick,t,sub)=>{
+    return `<g class="mk" onclick="${onclick}">
+      <g class="lift">
+       <ellipse cx="${x}" cy="${y+64}" rx="62" ry="8" fill="#4E3F70" opacity=".12"/>
+       <rect x="${x-48}" y="${y-6}" width="96" height="66" rx="9" fill="${bodyC}" stroke="${strokeC}" stroke-width="3"/>
+       <path d="M${x-58} ${y-2} L${x} ${y-52} L${x+58} ${y-2} Z" fill="${roofC}"/>
+       <path d="M${x-13} ${y+60} v-24 a13 13 0 0 1 26 0 v24 Z" fill="${strokeC}"/>
+       <circle cx="${x-27}" cy="${y+18}" r="9" fill="#FFF6D9" stroke="${strokeC}" stroke-width="2"/>
+       <circle cx="${x+27}" cy="${y+18}" r="9" fill="#FFF6D9" stroke="${strokeC}" stroke-width="2"/>
+       <rect x="${x+38}" y="${y-46}" width="3" height="22" rx="1.5" fill="#8A82A6"/>
+       <path class="flagWave" d="M${x+41} ${y-46} l16 5 l-16 5 Z" fill="${roofC}"/>
+       <rect x="${x-66}" y="${y+66}" width="132" height="44" rx="15" fill="#fff" opacity=".97" stroke="${strokeC}" stroke-width="2.5"/>
+       <text x="${x}" y="${y+85}" text-anchor="middle" font-size="14.5" font-weight="700" fill="${strokeC}">${t}</text>
+       <text x="${x}" y="${y+103}" text-anchor="middle" font-size="11" fill="#8A82A6">${sub}</text>
+      </g></g>`;
+  };
+  const cloud=(x,y,sc)=>`<g transform="translate(${x},${y}) scale(${sc})" opacity=".92">
+    <circle cx="0" cy="0" r="20" fill="#fff"/><circle cx="26" cy="6" r="16" fill="#fff"/>
+    <circle cx="-24" cy="7" r="15" fill="#fff"/><rect x="-24" y="4" width="52" height="18" rx="9" fill="#fff"/></g>`;
+  const butterfly=(c)=>`<g><ellipse cx="0" cy="0" rx="6" ry="8" fill="${c}"/>
+    <ellipse cx="-7" cy="-4" rx="8" ry="6" fill="${c}" opacity=".75"/><ellipse cx="7" cy="-4" rx="8" ry="6" fill="${c}" opacity=".75"/>
+    <ellipse cx="-6" cy="5" rx="6" ry="4.5" fill="${c}" opacity=".55"/><ellipse cx="6" cy="5" rx="6" ry="4.5" fill="${c}" opacity=".55"/></g>`;
+  let rb='';
+  RAINBOW.forEach((c,i)=>{
+    rb+=`<path d="M${450-(300-i*6)} 470 A${300-i*6} ${300-i*6} 0 0 1 ${450+(300-i*6)} 470"
+      fill="none" stroke="${c}" stroke-width="7" opacity=".34"/>`;});
+  let rays='';
+  for(let i=0;i<12;i++){const a=i*30*Math.PI/180;
+    rays+=`<line x1="${92+48*Math.cos(a)}" y1="${86+48*Math.sin(a)}" x2="${92+60*Math.cos(a)}" y2="${86+60*Math.sin(a)}"
+      stroke="#FFD93D" stroke-width="6" stroke-linecap="round" opacity=".85"/>`;}
+  const unTxt=(function(){
+    const un=QUIZ.filter(x=>!(p.quizSeen||[]).includes(x.q)).length;
+    return un?('还有 '+un+' 道没见过'):('全都见过啦，厉害！');})();
+  const zSub=z?('已解锁 '+z+' / 12 只萌宝'):'集星星换彩虹萌宝';
+  return `<svg viewBox="0 0 900 560" preserveAspectRatio="xMidYMid meet">
+   <defs>
+     <linearGradient id="gdSky" x1="0" y1="0" x2="0" y2="1">
+       <stop offset="0" stop-color="#9FE1FF"/><stop offset="1" stop-color="#FFF8DC"/></linearGradient>
+     <radialGradient id="gdSun"><stop offset="0" stop-color="#FFF6B0"/><stop offset="1" stop-color="#FFC44D"/></radialGradient>
+     <linearGradient id="gdGr" x1="0" y1="0" x2="0" y2="1">
+       <stop offset="0" stop-color="#C6F2B8"/><stop offset="1" stop-color="#8FD98A"/></linearGradient>
+     <linearGradient id="gdWalk" x1="0" y1="0" x2="0" y2="1">
+       <stop offset="0" stop-color="#FFF3CE"/><stop offset="1" stop-color="#FFDFA4"/></linearGradient>
+   </defs>
+   <rect width="900" height="560" fill="url(#gdSky)"/>
+   ${rays}<circle cx="92" cy="86" r="42" fill="url(#gdSun)"/>
+   ${rb}
+   ${cloud(180,74,1)}${cloud(720,58,.85)}${cloud(835,120,.62)}${cloud(430,46,.6)}
+   <ellipse cx="150" cy="530" rx="290" ry="90" fill="#A9E3A0" opacity=".65"/>
+   <ellipse cx="760" cy="540" rx="300" ry="100" fill="#9BDC95" opacity=".65"/>
+   <rect x="0" y="470" width="900" height="90" fill="url(#gdGr)"/>
+   <path d="M450 560 C 480 508 345 498 292 470 C 236 440 322 400 402 392 C 482 384 432 336 382 312 C 332 288 362 250 422 240 C 456 234 450 212 450 198"
+     fill="none" stroke="url(#gdWalk)" stroke-width="42" stroke-linecap="round"/>
+   <path d="M450 560 C 480 508 345 498 292 470 C 236 440 322 400 402 392 C 482 384 432 336 382 312 C 332 288 362 250 422 240"
+     fill="none" stroke="#F2D896" stroke-width="4" stroke-dasharray="16 14" stroke-linecap="round" opacity=".8"/>
+
+   <!-- 知识城堡 · 光影问答 -->
+   <g class="mk" onclick="startQuiz()">
+     <g class="lift">
+      <polygon points="450,30 388,120 512,120" fill="#FFF3A8" opacity=".3"/>
+      <ellipse cx="450" cy="212" rx="96" ry="10" fill="#4E3F70" opacity=".12"/>
+      <rect x="382" y="96" width="34" height="86" rx="8" fill="#FFEAF1" stroke="#F7B6CE" stroke-width="2.5"/>
+      <path d="M374 100 L399 66 L424 100 Z" fill="#FF9CC0"/>
+      <rect x="484" y="96" width="34" height="86" rx="8" fill="#FFEAF1" stroke="#F7B6CE" stroke-width="2.5"/>
+      <path d="M476 100 L501 66 L526 100 Z" fill="#FF9CC0"/>
+      <rect x="398" y="120" width="104" height="76" rx="10" fill="#FFF2F7" stroke="#F7B6CE" stroke-width="3"/>
+      <rect x="426" y="64" width="48" height="100" rx="9" fill="#FFDCE9" stroke="#F7B6CE" stroke-width="2.5"/>
+      <path d="M418 70 L450 26 L482 70 Z" fill="#FF7EB0"/>
+      <line x1="450" y1="26" x2="450" y2="8" stroke="#8A82A6" stroke-width="2.5"/>
+      <path class="flagWave" d="M450 8 l20 7 l-20 7 Z" fill="#FFC61A"/>
+      <path d="M450 196 v-30 a17 17 0 0 1 34 0 v30 Z" fill="#B8679B"/>
+      <circle cx="416" cy="146" r="8" fill="#FFF0A8" stroke="#F7B6CE" stroke-width="2"/>
+      <circle cx="484" cy="146" r="8" fill="#FFF0A8" stroke="#F7B6CE" stroke-width="2"/>
+      <path d="M450 88 l5 10.5 l11.5 1.5 l-8.5 8 l2 11.5 l-10-5.5 l-10 5.5 l2-11.5 l-8.5-8 l11.5-1.5 Z" fill="#FFC61A" stroke="#EFAF12" stroke-width="1.2"/>
+      <rect x="360" y="204" width="180" height="46" rx="17" fill="#fff" opacity=".97" stroke="#B8679B" stroke-width="2.5"/>
+      <text x="450" y="223" text-anchor="middle" font-size="15.5" font-weight="800" fill="#B8679B">🏰 知识城堡 · 光影问答</text>
+      <text x="450" y="241" text-anchor="middle" font-size="11" fill="#8A82A6">${unTxt} · 答对就有一颗星</text>
+     </g>
+   </g>
+
+   <!-- 光影百科小屋 -->
+   ${house(135,185,'#2FC5C0','#E8FBFF','#1FA9A5',"go('sWiki')",'📚 光影百科','植物图鉴 · 知识图谱')}
+   <!-- 生肖馆小屋 -->
+   ${house(816,150,'#FF8FB5','#FFF2F7','#E0558F',"go('sBadge')",'🎠 生肖馆',zSub)}
+
+   ${flowerBig(0,150,415)}${flowerBig(1,335,428)}${flowerBig(2,600,420)}
+   ${flowerBig(3,790,388)}${flowerBig(4,85,352)}${flowerBig(5,700,268)}${flowerBig(6,285,205)}
+
+   <!-- 蝴蝶 -->
+   <g class="fly1" transform="translate(360,300)"><g transform="scale(1)">${butterfly('#FF9CC0')}</g></g>
+   <g class="fly2" transform="translate(640,220)">${butterfly('#8FB8FF')}</g>
+
+   <!-- 我的生肖萌宝站在小路上 -->
+   <g class="cmp"><ellipse cx="452" cy="530" rx="34" ry="7" fill="#4E3F70" opacity=".16"/>
+     <g transform="translate(418,462)">${zodiacSVG(Math.max(0,z-1),z>0,70)}</g></g>
+  </svg>`;
+}
+
+function renderHome(){
+  const p=DB[ME],s=p.stars,z=zodiacOf(s);
+  $('#who').textContent='你好，'+ME;
+  $('#homeStars').textContent='⭐ '+s;
+  $('#stoneStars').textContent=s;
+  $('#stoneTip').textContent=z?('第 '+z+' 位萌宝：'+ZODIAC[z-1].n):('再攒 '+(CYCLE-s)+' 颗星，第一位萌宝就来啦');
+  $('#homeTip').textContent=z<12
+    ?('玩游戏、答对题都能攒星星——再攒 '+nextGap(s)+' 颗，「'+ZODIAC[z].n+'」就来找你；每次通关奖励一样，随时可以重玩喜欢的关卡')
+    :'十二只彩虹萌宝已经全部到齐啦，了不起！';
+  $('#gardenMap').innerHTML=gardenMapSVG();
+  $('#quickGrid').innerHTML=LEVELS.map((L,i)=>
+    `<button class="qbtn" onclick="start(${i+1})"><span class="qic">${L.ic}</span>${L.t}</button>`).join('')
+    +`<button class="qbtn castle" onclick="startQuiz()"><span class="qic">🏰</span>知识城堡 · 光影问答</button>`;
+}
+
+function renderBadge(){
+  const p=DB[ME],s=p.stars,z=zodiacOf(s);
+  $('#badgeTip').textContent='已解锁 '+z+' / 12 只萌宝；再攒 '+nextGap(s)+' 颗星星，'+(z<12?(ZODIAC[z].n+'就来找你'):('可以继续刷新最好成绩！'));
+  $('#zgrid').innerHTML=ZODIAC.map((zz,i)=>
+    `<div class="bitem">${zodiacSVG(i,i<z,72)}<div style="font-size:12px;margin-top:2px">${i<z?zz.n:'第 '+(i+1)+' 只'}</div>
+      <div class="muted" style="font-size:11px">${(i+1)*CYCLE} 星解锁</div></div>`).join('');
+}
+function renderRank(){
+  const list=Object.keys(DB).map(k=>({n:k,s:DB[k].stars})).sort((a,b)=>b.s-a.s).slice(0,10);
+  $('#rankTable').innerHTML=`<tr><th>名次</th><th>名字</th><th>星星</th><th>萌宝</th></tr>`+
+    list.map((r,i)=>`<tr class="${r.n===ME?'me':''}"><td>${i+1}</td><td>${r.n}</td><td>${r.s}</td>
+      <td>${zodiacOf(r.s)} / 12</td></tr>`).join('');
+}
+
+/* ---------- 游戏 ---------- */
+let CUR=0,HINTFN=null;
+function start(n){
+  CUR=n;const L=LEVELS[n-1],K=KNOW[n-1];
+  $('#gTitle').textContent='第 '+n+' 关 · '+L.t;
+  $('#gSub').textContent=L.d;
+  $('#knowList').innerHTML=K.l.map(x=>'<li>'+x+'</li>').join('');
+  $('#knowKey').textContent=K.k;
+  $('#ctrl').innerHTML='';$('#stage').innerHTML='';$('#gMsg').textContent='';
+  HINTFN=null;
+  [lv1,lv2,lv3,lv4,lv5,lv6,lv7][n-1]();
+  renderGameHud();go('sGame');
+}
+function renderGameHud(){$('#gStar').textContent='星星 '+DB[ME].stars;}
+function hint(){HU=1;if(HINTFN)HINTFN();}
+/* ---------- 通用：三星评价与结算 ---------- */
+let GT0=0,GERR=0,GDONE=false,GTIMER=null,HU=0;
+function gBegin(){GT0=Date.now();GERR=0;GDONE=false;HU=0;if(GTIMER){clearInterval(GTIMER);GTIMER=null;}}
+function gSec(){return Math.max(1,Math.round((Date.now()-GT0)/1000));}
+function finishLevel(n,tip){
+  if(GDONE)return;GDONE=true;
+  if(GTIMER){clearInterval(GTIMER);GTIMER=null;}
+  let s=Math.max(1,Math.min(3,n|0));
+  if(HU)s=Math.max(1,s-1);
+  const p=DB[ME];
+  p.best=p.best||{};if(s>(p.best[CUR]||0))p.best[CUR]=s;
+  p.cleared[CUR]=(p.cleared[CUR]||0)+1;saveDB(DB);
+  const get=s;
+  addRawStar(get);
+  const K=KNOW[CUR-1],L=LEVELS[CUR-1];
+  showPop(`<h2>${L.t} 通关！</h2>
+    <div class="stars3">${[0,1,2].map(i=>`<span class="${i<s?'on':''}">★</span>`).join('')}</div>
+    <div class="muted">用时 ${gSec()} 秒　·　失误 ${GERR} 次${HU?'　·　用了提示 -1 星':''}</div>
+    <div class="muted">拿到 <b>${get}</b> 颗星星（每次通关都是这个奖励，随时可以再来玩）</div>
+    <p style="font-size:clamp(13px,1.9vh,16px);line-height:1.8;margin-top:8px">${tip}</p>
+    <div class="knowKey">${K.k}</div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn p" onclick="closePop();start(CUR)">再玩一次</button>
+      <button class="btn" onclick="closePop();go('sHome')">回花园</button></div>`);
+}
+function svgPoint(svg,e){const r=svg.getBoundingClientRect(),vb=svg.viewBox.baseVal;
+  return{x:(e.clientX-r.left)/r.width*vb.width,y:(e.clientY-r.top)/r.height*vb.height};}
+
+/* 第 1 关：影子捉迷藏（5 题，难度递进） */
+function lv1(){
+  gBegin();
+  const qs=[
+   {t:8.5,q:'影子歪向了右边，太阳在哪一边？',o:['东边（早上）','头顶正上方（中午）','西边（下午）'],a:0},
+   {t:12,q:'影子又小又圆，缩在脚底下，太阳在哪？',o:['东边（早上）','头顶正上方（中午）','西边（下午）'],a:1},
+   {t:16.5,q:'影子歪向了左边，太阳在哪一边？',o:['东边（早上）','头顶正上方（中午）','西边（下午）'],a:2},
+   {t:18,q:'影子拉得又长又斜，说明太阳很低很低。大约几点？',o:['早上 6 点','中午 12 点','傍晚 6 点'],a:2},
+   {t:6.8,q:'影子也很长，但歪的方向和上一题正好相反。大约几点？',o:['早上 7 点','中午 12 点','傍晚 6 点'],a:0}];
+  let idx=0,bad=0;
+  $('#stage').innerHTML=`<svg id="s1" viewBox="0 0 700 400">
+   <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+     <stop offset="0" stop-color="#BFE3FF"/><stop offset="1" stop-color="#FFF3D9"/></linearGradient>
+     <radialGradient id="sg"><stop offset="0" stop-color="#FFF0A8"/><stop offset="1" stop-color="#FFA94D"/></radialGradient></defs>
+   <rect x="0" y="0" width="700" height="290" fill="url(#sky)"/>
+   <rect x="0" y="290" width="700" height="110" fill="#BFEBC0"/>
+   <ellipse cx="350" cy="292" rx="300" ry="14" fill="#A8DEAA"/>
+   <circle id="sun" cx="100" cy="90" r="30" fill="url(#sg)"/>
+   <circle id="sun2" cx="100" cy="90" r="30" fill="none" stroke="#FFD93D" stroke-width="6" opacity=".5"/>
+   <g><rect x="336" y="228" width="28" height="66" rx="8" fill="#C99A63"/>
+     <circle cx="350" cy="196" r="58" fill="#7BD389"/><circle cx="306" cy="214" r="36" fill="#8FDD9A"/>
+     <circle cx="394" cy="214" r="36" fill="#8FDD9A"/><circle cx="350" cy="170" r="34" fill="#9BE3A8"/>
+     <circle cx="330" cy="188" r="6" fill="#3A3355"/><circle cx="370" cy="188" r="6" fill="#3A3355"/>
+     <path d="M338 204 q12 12 24 0" stroke="#3A3355" stroke-width="3" fill="none" stroke-linecap="round"/></g>
+   <g id="shadow" opacity=".22">
+     <rect x="336" y="228" width="28" height="66" rx="8" fill="#3A3355"/>
+     <circle cx="350" cy="196" r="58" fill="#3A3355"/><circle cx="306" cy="214" r="36" fill="#3A3355"/>
+     <circle cx="394" cy="214" r="36" fill="#3A3355"/><circle cx="350" cy="170" r="34" fill="#3A3355"/></g>
+  </svg>`;
+  $('#ctrl').innerHTML=`<div class="gbar"><span class="gpill" id="p1pg">第 1 / 5 题</span>
+      <span class="gpill warn" id="p1er">失误 0 次</span></div>
+    <h3 id="qtext" style="font-size:clamp(17px,2.6vh,24px)">看影子，猜太阳在哪</h3><div id="opts" style="display:grid;gap:8px"></div>
+    <div style="margin-top:8px"><button class="btn p sm" id="playDay">▶ 看一天变化</button>
+    <div class="muted" id="tval">点一下，太阳会自己从早走到晚</div></div>`;
+  function draw(t){
+    const a=Math.PI*(t-6)/12,s=Math.sin(a);
+    const x=60+(t-6)/12*560,y=250-190*s;
+    $('#sun').setAttribute('cx',x);$('#sun').setAttribute('cy',y);
+    $('#sun2').setAttribute('cx',x);$('#sun2').setAttribute('cy',y);
+    const k=0.25+1.35*(1-s),dir=(350-x)>0?1:-1,deg=dir*32*(1-s);
+    $('#shadow').setAttribute('transform',`translate(350,294) rotate(${deg}) scale(1,${k}) translate(-350,-294)`);
+    $('#tval').textContent='现在是 '+String(Math.floor(t)).padStart(2,'0')+':'+String(Math.round((t%1)*60)).padStart(2,'0');
+  }
+  let dayT=12,playing=false,dayRaf=null;
+  function dayLoop(ts){
+    if(!playing)return;
+    dayT+=0.045;if(dayT>18)dayT=6;
+    draw(dayT);dayRaf=requestAnimationFrame(dayLoop);
+  }
+  $('#playDay').onclick=function(){
+    if(!playing){playing=true;dayT=6.2;this.textContent='⏸ 停一停';dayRaf=requestAnimationFrame(dayLoop);}
+    else{playing=false;cancelAnimationFrame(dayRaf);this.textContent='▶ 再看一遍';}
+  };
+  function upd(){
+    $('#p1pg').textContent='第 '+Math.min(idx+1,5)+' / 5 题';
+    $('#p1er').textContent='失误 '+GERR+' 次';
+  }
+  function ask(){
+    if(idx>=qs.length){
+      let st=3-GERR;if(gSec()>120)st--;
+      finishLevel(Math.max(1,st),'影子一会长一会短、一会左一会右，都是因为太阳一直在天空里走。掌握这条规律，你就能用影子估时间啦。');
+      return;}
+    const q=qs[idx];bad=0;upd();
+    $('#qtext').textContent=q.q;
+    playing=false;if(dayRaf)cancelAnimationFrame(dayRaf);
+    $('#playDay').textContent='▶ 看一天变化';
+    draw(q.t);
+    $('#opts').innerHTML=q.o.map((o,i)=>`<button class="opt" data-i="${i}">${o}</button>`).join('');
+    $$('#opts .opt').forEach(b=>b.onclick=()=>{
+      if(+b.dataset.i===q.a){b.classList.add('ok');idx++;upd();setTimeout(ask,600);}
+      else{b.classList.add('no');b.textContent+='　再看看影子的方向和长短';
+        if(!bad){bad=1;GERR++;}upd();}});
+  }
+  ask();
+  HINTFN=()=>{$('#gMsg').textContent='太阳低→影子长，太阳高→影子短；影子永远歪向太阳的反方向。用提示会少一颗星哦。';};
+}
+
+/* 第 2 关：彩虹记忆翻牌（同色配对，纯点击） */
+function lv2(){
+  gBegin();
+  const FACES=[
+   {n:'红光',c:'#FF5A5F'},{n:'橙光',c:'#FFA94D'},{n:'黄光',c:'#FFD93D'},
+   {n:'绿光',c:'#7BD389'},{n:'蓝光',c:'#5B9DF9'},{n:'紫光',c:'#A78BFA'}];
+  let cards,open=[],lock=0,found=0;
+  $('#stage').innerHTML='<div class="memoGrid" id="memoG"></div>';
+  $('#ctrl').innerHTML=`<div class="gbar"><span class="gpill" id="p2pg">配对 0 / 6</span>
+      <span class="gpill warn" id="p2er">失误 0 次</span></div>
+    <h3>翻牌找朋友</h3>
+    <div class="muted">每张牌后面藏着一颗彩色光球。点开两张，<b>颜色一样</b>的就是好朋友！</div>
+    <div class="muted bigMsg" id="s2msg"></div>`;
+  const deck=[];
+  FACES.forEach(f=>{deck.push({n:f.n,c:f.c});deck.push({n:f.n,c:f.c});});
+  cards=shuffle(deck);
+  $('#memoG').innerHTML=cards.map((c,i)=>{
+    const tc=(c.c==='#FFD93D')?'#C98A0A':c.c;
+    let rays='';
+    for(let k=0;k<8;k++){const a=k*45*Math.PI/180;
+      rays+=`<line x1="${50+30*Math.cos(a)}" y1="${50+30*Math.sin(a)}" x2="${50+38*Math.cos(a)}" y2="${50+38*Math.sin(a)}" stroke="${c.c}" stroke-width="5" stroke-linecap="round"/>`;}
+    return `<div class="mcard" data-i="${i}"><div class="inner">
+      <div class="mface bk">✦</div>
+      <div class="mface ft" style="background:${c.c}1F;border-color:${c.c}">
+        <svg viewBox="0 0 100 100" style="width:60%;height:auto">${rays}
+          <circle cx="50" cy="50" r="24" fill="${c.c}"/>
+          <circle cx="43" cy="46" r="3" fill="#fff"/><circle cx="57" cy="46" r="3" fill="#fff"/>
+          <path d="M42 56 q8 8 16 0" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </svg>
+        <div style="color:${tc};font-size:clamp(13px,2vh,17px);font-weight:800">${c.n}</div>
+      </div>
+    </div></div>`;}).join('');
+  $$('#memoG .mcard').forEach(el=>{
+    el.onclick=()=>{
+      if(lock||el.classList.contains('flip')||el.classList.contains('done'))return;
+      const c=cards[+el.dataset.i];
+      el.classList.add('flip');open.push({el:el,c:c});
+      if(open.length===2){
+        lock=1;const A=open[0],B=open[1];
+        if(A.c.n===B.c.n){
+          found++;
+          $('#p2pg').textContent='配对 '+found+' / 6';
+          $('#s2msg').textContent='一对好朋友：'+A.c.n+' 和 '+B.c.n;
+          setTimeout(()=>{
+            A.el.classList.add('done');B.el.classList.add('done');
+            open=[];lock=0;
+            if(found===FACES.length){
+              let st=3-GERR;if(gSec()>120)st--;
+              finishLevel(Math.max(1,st),'红、橙、黄、绿、蓝、紫，彩虹里的每一种颜色都是一束光。两束光混在一起，还会变出新颜色呢！');
+            }
+          },480);
+        }else{
+          GERR++;$('#p2er').textContent='失误 '+GERR+' 次';
+          $('#s2msg').textContent='颜色不一样，记住它们在哪里～';
+          setTimeout(()=>{A.el.classList.remove('flip');B.el.classList.remove('flip');open=[];lock=0;},820);
+        }
+      }
+    };
+  });
+  HINTFN=()=>{$('#gMsg').textContent='先点开一张，记住它的颜色，再去翻一样颜色那张。用提示会少一颗星哦。';};
+}
+
+/* 第 3 关：追光小能手（限时点中目标颜色的光球，纯点击） */
+function lv3(){
+  gBegin();
+  let target=0,hits=0,orbs={},spawnT=null,over=false;
+  const R=34,NM=['红','橙','黄','绿','青','蓝','紫'];
+  const SLOTS=[];
+  for(let r=0;r<2;r++)for(let c=0;c<4;c++)SLOTS.push({x:110+c*160,y:140+r*140});
+  $('#stage').innerHTML=`<svg id="s3" viewBox="0 0 700 420">
+   <defs>
+    <linearGradient id="g3" x1="0" y1="0" x2="1" y2="1">
+     <stop offset="0" stop-color="#FFF6E5"/><stop offset="1" stop-color="#EFEAFF"/></linearGradient>
+    <radialGradient id="halo"><stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+   </defs>
+   <rect width="700" height="420" fill="url(#g3)"/>
+   <ellipse cx="90" cy="56" rx="64" ry="36" fill="#fff" opacity=".55"/>
+   <ellipse cx="620" cy="84" rx="74" ry="40" fill="#fff" opacity=".45"/>
+   <g id="pots"></g>
+   <g id="orbs"></g>
+  </svg>`;
+  $('#ctrl').innerHTML=`<div class="gbar"><span class="gpill" id="p3pg">点中 0 / 8</span>
+      <span class="gpill warn" id="p3er">失误 0 次</span></div>
+    <div class="bTask" style="align-items:center;gap:12px"><span id="p3dot" style="width:46px;height:46px;border-radius:50%;display:inline-block;background:#ddd;flex:none"></span>
+      <span class="bt" id="p3t" style="font-size:clamp(19px,3.2vh,28px)"></span></div>
+    <div class="muted">花盆里会咕嘟咕嘟冒出七彩光球，只点任务牌上那个颜色的！</div>
+    <div class="muted bigMsg" id="s3msg"></div>`;
+  $('#pots').innerHTML=SLOTS.map(s=>`
+    <g><ellipse cx="${s.x}" cy="${s.y+70}" rx="52" ry="10" fill="#4E3F70" opacity=".12"/>
+    <path d="M${s.x-34} ${s.y+34} L${s.x+34} ${s.y+34} L${s.x+24} ${s.y+68} L${s.x-24} ${s.y+68} Z" fill="#C98A55"/>
+    <rect x="${s.x-40}" y="${s.y+26}" width="80" height="14" rx="7" fill="#E0A26B"/></g>`).join('');
+  function newTarget(){
+    target=Math.floor(Math.random()*7);
+    $('#p3dot').style.background=RAINBOW[target];
+    $('#p3dot').style.boxShadow='0 0 18px '+RAINBOW[target];
+    $('#p3t').textContent='点中【'+NM[target]+'色】的光球';
+  }
+  function spawn(){
+    if(over)return;
+    const free=SLOTS.map((s,i)=>i).filter(i=>!orbs[i]);
+    if(!free.length)return;
+    const i=free[Math.floor(Math.random()*free.length)];
+    const ci=Math.floor(Math.random()*7);
+    const s=SLOTS[i],g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('data-ci',ci);g.style.cursor='pointer';
+    g.innerHTML=`<circle cx="${s.x}" cy="${s.y}" r="54" fill="url(#halo)"/>
+      <circle class="body" cx="${s.x}" cy="${s.y}" r="${R}" fill="${RAINBOW[ci]}" stroke="#fff" stroke-width="4"/>
+      <circle cx="${s.x-9}" cy="${s.y-9}" r="8" fill="#fff" opacity=".55"/>`;
+    g.style.transformBox='fill-box';g.style.transformOrigin='center';
+    g.style.animation='orbIn .3s ease-out';
+    g.addEventListener('click',()=>hit(i,ci,g));
+    $('#orbs').appendChild(g);
+    orbs[i]=1;
+    setTimeout(()=>{if(orbs[i]){g.remove();delete orbs[i];}},1700);
+  }
+  function hit(i,ci,g){
+    if(over||!orbs[i])return;
+    if(ci===target){
+      hits++;$('#p3pg').textContent='点中 '+hits+' / 8';
+      $('#s3msg').textContent='太准啦！'+NM[target]+'光到手';
+      g.style.animation='orbOut .28s ease-in forwards';
+      delete orbs[i];setTimeout(()=>g.remove(),280);
+      if(hits>=8){
+        over=true;clearInterval(spawnT);
+        setTimeout(()=>{let st=3-GERR;if(gSec()>90)st--;
+          finishLevel(Math.max(1,st),'白光里藏着七种颜色，棱镜能把它们分开。雨后的小水珠就是天然的棱镜，所以彩虹总在雨后出现。');},420);
+      }else if(hits%3===0){newTarget();$('#s3msg').textContent='任务换颜色啦，看清楚！';}
+    }else{
+      GERR++;$('#p3er').textContent='失误 '+GERR+' 次';
+      $('#s3msg').textContent='哎呀，这是'+NM[ci]+'光，不是'+NM[target]+'光';
+      g.style.animation='orbOut .25s ease-in forwards';
+      delete orbs[i];setTimeout(()=>g.remove(),250);
+    }
+  }
+  newTarget();
+  spawnT=setInterval(spawn,650);spawn();
+  HINTFN=()=>{$('#gMsg').textContent='先看清任务牌的颜色再出手，光球会停留一小会儿，不着急。用提示会少一颗星哦。';};
+}
+
+/* 第 4 关：叶子大转盘（5 个任务，按停圆盘） */
+function lv4(){
+  gBegin();
+  const C=[{n:'红光',c:'#FF5A5F',f:'吃'},{n:'橙光',c:'#FFA94D',f:'吃'},
+   {n:'黄光',c:'#FFD93D',f:'推'},{n:'绿光',c:'#7BD389',f:'推'},
+   {n:'青光',c:'#4ECDC4',f:'推'},{n:'蓝光',c:'#5B9DF9',f:'吃'},{n:'紫光',c:'#A78BFA',f:'吃'}];
+  const TASKS=[
+   {t:'转到【绿光】',ok:function(i){return i===3;},tip:'绿光被叶子推回来，所以我们看到叶子是绿的。'},
+   {t:'转到叶子会【吃掉】的光',ok:function(i){return C[i].f==='吃';},tip:'红光、橙光、蓝紫光都被叶绿素吃掉，拿去做养分。'},
+   {t:'转到【红光】',ok:function(i){return i===0;},tip:'红光是叶绿素最爱吃的光之一。'},
+   {t:'转到叶子会【推回来】的光',ok:function(i){return C[i].f==='推';},tip:'黄、绿、青被推回来，混在一起就是我们眼睛收到的颜色。'},
+   {t:'转到【蓝光】',ok:function(i){return i===5;},tip:'蓝光也被吃掉啦，叶子要拿它来做饭。'}];
+  let ti=0,rot=0,run=false,raf=null,last=0,lock=0,missed=0;
+  const seg=360/7,SPEED=118;
+  $('#stage').innerHTML=`<svg id="s4" viewBox="0 0 420 420">
+   <defs><filter id="sh"><feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#7A5AA8" flood-opacity=".25"/></filter></defs>
+   <circle cx="210" cy="210" r="196" fill="#fff" filter="url(#sh)"/>
+   <g id="wheel"></g>
+   <circle cx="210" cy="210" r="30" fill="#fff" stroke="#EFE6F8" stroke-width="4"/>
+   <circle cx="210" cy="210" r="9" fill="#FFA94D"/>
+   <path d="M210 52 l16 -30 l-32 0 z" fill="#3A3355"/>
+  </svg>`;
+  $('#ctrl').innerHTML=`<div class="gbar"><span class="gpill" id="p4pg">第 1 / 5 个任务</span>
+      <span class="gpill warn" id="p4er">失误 0 次</span></div>
+    <div class="bTask"><span class="bt" id="p4t" style="font-size:clamp(19px,3.2vh,28px)">任务</span></div>
+    <button class="btn p" id="spin">转起来</button>
+    <div id="res" class="muted">按下「转起来」，看准了再按「停！」</div>`;
+  const R=172;
+  $('#wheel').innerHTML=C.map((o,i)=>{
+    const a0=-90+i*seg,a1=-90+(i+1)*seg;
+    const P=a=>[210+R*Math.cos(a*Math.PI/180),210+R*Math.sin(a*Math.PI/180)];
+    const A=P(a0),B=P(a1);
+    return `<path d="M210 210 L${A[0]} ${A[1]} A${R} ${R} 0 0 1 ${B[0]} ${B[1]} Z" fill="${o.c}" stroke="#fff" stroke-width="4"/>`;
+  }).join('')+C.map((o,i)=>{const a=(-90+(i+0.5)*seg)*Math.PI/180;
+    return `<text x="${210+118*Math.cos(a)}" y="${210+118*Math.sin(a)+8}" text-anchor="middle"
+      font-size="22" font-weight="700" fill="#fff">${o.n}</text>`;}).join('');
+  const w=$('#wheel');
+  w.style.transformBox='view-box';w.style.transformOrigin='210px 210px';w.style.transition='none';
+  function upd(){
+    $('#p4pg').textContent='第 '+Math.min(ti+1,5)+' / 5 个任务';
+    $('#p4er').textContent='失误 '+GERR+' 次';
+    $('#p4t').textContent=ti<5?TASKS[ti].t:'全部完成！';
+  }
+  function landed(){const a=((-rot)%360+360)%360;return Math.min(6,Math.floor(a/seg));}
+  function loop(ts){if(!run)return;if(!last)last=ts;
+    rot+=(ts-last)/1000*SPEED;last=ts;
+    w.style.transform='rotate('+rot+'deg)';raf=requestAnimationFrame(loop);}
+  $('#spin').onclick=function(){
+    if(lock)return;
+    if(!run){run=true;last=0;$('#spin').textContent='停！';$('#spin').className='btn o';
+      $('#res').textContent='转动中……看准了就按停！';raf=requestAnimationFrame(loop);return;}
+    run=false;cancelAnimationFrame(raf);last=0;
+    $('#spin').textContent='转起来';$('#spin').className='btn p';
+    const i=landed(),o=C[i];
+    if(TASKS[ti].ok(i)){
+      lock=1;
+      $('#res').innerHTML=`<b style="color:${o.c}">${o.n}</b>　任务完成！${TASKS[ti].tip}`;
+      setTimeout(function(){
+        ti++;
+        if(ti>=TASKS.length){
+          let st=3-GERR;if(gSec()>180)st--;
+          finishLevel(Math.max(1,st),'叶绿素吃掉红光和蓝紫光，把绿光让给我们 —— 所以我们看到的叶子是绿的。');
+        }else{missed=0;upd();lock=0;$('#res').textContent='下一个任务来啦，再转一次';}
+      },1400);
+    }else{
+      if(!missed){missed=1;GERR++;}
+      $('#res').innerHTML=`停在 <b style="color:${o.c}">${o.n}</b>，叶子会${o.f==='吃'?'吃掉它':'把它推回来'}。换一个试试`;
+      upd();
+    }
+  };
+  upd();
+  HINTFN=()=>{$('#gMsg').textContent='指针停在哪一格，就是哪一束光。别急，慢慢等它转过来。用提示会少一颗星哦。';};
+}
+
+/* 第 5 关：花花晒太阳（点击选择，替代原来的拖动版） */
+function lv5(){
+  gBegin();
+  const LIST=[
+   {f:2,go:'sun',tip:'它的花盘从小跟着太阳转，长大也天天要晒太阳。'},
+   {f:23,go:'shade',tip:'它怕强光直晒，放在明亮的散光处最舒服。'},
+   {f:22,go:'shade',tip:'它长在大树底下，从树叶缝里接一点点光就够。'},
+   {f:35,go:'sun',tip:'它长在地中海的烈日下，晒得越足香得越浓。'},
+   {f:41,go:'sun',tip:'它张开小叶子晒太阳，碰一碰才会害羞地合拢。'}];
+  let idx=0;
+  $('#stage').innerHTML=`<div style="width:100%;height:100%;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:8px;background:linear-gradient(180deg,#FFF9EC,#EDFBF2);
+    border-radius:20px;padding:10px" id="sunStage"></div>`;
+  $('#ctrl').innerHTML=`<div class="gbar"><span class="gpill" id="p5pg">第 1 / 5 株</span>
+      <span class="gpill warn" id="p5er">失误 0 次</span></div>
+    <h3>它该去哪儿？</h3>
+    <div style="display:grid;gap:10px">
+      <button class="btn p" id="btnSun" style="font-size:clamp(15px,2.2vh,20px);padding:14px">☀️ 放到太阳下</button>
+      <button class="btn o" id="btnShade" style="font-size:clamp(15px,2.2vh,20px);padding:14px">🌿 放到遮阴处</button>
+    </div>
+    <div class="muted" id="s5msg"></div>`;
+  function show(){
+    const it=LIST[idx],o=FLOWERS[it.f];
+    $('#p5pg').textContent='第 '+(idx+1)+' / 5 株';
+    $('#sunStage').innerHTML=`
+      <div style="display:flex;gap:14px;align-items:center">
+        <div style="font-size:clamp(26px,5vh,44px)">☀️</div>
+        <div id="plantPic">${flowerSVG(o,140)}</div>
+        <div style="font-size:clamp(26px,5vh,44px)">🌳</div>
+      </div>
+      <div style="font-size:clamp(18px,2.8vh,26px);font-weight:800">${o.n}</div>
+      <div style="max-width:460px;text-align:center;font-size:clamp(15px,2.2vh,20px);font-weight:600;color:var(--ink)">${it.tip}</div>`;
+  }
+  function lockButtons(){$('#btnSun').disabled=true;$('#btnShade').disabled=true;}
+  function unlockButtons(){$('#btnSun').disabled=false;$('#btnShade').disabled=false;}
+  function pick(v){
+    const it=LIST[idx],o=FLOWERS[it.f],pic=$('#plantPic');
+    if(v===it.go){
+      pic.style.animation='happy .7s ease';
+      $('#s5msg').innerHTML='<b style="color:var(--green)">舒服极啦！</b>它喜欢「'+(o.sun||'')+'」';
+      lockButtons();
+      setTimeout(()=>{
+        idx++;
+        if(idx>=LIST.length){
+          let st=3-GERR;if(gSec()>120)st--;
+          finishLevel(Math.max(1,st),'喜阳还是怕晒，是认识一朵花的第一件事。放对了地方，花才会开得漂亮。');
+        }else{unlockButtons();show();$('#s5msg').textContent='';}
+      },1100);
+    }else{
+      GERR++;$('#p5er').textContent='失误 '+GERR+' 次';
+      pic.style.animation='wilt .5s ease';
+      $('#s5msg').textContent='它蔫了一下……再读读它的小提示？';
+    }
+  }
+  $('#btnSun').onclick=()=>pick('sun');
+  $('#btnShade').onclick=()=>pick('shade');
+  show();
+  HINTFN=()=>{$('#gMsg').textContent='爱晒的：天天朝着太阳；怕晒的：喜欢树荫和散光。用提示会少一颗星哦。';};
+}
+
+/* ---------- 百科（四块） ---------- */
+let WTAB='map',WIDX=0;
+function wikiData(){
+  return WTAB==='map'?LIGHTMAP:(WTAB==='light'?LIGHT:(WTAB==='flower'?FLOWERS:TREES));}
+function mindSVG(){
+  const cx=350,cy=250,R=168,N=LIGHTMAP.length;let g=`<circle cx="${cx}" cy="${cy}" r="54" fill="#fff" stroke="#EADFF6" stroke-width="4"/>
+   <text x="${cx}" y="${cy+9}" text-anchor="middle" font-size="26" font-weight="700" fill="#3A3355">光</text>`;
+  LIGHTMAP.forEach((m,k)=>{
+    const ang=(-90+k*360/N)*Math.PI/180,x=cx+R*Math.cos(ang),y=cy+R*Math.sin(ang),sel=WIDX===k;
+    g+=`<path d="M${cx} ${cy} L${x} ${y}" stroke="${m.c}" stroke-width="${sel?4:2.5}" opacity="${sel?.85:.4}" stroke-linecap="round"/>`;});
+  LIGHTMAP.forEach((m,k)=>{
+    const ang=(-90+k*360/N)*Math.PI/180,x=cx+R*Math.cos(ang),y=cy+R*Math.sin(ang),sel=WIDX===k;
+    g+=`<g style="cursor:pointer" onclick="wikiShow(${k})">
+      <circle cx="${x}" cy="${y}" r="${sel?47:41}" fill="${sel?m.c:'#fff'}" stroke="${m.c}" stroke-width="3.5"/>
+      <text x="${x}" y="${y+6}" text-anchor="middle" font-size="15" font-weight="700" fill="${sel?'#fff':'#3A3355'}">${m.k}</text></g>`;});
+  return `<svg viewBox="0 0 700 500" style="width:100%;height:100%">${g}</svg>`;
+}
+function careTip(o,isF){
+  const sn=o.sun||'';
+  if(sn.indexOf('耐阴')>=0)return'它很怕强烈的阳光，放在散射光或半阴的地方最合适。';
+  if(sn.indexOf('半日照')>=0)return'每天给半天柔和的阳光就够了，烈日下要遮一遮。';
+  if(sn.indexOf('半阴')>=0)return sn.indexOf('喜阳')>=0?'阳光充足最好，但中午的烈日要稍微遮挡。':'不要暴晒，明亮的散光处最舒服。';
+  if(sn.indexOf('喜阳')>=0)return'它需要充足的阳光，每天最好能晒到 4 小时以上。';
+  return'先看看它放在屋里哪个位置最亮，再决定要不要挪动。';
+}
+function renderWiki(){
+  const tb=[['map','光影知识图谱'],['light','十万个为什么'],['flower','花卉图鉴'],['tree','树木图鉴']];
+  $('#wikiTabs').innerHTML=tb.map(([k,nm])=>
+    `<button class="tab ${WTAB===k?'on':''}" onclick="wikiTab('${k}')">${nm}</button>`).join('');
+  const d=wikiData();
+  if(WTAB==='map'){
+    $('#wikiList').innerHTML=d.map((o,i)=>
+      `<div class="witem" onclick="wikiShow(${i})">
+        <div style="width:14px;height:14px;border-radius:50%;background:${o.c};flex:none"></div>
+        <div><div class="nm">${o.k}</div><div class="fm">${o.pts.length} 个小知识</div></div></div>`).join('');
+  }else if(WTAB==='light'){
+    $('#wikiList').innerHTML=d.map((o,i)=>
+      `<div class="witem" onclick="wikiShow(${i})">
+        <div><div class="nm" style="font-size:13px">${o.q}</div><div class="fm">${o.t}</div></div></div>`).join('');
+  }else{
+    const isF=WTAB==='flower';
+    $('#wikiList').innerHTML=d.map((o,i)=>
+      `<div class="witem" onclick="wikiShow(${i})">
+        <div>${isF?flowerSVG(o,34):treeSVG(o,34)}</div>
+        <div><div class="nm">${o.n}</div><div class="fm">${o.fam} · ${o.sun}</div></div></div>`).join('');
+  }
+  wikiShow(Math.min(WIDX,d.length-1));
+}
+function wikiTab(k){WTAB=k;WIDX=0;renderWiki();}
+function wikiShow(i){
+  WIDX=i;const d=wikiData(),o=d[i];
+  if(WTAB==='map'){
+    $('#wikiDet').innerHTML=`<h2 style="color:${o.c}">${o.k}</h2>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;margin-top:8px">
+        <div style="flex:0 0 300px;max-width:100%">${mindSVG()}</div>
+        <div style="flex:1;min-width:230px">
+          ${o.pts.map(x=>`<div style="margin-bottom:10px">
+            <div style="font-weight:700;font-size:clamp(13px,1.7vh,16px);color:${o.c}">${x.t}</div>
+            <div class="muted" style="font-size:clamp(12px,1.6vh,15px)">${x.d}</div></div>`).join('')}
+        </div></div>`;
+  }else if(WTAB==='light'){
+    $('#wikiDet').innerHTML=`<h2>${o.q}</h2><span class="tag">${o.t}</span>
+      <p style="font-size:clamp(13px,1.85vh,17px);line-height:1.9;margin-top:10px">${o.a}</p>
+      <div class="muted" style="margin-top:12px">第 ${i+1} / ${d.length} 个为什么</div>`;
+  }else{
+    const isF=WTAB==='flower';
+    const rows=isF?[['科属',o.fam],['花期',o.f],['日照',o.sun],['水分',o.wt],['身高',o.h],['用途',o.u]]
+                  :[['科属',o.fam],['类型',o.ev],['日照',o.sun],['树高',o.h],['秋色',o.au],['用途',o.u]];
+    $('#wikiDet').innerHTML=`<div class="big">
+      <div style="flex:0 0 auto">${isF?flowerSVG(o,170):treeSVG(o,170)}</div>
+      <div style="flex:1;min-width:240px">
+        <h2>${o.n}</h2>
+        <div>${rows.map(r=>`<span class="tag">${r[0]}：${r[1]}</span>`).join('')}</div>
+        <p style="font-size:clamp(13px,1.8vh,16px);line-height:1.9;margin-top:10px">${o.k}</p>
+        <div class="knowKey">养它要注意：${careTip(o,isF)}</div>
+        <div class="muted" style="margin-top:10px">第 ${i+1} / ${d.length} 种${isF?'花':'树'}</div>
+      </div></div>`;
+  }
+}
+function openWiki(tab,i){WTAB=tab;WIDX=i;renderWiki();go('sWiki');}
+
+/* ---------- 问答 ---------- */
+let QSET=[],QI=0,QR=0;
+const QCAT={light:{n:'光影',c:'#FFB43D'},plant:{n:'植物',c:'#6FBF5F'},mix:{n:'生活',c:'#7C9CF5'}};
+const QCATS=['light','plant','mix'];
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=a[i];a[i]=a[j];a[j]=t;}return a;}
+/* 抽题：三类各出几道；没答过的优先；答错的会再考一次；答过的先不出现 */
+function pickQuiz(n){
+  const p=DB[ME];
+  p.quizSeen=p.quizSeen||[];p.quizWrong=p.quizWrong||[];
+  const seen={},wrong={};
+  p.quizSeen.forEach(k=>seen[k]=1);p.quizWrong.forEach(k=>wrong[k]=1);
+  const per=Math.max(1,Math.round(n/QCATS.length));
+  const rPer=Math.max(1,Math.floor(per/3));     // 每一类最多"回收"几道答错过的题
+  let out=[],reset=false;
+  QCATS.forEach(c=>{
+    let fresh=QUIZ.filter(q=>q.cat===c&&!seen[q.q]);
+    if(!fresh.length){                      // 这一类都答过了 → 清空该类已答记录，重新轮一轮
+      p.quizSeen=p.quizSeen.filter(k=>!(QUIZ.find(x=>x.q===k&&x.cat===c)));
+      reset=true;fresh=QUIZ.filter(q=>q.cat===c);
+    }
+    const retry=shuffle(QUIZ.filter(q=>q.cat===c&&wrong[q.q])).slice(0,rPer);
+    const add=shuffle(fresh.filter(q=>!wrong[q.q])).slice(0,per-retry.length);
+    out=out.concat(retry,add);
+  });
+  if(reset)saveDB(DB);
+  return shuffle(out).slice(0,n);
+}
+function startQuiz(){
+  QSET=pickQuiz(9);QI=0;QR=0;
+  go('sQuiz');quizShow();
+}
+function quizShow(){
+  const p=DB[ME];
+  $('#quizStat').textContent='星星 '+p.stars;
+  if(QI>=QSET.length){
+    const rate=Math.round(QR/QSET.length*100);
+    const word=rate>=90?'太厉害了，你就是光影小博士！':(rate>=60?'很不错，再练练就更棒了～':'再去百科逛逛，回来一定能行！');
+    $('#quizBox2').innerHTML=`<h2>答完啦</h2>
+      <div class="qscore">${QR}<span>/ ${QSET.length}</span></div>
+      <p style="font-size:clamp(14px,2vh,18px)">这一轮得到 <b>${QR}</b> 颗星星。${word}</p>
+      <div class="row" style="margin-top:10px"><button class="btn p" onclick="startQuiz()">再来一轮</button>
+      <button class="btn" onclick="go('sHome')">回花园</button></div>`;
+    renderHome();return;
+  }
+  const q=QSET[QI];
+  const opts=shuffle(q.o.map((t,i)=>({t,i})));      // 选项乱序，正确答案不再总在同一个位置
+  const ai=opts.findIndex(o=>o.i===q.a);
+  const pic=(q.fp!=null)?flowerSVG(FLOWERS[q.fp],92):((q.tp!=null)?treeSVG(TREES[q.tp],92):'');
+  $('#quizBox2').innerHTML=`<div class="qmeta">
+      <span class="qcat" style="background:${QCAT[q.cat].c}">${QCAT[q.cat].n}</span>
+      <span class="muted">第 ${QI+1} / ${QSET.length} 题</span></div>
+    ${pic?`<div class="qpic">${pic}</div>`:''}
+    <div class="qtitle">${q.q}</div>
+    ${opts.map((x,i)=>`<button class="qopt" data-i="${i}">${x.t}</button>`).join('')}
+    <div class="muted" id="qexp"></div>`;
+  $$('#quizBox2 .qopt').forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.i,p2=DB[ME];
+    p2.quizSeen=p2.quizSeen||[];p2.quizWrong=p2.quizWrong||[];
+    if(!p2.quizSeen.includes(q.q))p2.quizSeen.push(q.q);
+    if(i===ai){
+      b.classList.add('ok');QR++;addRawStar(1);
+      p2.quizRight=(p2.quizRight||0)+1;
+      p2.quizWrong=p2.quizWrong.filter(k=>k!==q.q);
+    }else{
+      b.classList.add('no');$$('#quizBox2 .qopt')[ai].classList.add('ok');
+      if(!p2.quizWrong.includes(q.q))p2.quizWrong.push(q.q);
+    }
+    saveDB(DB);
+    $$('#quizBox2 .qopt').forEach(x=>x.disabled=true);
+    $('#qexp').innerHTML='<b>'+(i===ai?'答对啦！':'再想想～')+'</b> '+q.e;
+    $('#quizStat').textContent='星星 '+DB[ME].stars;
+    setTimeout(()=>{QI++;quizShow();},i===ai?1700:2600);
+  });
+}
+function addRawStar(k){
+  const p=DB[ME],bz=zodiacOf(p.stars);
+  p.stars+=k;saveDB(DB);
+  const az=zodiacOf(p.stars);
+  renderHome();renderGameHud();
+  if(az>bz)popZodiac(az);
+}
+
+/* 第 6 关：调色魔法锅（大按钮调色，目标超大显示） */
+function lv6(){
+  gBegin();
+  const T=[{n:'红色',c:'#FF5A5F',s:['R']},{n:'黄色',c:'#FFD93D',s:['R','G']},
+   {n:'青色',c:'#4ECDC4',s:['G','B']},{n:'品红',c:'#FF6B9D',s:['R','B']},
+   {n:'白光',c:'#FFFFFF',s:['R','G','B']}];
+  const V={R:'#FF3B30',G:'#34C759',B:'#0A84FF'};
+  const NM={R:'红光',G:'绿光',B:'蓝光'};
+  const LIM=[16,18,20,22,26];
+  let on={R:0,G:0,B:0},step=0,W=0,left=0;
+  const mix=()=>'#'+[(on.R?255:0),(on.G?255:0),(on.B?255:0)]
+    .map(x=>x.toString(16).padStart(2,'0')).join('').toUpperCase();
+  $('#stage').innerHTML=`<svg id="s6" viewBox="0 0 700 420">
+   <defs><linearGradient id="g6" x1="0" y1="0" x2="1" y2="1">
+     <stop offset="0" stop-color="#FFF6E5"/><stop offset="1" stop-color="#EFEAFF"/></linearGradient>
+     <filter id="glow"><feGaussianBlur stdDeviation="10" result="b"/>
+       <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+   <rect width="700" height="420" fill="url(#g6)"/>
+   <g id="bubbles"></g>
+   <ellipse cx="350" cy="356" rx="200" ry="18" fill="#4E3F70" opacity=".12"/>
+   <path d="M195 244 L505 244 L468 354 L232 354 Z" fill="#B98A55"/>
+   <rect x="180" y="228" width="340" height="26" rx="13" fill="#C99A63"/>
+   <ellipse id="pot" cx="350" cy="241" rx="163" ry="24" fill="#EDE7F3" filter="url(#glow)"/>
+   <text id="potName" x="350" y="322" text-anchor="middle" font-size="42" font-weight="800" fill="#3A3355">关着灯</text>
+   <text x="350" y="392" text-anchor="middle" font-size="17" fill="#8A82A6" id="potMix">点右边的彩色按钮，把光加进锅里</text>
+  </svg>`;
+  let bub='';
+  for(let i=0;i<6;i++){
+    bub+=`<circle class="bb" cx="${290+i*26}" cy="236" r="${5+(i%3)*2.5}" fill="#EDE7F3" style="animation-delay:${(i*0.35).toFixed(2)}s"/>`;}
+  $('#bubbles').innerHTML=bub;
+  $('#ctrl').innerHTML=`<div class="gbar"><span class="gpill" id="p6pg">第 1 / 5 锅</span>
+      <span class="gpill warn" id="p6er">失误 0 次</span></div>
+    <div style="height:10px;background:#EFEAF6;border-radius:999px;overflow:hidden;margin:2px 0 10px">
+      <div id="s6bar" style="height:100%;width:100%;background:linear-gradient(90deg,#FFB43D,#FF6B9D);transition:width .12s"></div></div>
+    <div class="bTask" style="align-items:center;gap:14px;padding:10px 14px">
+      <span id="p6tgt" style="width:56px;height:56px;border-radius:50%;flex:none;background:#ddd;
+        box-shadow:0 0 0 3px #fff,0 0 0 5px #E3DAF0,0 4px 10px rgba(120,90,160,.2)"></span>
+      <div style="line-height:1.15">
+        <div style="font-size:12px;color:#8A82A6;font-weight:700">这一锅要调出</div>
+        <div id="p6t" style="font-size:clamp(22px,3.6vh,32px);font-weight:800">红色</div>
+      </div>
+      <div id="p6dots" style="margin-left:auto;display:flex;gap:5px;font-size:20px;font-weight:800"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+      <button class="btn" id="btnR" onclick="toggleLamp('R')" style="font-size:clamp(15px,2.3vh,21px);padding:13px 4px;font-weight:800">🔴 红光</button>
+      <button class="btn" id="btnG" onclick="toggleLamp('G')" style="font-size:clamp(15px,2.3vh,21px);padding:13px 4px;font-weight:800">🟢 绿光</button>
+      <button class="btn" id="btnB" onclick="toggleLamp('B')" style="font-size:clamp(15px,2.3vh,21px);padding:13px 4px;font-weight:800">🔵 蓝光</button>
+    </div>
+    <button class="btn o" id="btnClear" onclick="clearPot()" style="width:100%;font-size:clamp(14px,2vh,18px);padding:11px;margin-top:8px">🧹 清空这锅，重新加光</button>
+    <div class="muted bigMsg" id="s6msg" style="margin-top:6px"></div>`;
+  function darkTxt(c){return c==='#000000'||(parseInt(c.slice(1,3),16)*0.299+parseInt(c.slice(3,5),16)*0.587+parseInt(c.slice(5,7),16)*0.114)>150;}
+  function updBtns(){
+    ['R','G','B'].forEach(k=>{
+      const b=$('#btn'+k);if(!b)return;
+      if(on[k]){b.style.background=V[k];b.style.color='#fff';b.style.borderColor='transparent';}
+      else{b.style.background='#fff';b.style.color='#B0A6C4';b.style.borderColor='var(--line)';}
+    });
+  }
+  function updDots(){
+    $('#p6dots').innerHTML=T.map((x,i)=>{
+      if(i<step)return `<span style="color:${x.c==='#FFFFFF'?'#B0A6C4':x.c}">✓</span>`;
+      if(i===step)return `<span style="color:#3A3355">●</span>`;
+      return `<span style="color:#D9D2E8">○</span>`;}).join('');
+  }
+  function paint(){
+    const e1=$('#s6time')||{};
+    left=Math.max(0,left);
+    const bar=$('#s6bar');if(bar)bar.style.width=(left/LIM[Math.min(step,LIM.length-1)]*100)+'%';
+  }
+  function tick(){left-=0.1;if(left<=0){clearInterval(GTIMER);GTIMER=null;timeUp();}else paint();}
+  function begin(){
+    $('#p6pg').textContent='第 '+(Math.min(step+1,5))+' / 5 锅';
+    left=LIM[Math.min(step,LIM.length-1)];
+    if(GTIMER)clearInterval(GTIMER);
+    GTIMER=setInterval(tick,100);paint();
+  }
+  function timeUp(){
+    if(W)return;
+    GERR++;on={R:0,G:0,B:0};
+    $('#p6er').textContent='失误 '+GERR+' 次';
+    $('#s6msg').textContent='时间到！这一锅重新来过';
+    draw();
+    left=LIM[Math.min(step,LIM.length-1)];
+    if(GTIMER)clearInterval(GTIMER);
+    GTIMER=setInterval(tick,100);paint();
+  }
+  function draw(){
+    const c=mix();
+    const pot=$('#pot');if(!pot)return;
+    pot.setAttribute('fill',c==='#000000'?'#EDE7F3':c);
+    const hit=T.find(x=>x.s.slice().sort().join('')===Object.keys(on).filter(k=>on[k]).sort().join('')&&Object.keys(on).some(k=>on[k]));
+    $('#potName').textContent=(c==='#000000')?'关着灯':(hit?hit.n+'！':'混一混…');
+    $('#potName').setAttribute('fill',darkTxt(c)?'#3A3355':'#fff');
+    const list=Object.keys(on).filter(k=>on[k]).map(k=>NM[k]);
+    $('#potMix').textContent=list.length?('锅里加了：'+list.join(' + ')):'点右边的彩色按钮，把光加进锅里';
+    const tg=T[Math.min(step,T.length-1)];
+    $('#p6tgt').style.background=tg.c;
+    $('#p6t').textContent=tg.n;
+    $('#p6t').style.color=(tg.c==='#FFFFFF'||tg.c==='#FFD93D')?'#C98A0A':tg.c;
+    updBtns();updDots();
+    if(step<T.length&&!W){
+      const tk=T[step].s.slice().sort().join('');
+      const ck=Object.keys(on).filter(k=>on[k]).sort().join('');
+      if(ck===tk&&ck){
+        step++;
+        if(step>=T.length&&!W){W=1;
+          if(GTIMER){clearInterval(GTIMER);GTIMER=null;}
+          $('#s6msg').textContent='五锅全部调好啦！';
+          setTimeout(function(){let st=3-GERR;if(gSec()>200)st--;
+            finishLevel(Math.max(1,st),'色光越混越亮：红+绿=黄，绿+蓝=青，红+蓝=品红，三种全开就是白光。');},700);
+        }else{
+          Object.keys(on).forEach(k=>on[k]=0);
+          $('#s6msg').textContent='对啦！进入下一锅';
+          begin();draw();
+        }
+      }
+    }
+  }
+  window.toggleLamp=k=>{if(W)return;on[k]=on[k]?0:1;draw();
+    const tk=T[Math.min(step,T.length-1)].s.slice().sort().join('');
+    const ck=Object.keys(on).filter(x=>on[x]).sort().join('');
+    if(ck!==tk)$('#s6msg').textContent=(ck?'再看看，还差什么光？':'加一束光试试');};
+  window.clearPot=()=>{if(W)return;on={R:0,G:0,B:0};$('#s6msg').textContent='清空啦，重新加光';draw();};
+  begin();draw();
+  HINTFN=()=>{$('#gMsg').textContent='照着大圆点的颜色按按钮：黄色=红光+绿光，青色=绿光+蓝光，白光=三个全开。用提示会少一颗星哦。';};
+}
+
+/* 第 7 关：彩虹点灯（记住亮灯顺序再复现，纯点击） */
+function lv7(){
+  gBegin();
+  const POS=[[110,150],[310,150],[510,150],[190,300],[350,300],[510,300],[350,64]];
+  const NM=['红','橙','黄','绿','青','蓝','紫'];
+  let seq=[],round=0,inputIdx=0,accept=false,showing=false;
+  $('#stage').innerHTML=`<svg id="s7" viewBox="0 0 700 420">
+   <defs><linearGradient id="g7" x1="0" y1="0" x2="0" y2="1">
+     <stop offset="0" stop-color="#2C2A4A"/><stop offset="1" stop-color="#4A3F78"/></linearGradient></defs>
+   <rect width="700" height="420" rx="18" fill="url(#g7)"/>
+   <circle cx="70" cy="60" r="2.5" fill="#fff" opacity=".8"/><circle cx="640" cy="90" r="2" fill="#fff" opacity=".7"/>
+   <circle cx="580" cy="40" r="1.8" fill="#fff" opacity=".6"/><circle cx="120" cy="360" r="2" fill="#fff" opacity=".5"/>
+   <circle cx="660" cy="330" r="2.4" fill="#fff" opacity=".7"/><circle cx="40" cy="220" r="1.8" fill="#fff" opacity=".6"/>
+   <g id="lamps7"></g>
+   <text x="350" y="398" text-anchor="middle" font-size="20" font-weight="700" fill="#FFE9B8" id="l7txt">看彩虹灯怎么亮，然后照着点</text>
+  </svg>`;
+  $('#ctrl').innerHTML=`<div class="gbar"><span class="gpill" id="p7pg">第 1 / 6 轮</span>
+      <span class="gpill warn" id="p7er">失误 0 次</span></div>
+    <h3>彩虹点灯</h3>
+    <div class="muted">夜晚的彩虹城堡要亮灯啦！彩虹灯会按顺序闪，记住顺序，照着点一遍。</div>
+    <button class="btn o sm" id="l7replay" style="margin-top:4px">👀 再看一遍顺序</button>
+    <div class="muted" id="s7msg"></div>`;
+  $('#lamps7').innerHTML=POS.map((p,i)=>`
+    <g class="lamp" data-i="${i}" style="cursor:pointer">
+      <circle class="glow" cx="${p[0]}" cy="${p[1]}" r="56" fill="${RAINBOW[i]}" opacity="0"/>
+      <circle class="body" cx="${p[0]}" cy="${p[1]}" r="40" fill="${RAINBOW[i]}" opacity=".3" stroke="#fff" stroke-width="3"/>
+      <circle cx="${p[0]-12}" cy="${p[1]-12}" r="9" fill="#fff" opacity=".35"/>
+    </g>`).join('');
+  function flash(i,ms){
+    return new Promise(res=>{
+      const g=$$('#lamps7 .lamp')[i];
+      if(!g){res();return;}
+      g.querySelector('.body').style.filter='brightness(2)';
+      g.querySelector('.glow').setAttribute('opacity','.5');
+      setTimeout(()=>{g.querySelector('.body').style.filter='';
+        g.querySelector('.glow').setAttribute('opacity','0');
+        setTimeout(res,160);},ms);
+    });
+  }
+  async function playSeq(){
+    showing=true;accept=false;inputIdx=0;
+    $('#l7txt').textContent='彩虹灯亮起来啦，仔细看……';
+    for(const s of seq){await flash(s,430);}
+    $('#l7txt').textContent='到你了，按顺序点亮它们！';
+    showing=false;accept=true;
+  }
+  $('#l7replay').onclick=()=>{if(!showing&&!GDONE)playSeq();};
+  function nextRound(){
+    round++;
+    if(round>6){
+      let st=3-GERR;if(gSec()>150)st--;
+      finishLevel(Math.max(1,st),'红绿灯、灯塔、信号灯，都是用光的颜色和闪动来传递消息——光的颜色会说话。');
+      return;
+    }
+    $('#p7pg').textContent='第 '+round+' / 6 轮';
+    seq.push(Math.floor(Math.random()*7));
+    playSeq();
+  }
+  $$('#lamps7 .lamp').forEach(g=>{
+    g.addEventListener('click',async()=>{
+      if(!accept)return;
+      const i=+g.dataset.i;
+      accept=false;
+      await flash(i,240);
+      if(seq[inputIdx]===i){
+        inputIdx++;
+        if(inputIdx>=seq.length){
+          $('#s7msg').textContent='点对啦！准备下一轮';
+          setTimeout(nextRound,900);
+        }else accept=true;
+      }else{
+        GERR++;$('#p7er').textContent='失误 '+GERR+' 次';
+        $('#s7msg').textContent='点错啦，再看一遍顺序';
+        setTimeout(playSeq,900);
+      }
+    });
+  });
+  HINTFN=()=>{$('#gMsg').textContent='记颜色出现的先后顺序：第 1 个、第 2 个……别慌，慢慢点。用提示会少一颗星哦。';};
+  nextRound();
+}
+
+/* 导航增强 */
+const _go=go;
+go=function(id){if(id!=='sGame'&&GTIMER){clearInterval(GTIMER);GTIMER=null;}
+  if(id==='sBadge')renderBadge();if(id==='sRank')renderRank();if(id==='sWiki')renderWiki();_go(id);};
+
+/* 启动 */
+const last=localStorage.getItem(MEK);
+if(last&&DB[last])enter(last);else{renderReg();go('sReg');}
+$('#nameIn').addEventListener('keydown',e=>{if(e.key==='Enter')doReg();});
+</script>
+</body>
+</html>
