@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>星光数独乐园 · 六宫格/九宫格</title>
+<style>
+  :root{
+    --bg:#FFF8EC; --card:#FFFFFF; --ink:#4A4235; --ink2:#8A7B57;
+    --line:#EADFC5; --thick:#B49F6E;
+    --accent:#7B6FD0; --accent-soft:#EFECFB;
+    --gold:#FFB13D; --pink:#FF8FB1; --teal:#4FB8A8;
+    --good:#3E9B6C; --bad:#E05A5A;
+    --radius:14px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+    padding:8px 10px 14px; overflow-x:hidden;
+    background-image:
+      radial-gradient(circle at 10% 6%, rgba(255,177,61,.13) 0 50px, transparent 51px),
+      radial-gradient(circle at 90% 10%, rgba(123,111,208,.11) 0 44px, transparent 45px),
+      radial-gradient(circle at 82% 92%, rgba(79,184,168,.09) 0 60px, transparent 61px);
+  }
+  .wrap{max-width:1020px; margin:0 auto; min-height:calc(100vh - 22px); display:flex; flex-direction:column;}
+  .view{display:none; flex:1; flex-direction:column;}
+  .view.on{display:flex;}
+
+  h1{font-size:clamp(18px,2.6vw,24px); margin:0; letter-spacing:1.5px; white-space:nowrap;}
+  h1 .tw{color:var(--gold);}
+
+  .bar{
+    display:flex; flex-wrap:wrap; align-items:center; gap:8px;
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:7px 10px; margin-bottom:8px; box-shadow:0 2px 8px rgba(180,159,110,.08);
+  }
+  .player-chip{display:flex; align-items:center; gap:7px;}
+  .avatar{
+    width:30px; height:30px; border-radius:50%; background:var(--accent-soft);
+    color:var(--accent); font-weight:700; display:flex; align-items:center; justify-content:center;
+    font-size:13px; border:1.5px solid var(--accent); flex:none;
+  }
+  select,button,input[type=text]{
+    font-family:inherit; font-size:13px; color:var(--ink);
+    border:1px solid var(--line); border-radius:9px; background:#fff;
+    padding:6px 9px; outline:none; cursor:pointer;
+  }
+  input[type=text]{cursor:text;}
+  select:focus,input:focus{border-color:var(--accent);}
+  button{transition:transform .06s, box-shadow .12s;}
+  button:active{transform:scale(.96);}
+  .btn:hover{box-shadow:0 2px 8px rgba(180,159,110,.25);}
+  .btn-primary{background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600;}
+  .btn-gold{background:var(--gold); border-color:var(--gold); color:#7A4B00; font-weight:600;}
+  .btn-ghost{border-style:dashed; color:var(--ink2);}
+  .flower-count{
+    margin-left:auto; display:flex; align-items:center; gap:5px;
+    background:#FFF3E0; border:1px solid #F5D9A8; border-radius:999px;
+    padding:4px 12px; font-weight:700; color:#B0680A; font-size:14px;
+  }
+  .flower-count .f{font-size:16px;}
+
+  .ctrl{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:7px;}
+  .seg{display:flex; background:var(--card); border:1px solid var(--line); border-radius:11px; overflow:hidden;}
+  .seg button{border:none; border-radius:0; background:transparent; padding:7px 12px; color:var(--ink2);}
+  .seg button.on{background:var(--accent); color:#fff; font-weight:600;}
+  .seg button+button{border-left:1px solid var(--line);}
+
+  .rules-strip{
+    display:flex; flex-wrap:wrap; align-items:center; gap:6px;
+    background:var(--card); border:1px dashed #E5CFA0; border-radius:11px;
+    padding:6px 10px; margin-bottom:8px; font-size:12px; color:var(--ink2); cursor:pointer;
+  }
+  .rules-strip b{color:#B0680A;}
+  .rule-chip{
+    background:#FFF7E8; border:1px solid #F2DDB0; border-radius:999px; padding:3px 9px;
+    color:#8A6A1E; font-weight:600; white-space:nowrap;
+  }
+
+  main{display:flex; gap:12px; align-items:flex-start; flex:1; flex-wrap:wrap;}
+  .board-col{flex:1 1 320px; display:flex; justify-content:center; align-items:flex-start;}
+  .board-outer{
+    background:var(--card); border:3px solid var(--thick); border-radius:12px;
+    padding:5px; box-shadow:0 6px 20px rgba(180,159,110,.16);
+  }
+  body.n6 .board-outer{width:min(88vw,50vh,430px);}
+  body.n9 .board-outer{width:min(92vw,56vh,460px);}
+  #board{display:grid; gap:0; width:100%;}
+  body.n6 #board{grid-template-columns:repeat(6,1fr);}
+  body.n9 #board{grid-template-columns:repeat(9,1fr);}
+  .cell{
+    aspect-ratio:1/1; display:flex; align-items:center; justify-content:center;
+    border-right:1px solid var(--line); border-bottom:1px solid var(--line);
+    background:#fff; cursor:pointer; position:relative; user-select:none;
+    font-weight:700; color:var(--ink);
+  }
+  body.n6 .cell{font-size:clamp(18px,5.2vw,28px);}
+  body.n9 .cell{font-size:clamp(11px,2.6vw,19px);}
+  .cell:last-child{border-right:none;}
+  .cell.br{border-right:2.5px solid var(--thick);}
+  .cell.bb{border-bottom:2.5px solid var(--thick);}
+  body.n9 .cell.br,body.n9 .cell.bb{border-width:2px;}
+  .cell.given{background:#FFF3D6; color:#8A6A1E;}
+  .cell.same{background:#EFECFB;}
+  .cell.sel{outline:3px solid var(--pink); outline-offset:-3px; background:#FFF0F5; z-index:2;}
+  .cell.conflict{color:var(--bad); background:#FFDFDF;}
+  .cell .ic{width:66%; height:66%;}
+  .cell.flash-wrong{animation:shake .35s;}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+
+  .side{flex:1 1 250px; display:flex; flex-direction:column; gap:8px; min-width:230px;}
+  .panel{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:10px 12px; box-shadow:0 2px 8px rgba(180,159,110,.08);
+  }
+  .panel h3{margin:0 0 7px; font-size:13px; color:var(--ink2); font-weight:600;}
+  .stat-row{display:flex; gap:8px;}
+  .stat{flex:1; text-align:center; background:var(--accent-soft); border-radius:10px; padding:5px;}
+  .stat .v{font-size:17px; font-weight:700; color:var(--accent);}
+  .stat .l{font-size:11px; color:var(--ink2);}
+  #palette{display:grid; grid-template-columns:repeat(6,1fr); gap:7px;}
+  body.n9 #palette{grid-template-columns:repeat(9,1fr);}
+  .pal{
+    aspect-ratio:1/1; border:1.5px solid var(--line); border-radius:10px; background:#fff;
+    display:flex; align-items:center; justify-content:center; padding:0;
+    font-size:clamp(16px,4vw,22px); font-weight:700; position:relative;
+  }
+  body.n9 .pal{font-size:clamp(13px,2.6vw,17px);}
+  .pal:hover{border-color:var(--accent); background:var(--accent-soft);}
+  .pal .ic{width:72%; height:72%;}
+  .act-row{display:flex; gap:7px; margin-top:8px;}
+  .act-row button{flex:1; padding:9px;}
+  details{margin-top:6px; font-size:12px; color:var(--ink2);}
+  details summary{cursor:pointer; color:var(--accent); font-weight:600;}
+  details p{margin:4px 0;}
+
+  .overlay{
+    position:fixed; inset:0; background:rgba(74,66,53,.45); display:none;
+    align-items:center; justify-content:center; z-index:50; padding:14px;
+  }
+  .overlay.show{display:flex;}
+  .modal{
+    background:#fff; border-radius:18px; padding:20px; max-width:460px; width:100%;
+    max-height:88vh; overflow:auto; box-shadow:0 12px 40px rgba(0,0,0,.2);
+    text-align:center; animation:pop .25s;
+  }
+  @keyframes pop{from{transform:scale(.85); opacity:0} to{transform:scale(1); opacity:1}}
+  .modal h2{margin:0 0 5px; font-size:19px;}
+  .modal .sub{color:var(--ink2); font-size:13px; margin:0 0 12px;}
+  .modal .btn-row{display:flex; gap:9px; margin-top:14px;}
+  .modal .btn-row button{flex:1; padding:10px;}
+  .flower-burst{font-size:40px; line-height:1.2;}
+  .flower-burst span{display:inline-block; animation:bounce .8s infinite alternate;}
+  .flower-burst span:nth-child(2){animation-delay:.15s}
+  .flower-burst span:nth-child(3){animation-delay:.3s}
+  .flower-burst span:nth-child(4){animation-delay:.45s}
+  .flower-burst span:nth-child(5){animation-delay:.6s}
+  @keyframes bounce{from{transform:translateY(0) scale(1)} to{transform:translateY(-8px) scale(1.12)}}
+  .earn{font-size:28px; font-weight:800; color:#E07B00; margin:5px 0;}
+  .rule-table{width:100%; border-collapse:collapse; font-size:12.5px; margin:4px 0 2px;}
+  .rule-table td{border:1px solid var(--line); padding:5px 6px; text-align:center;}
+  .rule-table td:first-child{color:var(--ink2);}
+  .rule-table .fl{color:#D97706; font-weight:700;}
+
+  /* ---------- badge hall ---------- */
+  .hall-head{
+    display:flex; flex-wrap:wrap; align-items:center; gap:8px;
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:8px 12px; margin-bottom:10px;
+  }
+  .hall-title{font-size:18px; font-weight:700; letter-spacing:1px;}
+  .hall-prog{font-size:13px; color:var(--ink2);}
+  .series-tabs{display:flex; gap:7px; flex-wrap:wrap; margin-bottom:12px;}
+  .series-tab{
+    border:1.5px solid var(--line); background:#fff; border-radius:999px; padding:7px 16px;
+    font-size:14px; color:var(--ink2); font-weight:600;
+  }
+  .series-tab.on{background:linear-gradient(135deg,#FFE9C2,#FFD27A); border-color:#E0A93C; color:#7A4B00;}
+  .series-desc{font-size:13px; color:var(--ink2); margin:0 0 10px;}
+  .shop-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+  .shop-item{
+    border:1.5px solid var(--line); border-radius:16px; padding:14px 6px 10px; cursor:pointer;
+    background:#fff; transition:border-color .12s, transform .12s; text-align:center; position:relative;
+  }
+  .shop-item:hover{border-color:var(--gold); transform:translateY(-2px);}
+  .shop-item.owned{background:#F6FBF3; border-color:#BFE3CC; cursor:default;}
+  .shop-item.locked{opacity:.6;}
+  .shop-item .nm{font-size:13px; font-weight:700; margin-top:10px;}
+  .shop-item .pr{font-size:12px; color:#B0680A; margin-top:3px;}
+  .shop-item.owned .pr{color:var(--good); font-weight:600;}
+  .medal-wrap{position:relative; width:66px; height:66px; margin:0 auto;}
+  .medal{
+    width:66px; height:66px; border-radius:50%;
+    background:radial-gradient(circle at 32% 26%, #FFFBEC, #FFE49A 46%, #E4AE33 100%);
+    border:3px solid #C9922A;
+    box-shadow:inset 0 0 0 3px rgba(255,255,255,.6), inset 0 -6px 10px rgba(160,110,20,.25), 0 3px 7px rgba(120,80,10,.25);
+    display:flex; align-items:center; justify-content:center; font-size:30px; line-height:1;
+  }
+  .medal .glyph{filter:drop-shadow(0 1px 1px rgba(120,80,10,.4));}
+  .medal-wrap::after{
+    content:""; position:absolute; left:50%; bottom:-13px; transform:translateX(-50%);
+    width:18px; height:20px; background:linear-gradient(#E05A5A,#B93B3B);
+    clip-path:polygon(0 0,100% 0,100% 100%,50% 68%,0 100%);
+  }
+  .shop-item.owned .medal-wrap::after{background:linear-gradient(#3E9B6C,#2C7A50);}
+  .shop-item.locked .medal{
+    background:radial-gradient(circle at 32% 26%, #F2F0EA, #DDDACF 46%, #BDB8A8 100%);
+    border-color:#A8A292; box-shadow:inset 0 0 0 3px rgba(255,255,255,.4), 0 2px 4px rgba(0,0,0,.08);
+  }
+  .shop-item.locked .glyph{filter:grayscale(1); opacity:.45;}
+  .medal .spark{position:absolute; top:5px; right:8px; font-size:11px;}
+
+  .toast{
+    position:fixed; left:50%; bottom:28px; transform:translateX(-50%) translateY(20px);
+    background:rgba(74,66,53,.92); color:#fff; padding:9px 18px; border-radius:999px;
+    font-size:13px; opacity:0; pointer-events:none; transition:all .25s; z-index:99;
+    max-width:88vw; text-align:center;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+  .confetti{position:fixed; top:-12px; font-size:20px; z-index:98; pointer-events:none; animation:fall linear forwards;}
+  @keyframes fall{to{transform:translateY(105vh) rotate(360deg); opacity:.7;}}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:720px), (orientation:portrait) and (max-width:920px){
+    body{padding:5px 5px 10px;}
+    h1{font-size:16px;}
+    .bar{padding:5px 7px; gap:6px; margin-bottom:6px;}
+    .bar select,.bar button{font-size:12px; padding:5px 7px;}
+    .avatar{width:26px; height:26px; font-size:11px;}
+    .flower-count{margin-left:0; padding:3px 9px; font-size:12px;}
+    .ctrl{gap:6px; margin-bottom:6px;}
+    .ctrl .seg button{padding:6px 9px; font-size:12px;}
+    .ctrl button{font-size:12px;}
+    .rules-strip{padding:4px 8px; font-size:11px; margin-bottom:6px; gap:4px;}
+    .rule-chip{padding:2px 7px;}
+    main{flex-direction:column; align-items:stretch; gap:7px;}
+    .side{display:contents;}
+    #statPanel{order:1;}
+    .board-col{order:2;}
+    #playPanel{order:3;}
+    main details.panel{order:4; padding:7px 10px;}
+    .panel{padding:7px 10px;}
+    .stat{padding:3px;}
+    .stat .v{font-size:15px;}
+    .stat .l{font-size:10px;}
+    #statPanel .stat-row{gap:6px;}
+    body.n6 .board-outer{width:min(94vw,42vh,430px);}
+    body.n9 .board-outer{width:min(96vw,48vh,460px);}
+    body.n6 .cell{font-size:clamp(16px,5vw,24px);}
+    body.n9 .cell{font-size:clamp(10px,3.2vw,16px);}
+    #playPanel h3{font-size:11px; margin-bottom:5px;}
+    #palette{gap:5px;}
+    .pal{border-radius:8px;}
+    body.n6 .pal{font-size:clamp(15px,4.4vw,20px);}
+    body.n9 .pal{font-size:clamp(12px,3vw,15px);}
+    .act-row{gap:6px; margin-top:6px;}
+    .act-row button{padding:7px;}
+    .shop-grid{grid-template-columns:repeat(3,1fr); gap:9px;}
+    .medal,.medal-wrap{width:56px; height:56px;}
+    .medal{font-size:26px;}
+    details p{margin:3px 0;}
+  }
+  @media (max-height:780px) and (min-width:721px){
+    body.n6 .board-outer{width:min(88vw,46vh);}
+    body.n9 .board-outer{width:min(92vw,50vh);}
+  }
+</style>
+</head>
+<body class="n6">
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <symbol id="sym-star" viewBox="0 0 48 48">
+      <path d="M24 4 L29.6 17.3 L44 18.6 L33 28.2 L36.4 42.4 L24 34.8 L11.6 42.4 L15 28.2 L4 18.6 L18.4 17.3 Z" fill="#FFC53D" stroke="#D99A1B" stroke-width="2" stroke-linejoin="round"/>
+      <circle cx="20" cy="24" r="1.8" fill="#7A4B00"/><circle cx="28" cy="24" r="1.8" fill="#7A4B00"/>
+      <path d="M21 28.5 Q24 31 27 28.5" stroke="#7A4B00" fill="none" stroke-width="1.6" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="sym-moon" viewBox="0 0 48 48">
+      <path d="M30 5 A19 19 0 1 0 43 30 A15.5 15.5 0 0 1 30 5 Z" fill="#FFE08A" stroke="#D9A93B" stroke-width="2"/>
+      <circle cx="14" cy="12" r="1.6" fill="#D9A93B"/><circle cx="9" cy="20" r="1.2" fill="#D9A93B"/>
+      <circle cx="20" cy="26" r="1.8" fill="#B8860B"/><circle cx="27" cy="28" r="1.8" fill="#B8860B"/>
+      <path d="M21 32 Q24 34.5 27 32" stroke="#B8860B" fill="none" stroke-width="1.6" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="sym-sun" viewBox="0 0 48 48">
+      <g stroke="#F09F27" stroke-width="2.6" stroke-linecap="round">
+        <path d="M24 2 V9"/><path d="M24 39 V46"/><path d="M2 24 H9"/><path d="M39 24 H46"/>
+        <path d="M8.4 8.4 L13.3 13.3"/><path d="M34.7 34.7 L39.6 39.6"/>
+        <path d="M39.6 8.4 L34.7 13.3"/><path d="M13.3 34.7 L8.4 39.6"/>
+      </g>
+      <circle cx="24" cy="24" r="12" fill="#FFCF5C" stroke="#F09F27" stroke-width="2"/>
+      <circle cx="20" cy="22" r="1.8" fill="#8A5A00"/><circle cx="28" cy="22" r="1.8" fill="#8A5A00"/>
+      <path d="M20 27 Q24 30.5 28 27" stroke="#8A5A00" fill="none" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="sym-rainbow" viewBox="0 0 48 48">
+      <path d="M6 40 A18 18 0 0 1 42 40" fill="none" stroke="#F28C8C" stroke-width="4.6"/>
+      <path d="M10.5 40 A13.5 13.5 0 0 1 37.5 40" fill="none" stroke="#FFD35C" stroke-width="4.6"/>
+      <path d="M15 40 A9 9 0 0 1 33 40" fill="none" stroke="#8FD0F0" stroke-width="4.6"/>
+      <ellipse cx="9" cy="40" rx="6" ry="4.4" fill="#fff" stroke="#C9C2B0" stroke-width="1.5"/>
+      <ellipse cx="39" cy="40" rx="6" ry="4.4" fill="#fff" stroke="#C9C2B0" stroke-width="1.5"/>
+    </symbol>
+    <symbol id="sym-storm" viewBox="0 0 48 48">
+      <path d="M12 30 A8 8 0 0 1 13 14 A10 10 0 0 1 32 10 A8.5 8.5 0 0 1 37 27 Z" fill="#9AA3B5" stroke="#6B7385" stroke-width="2"/>
+      <circle cx="17" cy="22" r="1.7" fill="#3C4250"/><circle cx="25" cy="22" r="1.7" fill="#3C4250"/>
+      <path d="M25 26 L18 35 L23 35 L20 44 L30 32 L25 32 L28 26 Z" fill="#FFD35C" stroke="#D9A93B" stroke-width="1.4" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="sym-cloud" viewBox="0 0 48 48">
+      <path d="M12 34 A8 8 0 0 1 13 18 A10 10 0 0 1 32 14 A8.5 8.5 0 0 1 37 31 Z" fill="#FFFFFF" stroke="#B9C2CF" stroke-width="2"/>
+      <circle cx="18" cy="25" r="1.7" fill="#6B7385"/><circle cx="27" cy="25" r="1.7" fill="#6B7385"/>
+      <path d="M19 30 Q22 33 25 30" stroke="#6B7385" fill="none" stroke-width="1.7" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+
+  <!-- ========== 游戏主页 ========== -->
+  <section class="view on" id="viewGame">
+    <div class="bar">
+      <h1>✨ 星光<span class="tw">数独</span>乐园</h1>
+      <div class="player-chip">
+        <div class="avatar" id="avatar">宝</div>
+        <select id="playerSel"></select>
+        <button class="btn btn-ghost" id="addPlayerBtn">＋玩家</button>
+        <button class="btn" id="manageBtn">管理</button>
+      </div>
+      <div class="flower-count"><span class="f">🌸</span><span id="flowerNum">0</span></div>
+      <button class="btn btn-gold" id="hallBtn">🏅 徽章馆</button>
+    </div>
+
+    <div class="ctrl">
+      <div class="seg" id="sizeSeg">
+        <button data-size="6">6宫格</button>
+        <button data-size="9">9宫格</button>
+      </div>
+      <div class="seg" id="modeSeg">
+        <button data-mode="num">🔢 数字</button>
+        <button data-mode="icon">🌟 星空</button>
+      </div>
+      <div class="seg" id="diffSeg">
+        <button data-diff="easy">简单</button>
+        <button data-diff="medium">中等</button>
+        <button data-diff="hard">困难</button>
+      </div>
+      <button class="btn btn-primary" id="newGameBtn">🌀 换一局</button>
+    </div>
+
+    <div class="rules-strip" id="rulesStrip" title="点击查看完整规则">
+      <b>🌸 奖励规则</b><span id="rulesChips"></span>
+    </div>
+
+    <main>
+      <div class="board-col">
+        <div class="board-outer"><div id="board"></div></div>
+      </div>
+      <div class="side">
+        <div class="panel" id="statPanel">
+          <div class="stat-row">
+            <div class="stat"><div class="v" id="timeStat">00:00</div><div class="l">用时</div></div>
+            <div class="stat"><div class="v" id="progStat">0/0</div><div class="l">已填对</div></div>
+          </div>
+        </div>
+        <div class="panel" id="playPanel">
+          <h3 id="palTip">点一格，再选一个伙伴住进去</h3>
+          <div id="palette"></div>
+          <div class="act-row">
+            <button class="btn" id="eraseBtn">🧽 擦掉</button>
+            <button class="btn btn-gold" id="doneBtn">🌸 完成啦！</button>
+          </div>
+        </div>
+        <details class="panel">
+          <summary>怎么玩？</summary>
+          <p>· 每行、每列、每个粗框小宫里，元素只能出现一次。</p>
+          <p>· 6宫格可选数字或星空小伙伴；9宫格是数字 1~9 大挑战。</p>
+          <p>· 完成一局按用时拿 1~5 朵小红花，9宫格时间更宽裕。</p>
+          <p>· 攒够小红花去徽章馆，换星座、生肖、海洋萌宝三套徽章！</p>
+        </details>
+      </div>
+    </main>
+  </section>
+
+  <!-- ========== 徽章馆 ========== -->
+  <section class="view" id="viewHall">
+    <div class="hall-head">
+      <button class="btn btn-primary" id="backBtn">← 回到游戏</button>
+      <span class="hall-title">🏅 星光徽章馆</span>
+      <span class="hall-prog" id="hallProg"></span>
+      <div class="flower-count" style="margin-left:auto"><span class="f">🌸</span><span id="hallFlowerNum">0</span></div>
+    </div>
+    <div class="series-tabs" id="seriesTabs"></div>
+    <p class="series-desc" id="seriesDesc"></p>
+    <div class="shop-grid" id="shopGrid"></div>
+  </section>
+</div>
+
+<div class="overlay" id="rewardOverlay">
+  <div class="modal">
+    <h2 id="rewardTitle">太棒啦！</h2>
+    <p class="sub" id="rewardSub"></p>
+    <div class="flower-burst" id="rewardBurst"></div>
+    <div class="earn" id="rewardEarn"></div>
+    <div class="btn-row"><button class="btn btn-primary" id="rewardClose">收下花花</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="rulesOverlay">
+  <div class="modal" style="text-align:left">
+    <h2 style="text-align:center">🌸 小红花奖励规则</h2>
+    <p class="sub" style="text-align:center">完成一局按用时拿花；填对 70% 以上另有鼓励花</p>
+    <div id="rulesDetail"></div>
+    <div class="btn-row"><button class="btn" id="rulesClose">明白啦</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="addOverlay">
+  <div class="modal">
+    <h2>新玩家是谁呀？</h2>
+    <p class="sub">每个玩家有自己的小红花和徽章哦</p>
+    <input type="text" id="newName" maxlength="8" placeholder="输入名字，最多 8 个字" style="width:100%; text-align:center; padding:11px; font-size:15px;">
+    <div class="btn-row">
+      <button class="btn" id="addCancel">先不啦</button>
+      <button class="btn btn-primary" id="addConfirm">创建</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="manageOverlay">
+  <div class="modal" style="text-align:left">
+    <h2 style="text-align:center">玩家管理</h2>
+    <p class="sub" style="text-align:center">删除玩家会清空 TA 的花朵和徽章</p>
+    <div id="manageList"></div>
+    <div class="btn-row"><button class="btn" id="manageClose">好啦</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+  var ICONS=["star","moon","sun","rainbow","storm","cloud"];
+  var EMO_VS="\uFE0F";
+
+  var GAME_CFG={
+    6:{blanks:{easy:10,medium:14,hard:18}, time:{easy:[120,240,420,720], medium:[240,480,840,1320], hard:[420,840,1500,2400]}},
+    9:{blanks:{easy:32,medium:42,hard:52}, time:{easy:[300,600,1050,1500], medium:[600,1200,2100,3000], hard:[1200,2400,4200,6000]}}
+  };
+  var DIFF_NAME={easy:"简单",medium:"中等",hard:"困难"};
+  var TIER_EMOJI=["🥇","🥈","🥉","🎖️","🌸"];
+
+  var SERIES=[
+    {id:"const", name:"十二星座", price:6,
+     desc:"闪闪发光的星座勋章，收集齐全点亮整片星空。",
+     items:[["白羊座","♈"],["金牛座","♉"],["双子座","♊"],["巨蟹座","♋"],["狮子座","♌"],["处女座","♍"],["天秤座","♎"],["天蝎座","♏"],["射手座","♐"],["摩羯座","♑"],["水瓶座","♒"],["双鱼座","♓"]]},
+    {id:"zodiac", name:"十二生肖", price:10,
+     desc:"国风生肖萌兽勋章，金属质感、稀有进阶。",
+     items:[["鼠","🐭"],["牛","🐮"],["虎","🐯"],["兔","🐰"],["龙","🐲"],["蛇","🐍"],["马","🐴"],["羊","🐑"],["猴","🐵"],["鸡","🐔"],["狗","🐶"],["猪","🐷"]]},
+    {id:"ocean", name:"海洋萌宝", price:10,
+     desc:"来自深海的萌宝小队，全服最稀有系列！",
+     items:[["小海豚","🐬"],["小鲸鱼","🐋"],["小章鱼","🐙"],["小螃蟹","🦀"],["小丑鱼","🐠"],["小鲨鱼","🦈"],["小企鹅","🐧"],["小海龟","🐢"],["小鱿鱼","🦑"],["小龙虾","🦞"],["小河豚","🐡"],["小海豹","🦭"]]}
+  ];
+
+  // ---------- storage ----------
+  var LS_PLAYERS="sudoku_v3_players", LS_CUR="sudoku_v3_current";
+  function migrate(p){
+    if(Array.isArray(p.badges)){ p.badges={const:p.badges, zodiac:[], ocean:[]}; }
+    if(!p.badges) p.badges={const:[], zodiac:[], ocean:[]};
+    if(typeof p.games!=="number") p.games=0;
+    if(typeof p.wins!=="number") p.wins=0;
+    return p;
+  }
+  function seedPlayers(){
+    return [
+      {id:"seed_star",  name:"小星星", flowers:18, wins:12, games:16,
+       badges:{const:[0,1,2,3], zodiac:[], ocean:[0]}},
+      {id:"seed_candy", name:"棉花糖", flowers:46, wins:31, games:42,
+       badges:{const:[4,5], zodiac:[0,1,2,7], ocean:[3]}},
+      {id:"seed_bean",  name:"小汤圆", flowers:65, wins:45, games:60,
+       badges:{const:[6], zodiac:[4,5,6], ocean:[0,1,2,4,8]}}
+    ];
+  }
+  var OLD_SEED_IDS={"seed_baby":1,"seed_mama":1,"seed_baba":1};
+  function loadPlayers(){
+    try{
+      var d=JSON.parse(localStorage.getItem(LS_PLAYERS));
+      if(d&&d.length){
+        if(d.some(function(p){return OLD_SEED_IDS[p.id];})){
+          var custom=d.filter(function(p){return !OLD_SEED_IDS[p.id];});
+          d=seedPlayers().concat(custom);
+          localStorage.setItem(LS_PLAYERS, JSON.stringify(d));
+          return d.map(migrate);
+        }
+        return d.map(migrate);
+      }
+    }catch(e){}
+    return seedPlayers();
+  }
+  function savePlayers(){ localStorage.setItem(LS_PLAYERS, JSON.stringify(players)); }
+  var players=loadPlayers();
+  var curId=localStorage.getItem(LS_CUR);
+  if(!players.some(function(p){return p.id===curId;})) curId=players[0].id;
+  function cur(){ return players.filter(function(p){return p.id===curId;})[0]; }
+  function gameKey(){ return "sudoku_v3_game_"+curId; }
+  function saveGame(){ if(game) localStorage.setItem(gameKey(), JSON.stringify(game)); else localStorage.removeItem(gameKey()); }
+  function loadGame(){
+    try{ var g=JSON.parse(localStorage.getItem(gameKey()));
+      if(g && g.solution && (g.n===6||g.n===9) && g.solution.length===g.n*g.n) return g;
+    }catch(e){}
+    return null;
+  }
+  function totalOwned(p){ return p.badges.const.length+p.badges.zodiac.length+p.badges.ocean.length; }
+
+  // ---------- sudoku engine (n = 6 or 9) ----------
+  function isValid(g,n,bw,bh,r,c,v){
+    for(var i=0;i<n;i++){
+      if(i!==c && g[r*n+i]===v) return false;
+      if(i!==r && g[i*n+c]===v) return false;
+    }
+    var br=Math.floor(r/bh)*bh, bc=Math.floor(c/bw)*bw;
+    for(var rr=br;rr<br+bh;rr++) for(var cc=bc;cc<bc+bw;cc++){
+      if((rr!==r||cc!==c) && g[rr*n+cc]===v) return false;
+    }
+    return true;
+  }
+  function shuffle(a){ for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function fillGrid(g,n){
+    var bw=3, bh=(n===6)?2:3;
+    for(var i=0;i<n*n;i++){ if(g[i]!==0) continue;
+      var r=Math.floor(i/n), c=i%n, nums=[]; for(var t=1;t<=n;t++) nums.push(t); shuffle(nums);
+      for(var k=0;k<n;k++){ var v=nums[k];
+        if(isValid(g,n,bw,bh,r,c,v)){ g[i]=v; if(fillGrid(g,n)) return true; g[i]=0; }
+      }
+      return false;
+    }
+    return true;
+  }
+  function countSolutions(g,n,bw,bh,limit){
+    var count=0;
+    function rec(){
+      for(var i=0;i<n*n;i++){ if(g[i]!==0) continue;
+        var r=Math.floor(i/n), c=i%n;
+        for(var v=1;v<=n;v++){
+          if(isValid(g,n,bw,bh,r,c,v)){ g[i]=v; rec(); g[i]=0; if(count>=limit) return; }
+        }
+        return;
+      }
+      count++;
+    }
+    rec();
+    return count;
+  }
+  function makePuzzle(n,diff){
+    var bw=3, bh=(n===6)?2:3, total=n*n;
+    var solution=new Array(total).fill(0); fillGrid(solution,n);
+    var puzzle=solution.slice();
+    var target=GAME_CFG[n].blanks[diff], blanks=0;
+    var order=shuffle(Array.apply(null,Array(total)).map(function(_,i){return i;}));
+    for(var k=0;k<order.length && blanks<target;k++){
+      var idx=order[k], keep=puzzle[idx]; puzzle[idx]=0;
+      var test=puzzle.slice();
+      if(countSolutions(test,n,bw,bh,2)===1){ blanks++; } else { puzzle[idx]=keep; }
+    }
+    return {solution:solution, puzzle:puzzle, givens:puzzle.map(function(v){return v!==0;}), blanks:blanks};
+  }
+
+  // ---------- state ----------
+  var game=null, selIdx=-1, timerId=null, settling=false;
+  function N(){ return game?game.n:6; }
+
+  function newGame(n,diff,mode){
+    var p=makePuzzle(n,diff);
+    game={n:n, diff:diff, mode:(n===9?"num":mode), givens:p.givens, entries:p.puzzle.slice(),
+          solution:p.solution, elapsed:0, partialPaid:false};
+    selIdx=-1; settling=false;
+    saveGame(); renderAll(); startTimer();
+  }
+
+  // ---------- timer ----------
+  function startTimer(){
+    if(timerId) clearInterval(timerId);
+    timerId=setInterval(function(){
+      if(document.hidden || !game || settling) return;
+      game.elapsed++; updateTime();
+      if(game.elapsed%10===0) saveGame();
+    },1000);
+  }
+  function fmt(s){ var m=Math.floor(s/60), ss=s%60; return (m<10?"0":"")+m+":"+(ss<10?"0":"")+ss; }
+  function fmtMin(s){ return s<60? s+"秒" : (Math.round(s/6)/10)+"分钟"; }
+
+  // ---------- rendering ----------
+  var boardEl=document.getElementById("board"), cellEls=[];
+  function buildBoard(n){
+    boardEl.innerHTML=""; cellEls=[];
+    var bh_=(n===6)?2:3;
+    for(var r=0;r<n;r++) for(var c=0;c<n;c++){
+      var d=document.createElement("div");
+      d.className="cell";
+      if((c+1)%3===0 && c!==n-1) d.classList.add("br");
+      if((r+1)%bh_===0 && r!==n-1) d.classList.add("bb");
+      d.dataset.i=r*n+c;
+      boardEl.appendChild(d); cellEls.push(d);
+    }
+  }
+  function valueHTML(v,mode){
+    if(!v) return "";
+    if(mode!=="num") return '<svg class="ic"><use href="#sym-'+ICONS[v-1]+'"/></svg>';
+    return String(v);
+  }
+  function computeConflicts(){
+    var n=N(), b_w=3, b_h=(n===6)?2:3, conf={};
+    for(var r=0;r<n;r++) for(var c=0;c<n;c++){
+      var v=game.entries[r*n+c]; if(!v) continue;
+      for(var i=0;i<n;i++){
+        if(i!==c && game.entries[r*n+i]===v){ conf[r*n+c]=1; conf[r*n+i]=1; }
+        if(i!==r && game.entries[i*n+c]===v){ conf[r*n+c]=1; conf[i*n+c]=1; }
+      }
+      var br=Math.floor(r/b_h)*b_h, bc=Math.floor(c/b_w)*b_w;
+      for(var rr=br;rr<br+b_h;rr++) for(var cc=bc;cc<bc+b_w;cc++){
+        if((rr!==r||cc!==c) && game.entries[rr*n+cc]===v){ conf[r*n+c]=1; conf[rr*n+cc]=1; }
+      }
+    }
+    return conf;
+  }
+  function renderBoard(){
+    var n=N(), conf=computeConflicts();
+    var selVal=selIdx>=0?game.entries[selIdx]:0;
+    for(var i=0;i<n*n;i++){
+      var el=cellEls[i];
+      el.innerHTML=valueHTML(game.entries[i], game.mode);
+      el.classList.toggle("given", game.givens[i]);
+      el.classList.toggle("conflict", !!conf[i]);
+      el.classList.toggle("sel", i===selIdx);
+      el.classList.toggle("same", selVal!==0 && !conf[i] && game.entries[i]===selVal && i!==selIdx);
+    }
+  }
+  function renderStats(){
+    var n=N(), ok=0, total=game.blanks;
+    for(var i=0;i<n*n;i++) if(!game.givens[i] && game.entries[i]===game.solution[i]) ok++;
+    document.getElementById("progStat").textContent=ok+"/"+total;
+    document.getElementById("timeStat").textContent=fmt(game.elapsed);
+  }
+  function updateTime(){ document.getElementById("timeStat").textContent=fmt(game.elapsed); }
+  function renderPalette(){
+    var n=N(), pal=document.getElementById("palette"); pal.innerHTML="";
+    var isNum=(n===9)||game.mode==="num";
+    for(var v=1;v<=n;v++){
+      var b=document.createElement("button");
+      b.className="pal"; b.dataset.v=v;
+      b.innerHTML=isNum?String(v):('<svg class="ic"><use href="#sym-'+ICONS[v-1]+'"/></svg>');
+      pal.appendChild(b);
+    }
+    document.getElementById("palTip").textContent = n===9 ?
+      "数字 1~9 大挑战！点一格，再选数字" :
+      (isNum?"点一格，再选一个数字住进去":"点一格，再选一个伙伴住进去");
+  }
+  function renderPlayer(){
+    var p=cur();
+    document.getElementById("avatar").textContent=p.name.charAt(0);
+    document.getElementById("flowerNum").textContent=p.flowers;
+    document.getElementById("hallFlowerNum").textContent=p.flowers;
+    document.getElementById("hallProg").textContent="已收集 "+totalOwned(p)+" / 36 枚";
+    var sel=document.getElementById("playerSel");
+    sel.innerHTML=players.map(function(pp){
+      return '<option value="'+pp.id+'"'+(pp.id===curId?" selected":"")+'>'+esc(pp.name)+'</option>';
+    }).join("");
+  }
+  function renderRules(){
+    var th=GAME_CFG[game.n].time[game.diff];
+    var html="";
+    for(var i=0;i<5;i++){
+      var label = i<4 ? ("≤"+fmtMin(th[i])) : "完成";
+      html+='<span class="rule-chip">'+TIER_EMOJI[i]+' '+label+' → '+(5-i)+'朵</span> ';
+    }
+    document.getElementById("rulesChips").innerHTML=html;
+  }
+  function syncSegs(){
+    document.querySelectorAll("#sizeSeg button").forEach(function(b){
+      b.classList.toggle("on", +b.dataset.size===game.n);
+    });
+    document.querySelectorAll("#modeSeg button").forEach(function(b){
+      b.classList.toggle("on", b.dataset.mode===game.mode);
+      b.style.opacity = (game.n===9 && b.dataset.mode==="icon") ? .35 : 1;
+    });
+    document.querySelectorAll("#diffSeg button").forEach(function(b){
+      b.classList.toggle("on", b.dataset.diff===game.diff);
+    });
+    document.getElementById("modeSeg").style.pointerEvents = game.n===9 ? "none" : "auto";
+  }
+  function esc(s){ return s.replace(/[&<>"]/g,function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+  function renderAll(){
+    renderPlayer();
+    if(!game){ newGame(6,"easy","icon"); return; }
+    document.body.className = game.n===9 ? "n9" : "n6";
+    buildBoard(game.n);
+    renderBoard(); renderStats(); renderPalette(); renderRules(); syncSegs();
+  }
+
+  // ---------- interaction ----------
+  boardEl.addEventListener("click",function(e){
+    var cell=e.target.closest(".cell"); if(!cell||!game) return;
+    var i=+cell.dataset.i;
+    if(game.givens[i]){ toast("这一格是星空先生放好的，不能改哦"); return; }
+    selIdx=(selIdx===i)?-1:i;
+    renderBoard();
+  });
+  document.getElementById("palette").addEventListener("click",function(e){
+    var b=e.target.closest(".pal"); if(!b||!game) return;
+    placeValue(+b.dataset.v);
+  });
+  function placeValue(v){
+    if(!game||selIdx<0){ toast("先点一下要填的格子吧"); return; }
+    if(game.givens[selIdx]) return;
+    game.entries[selIdx]=(game.entries[selIdx]===v)?0:v;
+    saveGame(); renderBoard(); renderStats();
+    if(isSolved()) winRound();
+  }
+  function isSolved(){
+    var n=N();
+    for(var i=0;i<n*n;i++) if(game.entries[i]!==game.solution[i]) return false;
+    return true;
+  }
+  document.getElementById("eraseBtn").addEventListener("click",function(){
+    if(!game||selIdx<0||game.givens[selIdx]) return;
+    game.entries[selIdx]=0; saveGame(); renderBoard(); renderStats();
+  });
+  document.addEventListener("keydown",function(e){
+    if(!game || e.target.tagName==="INPUT" || !document.getElementById("viewGame").classList.contains("on")) return;
+    var v=+e.key;
+    if(v>=1 && v<=N()){ placeValue(v); return; }
+    if(e.key==="Backspace"||e.key==="Delete"||e.key==="0"){
+      if(selIdx>=0&&!game.givens[selIdx]){ game.entries[selIdx]=0; saveGame(); renderBoard(); renderStats(); }
+    }
+    if(e.key==="Escape"){ selIdx=-1; renderBoard(); }
+  });
+
+  // ---------- reward ----------
+  function correctCount(){
+    var n=N(), ok=0;
+    for(var i=0;i<n*n;i++) if(!game.givens[i] && game.entries[i]!==0 && game.entries[i]===game.solution[i]) ok++;
+    return ok;
+  }
+  document.getElementById("doneBtn").addEventListener("click",function(){
+    if(!game||settling) return;
+    if(isSolved()){ winRound(); return; }
+    var n=N(), ok=correctCount(), total=game.blanks, ratio=total?ok/total:0;
+    cellEls.forEach(function(el,i){
+      if(!game.givens[i] && game.entries[i]!==0 && game.entries[i]!==game.solution[i]){
+        el.classList.add("flash-wrong");
+        setTimeout(function(){ el.classList.remove("flash-wrong"); },500);
+      }
+    });
+    var msg="还有 "+(total-ok)+" 格没填对，加把劲！已填对 "+ok+"/"+total+"。";
+    if(!game.partialPaid && ratio>=0.7){
+      game.partialPaid=true; addFlowers(1); saveGame();
+      msg+=" 完成度很棒，奖励 1 朵鼓励小红花 🌸";
+      showReward("就快好啦！",msg,1);
+    }else{
+      showReward("继续加油！",msg,0);
+    }
+  });
+  function rewardForTime(n,diff,t){
+    var th=GAME_CFG[n].time[diff];
+    for(var i=0;i<4;i++){ if(t<=th[i]) return 5-i; }
+    return 1;
+  }
+  function winRound(){
+    if(settling) return; settling=true;
+    var n=N(), t=game.elapsed;
+    var flowers=rewardForTime(n,game.diff,t);
+    var tier = flowers===5?"闪电速度！":(flowers===4?"速度不错！":(flowers===3?"稳稳完成！":(flowers===2?"坚持就是胜利！":"慢慢来也很棒！")));
+    addFlowers(flowers);
+    cur().games++; cur().wins++; savePlayers(); saveGame();
+    confetti();
+    showReward("🎉 完成啦！",n+"宫格 · "+DIFF_NAME[game.diff]+"难度 · 用时 "+fmt(t)+" · "+tier,flowers);
+  }
+  function addFlowers(n){ cur().flowers+=n; savePlayers(); renderPlayer(); }
+  function showReward(title,sub,flowers){
+    document.getElementById("rewardTitle").textContent=title;
+    document.getElementById("rewardSub").textContent=sub||"";
+    var earn=document.getElementById("rewardEarn");
+    var burst=document.getElementById("rewardBurst");
+    earn.style.display=flowers?"block":"none";
+    burst.style.display=flowers?"block":"none";
+    burst.innerHTML=new Array(Math.max(flowers,1)).fill("<span>🌸</span>").join("");
+    earn.textContent="+"+flowers+" 朵小红花";
+    document.getElementById("rewardOverlay").classList.add("show");
+  }
+  document.getElementById("rewardClose").addEventListener("click",function(){
+    document.getElementById("rewardOverlay").classList.remove("show");
+    settling=false;
+    newGame(game.n, game.diff, game.mode);
+  });
+
+  // ---------- rules detail modal ----------
+  document.getElementById("rulesStrip").addEventListener("click",function(){
+    var html="";
+    [6,9].forEach(function(n){
+      html+='<h3 style="margin:10px 0 4px;font-size:14px">'+n+'宫格</h3>';
+      ["easy","medium","hard"].forEach(function(d){
+        var th=GAME_CFG[n].time[d];
+        html+='<table class="rule-table"><tr><td>'+n+'宫格 · '+DIFF_NAME[d]+'</td>';
+        for(var i=0;i<4;i++) html+='<td>≤'+fmtMin(th[i])+'<br><span class="fl">'+(5-i)+'朵</span></td>';
+        html+='<td>更慢<br><span class="fl">1朵</span></td></tr></table>';
+      });
+    });
+    html+='<p style="font-size:12px;color:var(--ink2);margin:8px 0 0">没完成也没关系：填对 70% 以上可得 1 朵鼓励花（每局限一次）。9宫格难度更高、时间线更宽，同样最高 5 朵。</p>';
+    document.getElementById("rulesDetail").innerHTML=html;
+    document.getElementById("rulesOverlay").classList.add("show");
+  });
+  document.getElementById("rulesClose").addEventListener("click",function(){
+    document.getElementById("rulesOverlay").classList.remove("show");
+  });
+
+  // ---------- badge hall ----------
+  var curSeries="const";
+  function renderHall(){
+    var p=cur();
+    var tabs=document.getElementById("seriesTabs"); tabs.innerHTML="";
+    SERIES.forEach(function(s){
+      var b=document.createElement("button");
+      b.className="series-tab"+(s.id===curSeries?" on":"");
+      b.textContent=s.name+" "+p.badges[s.id].length+"/12";
+      b.addEventListener("click",function(){ curSeries=s.id; renderHall(); });
+      tabs.appendChild(b);
+    });
+    var s=SERIES.filter(function(x){return x.id===curSeries;})[0];
+    document.getElementById("seriesDesc").textContent=s.desc+" 每枚 "+s.price+" 朵小红花。";
+    var grid=document.getElementById("shopGrid"); grid.innerHTML="";
+    s.items.forEach(function(it,i){
+      var owned=p.badges[s.id].indexOf(i)>=0;
+      var d=document.createElement("div");
+      d.className="shop-item"+(owned?" owned":(p.flowers<s.price?" locked":""));
+      d.innerHTML='<div class="medal-wrap"><div class="medal">'
+        +(owned?('<span class="glyph">'+it[1]+EMO_VS+'</span><span class="spark">✦</span>'):'<span class="glyph">🔒</span>')
+        +'</div></div>'
+        +'<div class="nm">'+it[0]+'</div>'
+        +'<div class="pr">'+(owned?"已拥有 ✓":s.price+" 朵🌸")+'</div>';
+      if(!owned && p.flowers>=s.price){
+        d.addEventListener("click",function(){ buyBadge(s,i); });
+      }else if(owned){
+        d.addEventListener("click",function(){ toast(it[0]+"徽章已经在你的收藏里啦"); });
+      }else{
+        d.addEventListener("click",function(){ toast("还差 "+(s.price-p.flowers)+" 朵小红花才能换"+it[0]); });
+      }
+      grid.appendChild(d);
+    });
+  }
+  function buyBadge(s,i){
+    var p=cur();
+    if(p.flowers<s.price){ toast("还差 "+(s.price-p.flowers)+" 朵小红花"); return; }
+    if(p.badges[s.id].indexOf(i)>=0) return;
+    p.flowers-=s.price; p.badges[s.id].push(i);
+    savePlayers(); renderPlayer(); renderHall();
+    confetti();
+    toast("🎉 "+s.items[i][0]+"徽章到手！"+s.name+"已集 "+p.badges[s.id].length+"/12");
+  }
+
+  // ---------- view switch ----------
+  document.getElementById("hallBtn").addEventListener("click",function(){
+    renderHall();
+    document.getElementById("viewGame").classList.remove("on");
+    document.getElementById("viewHall").classList.add("on");
+    window.scrollTo(0,0);
+  });
+  document.getElementById("backBtn").addEventListener("click",function(){
+    document.getElementById("viewHall").classList.remove("on");
+    document.getElementById("viewGame").classList.add("on");
+    window.scrollTo(0,0);
+  });
+
+  // ---------- players ----------
+  document.getElementById("playerSel").addEventListener("change",function(e){
+    saveGame(); curId=e.target.value; localStorage.setItem(LS_CUR,curId);
+    var g=loadGame();
+    if(g){ game=g; selIdx=-1; renderAll(); }
+    else newGame(6,"easy","icon");
+    toast("已切换到 "+cur().name);
+  });
+  document.getElementById("addPlayerBtn").addEventListener("click",function(){
+    document.getElementById("newName").value="";
+    document.getElementById("addOverlay").classList.add("show");
+    setTimeout(function(){ document.getElementById("newName").focus(); },80);
+  });
+  document.getElementById("addCancel").addEventListener("click",function(){ hideModal("addOverlay"); });
+  document.getElementById("addConfirm").addEventListener("click",addPlayer);
+  document.getElementById("newName").addEventListener("keydown",function(e){ if(e.key==="Enter") addPlayer(); });
+  function addPlayer(){
+    var name=document.getElementById("newName").value.trim();
+    if(!name){ toast("先给玩家起个名字吧"); return; }
+    saveGame();
+    var p={id:"p"+Date.now(), name:name, flowers:0, badges:{const:[],zodiac:[],ocean:[]}, games:0, wins:0};
+    players.push(p); savePlayers();
+    curId=p.id; localStorage.setItem(LS_CUR,curId);
+    hideModal("addOverlay");
+    game=null; saveGame();
+    newGame(6,"easy","icon");
+    toast("欢迎 "+name+"！新的星空之旅开始啦 ✨");
+  }
+  document.getElementById("manageBtn").addEventListener("click",function(){
+    var list=document.getElementById("manageList"); list.innerHTML="";
+    players.forEach(function(p){
+      var row=document.createElement("div");
+      row.style.cssText="display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid var(--line);";
+      row.innerHTML='<div class="avatar" style="width:28px;height:28px;font-size:12px">'+esc(p.name.charAt(0))+'</div>'
+        +'<div style="flex:1;text-align:left"><b>'+esc(p.name)+'</b><div style="font-size:12px;color:var(--ink2)">🌸'+p.flowers+' · 🏅'+totalOwned(p)+'/36 · 完成 '+p.wins+' 局</div></div>';
+      if(players.length>1){
+        var del=document.createElement("button");
+        del.className="btn"; del.textContent="删除";
+        var armed=false;
+        del.addEventListener("click",function(){
+          if(!armed){ armed=true; del.textContent="再点一次确认"; del.style.background="#FFE9E9"; return; }
+          players=players.filter(function(pp){return pp.id!==p.id;});
+          localStorage.removeItem("sudoku_v3_game_"+p.id);
+          if(curId===p.id){ curId=players[0].id; localStorage.setItem(LS_CUR,curId); game=loadGame(); }
+          savePlayers(); hideModal("manageOverlay");
+          if(!game) newGame(6,"easy","icon"); else renderAll();
+          toast("已删除 "+p.name);
+        });
+        row.appendChild(del);
+      }
+      list.appendChild(row);
+    });
+    document.getElementById("manageOverlay").classList.add("show");
+  });
+  document.getElementById("manageClose").addEventListener("click",function(){ hideModal("manageOverlay"); });
+
+  // ---------- controls ----------
+  document.getElementById("sizeSeg").addEventListener("click",function(e){
+    var b=e.target.closest("button"); if(!b||!game) return;
+    var n=+b.dataset.size;
+    if(n===game.n) return;
+    newGame(n, game.diff, game.mode);
+    toast("切到 "+n+"宫格，新的一局 ✨");
+  });
+  document.getElementById("modeSeg").addEventListener("click",function(e){
+    var b=e.target.closest("button"); if(!b||!game||game.n===9) return;
+    if(b.dataset.mode===game.mode) return;
+    game.mode=b.dataset.mode; saveGame(); renderPalette(); renderBoard(); syncSegs();
+  });
+  document.getElementById("diffSeg").addEventListener("click",function(e){
+    var b=e.target.closest("button"); if(!b||!game) return;
+    if(b.dataset.diff===game.diff) return;
+    newGame(game.n, b.dataset.diff, game.mode);
+    toast("新的一局 · "+DIFF_NAME[b.dataset.diff]+"难度");
+  });
+  document.getElementById("newGameBtn").addEventListener("click",function(){
+    if(!game) return;
+    newGame(game.n, game.diff, game.mode);
+    toast("新的一局来啦，星空重新洗牌 ✨");
+  });
+
+  // ---------- misc ----------
+  function hideModal(id){ document.getElementById(id).classList.remove("show"); }
+  document.querySelectorAll(".overlay").forEach(function(ov){
+    ov.addEventListener("click",function(e){ if(e.target===ov) ov.classList.remove("show"); });
+  });
+  var toastTimer=null;
+  function toast(msg){
+    var t=document.getElementById("toast");
+    t.textContent=msg; t.classList.add("show");
+    if(toastTimer) clearTimeout(toastTimer);
+    toastTimer=setTimeout(function(){ t.classList.remove("show"); },2200);
+  }
+  function confetti(){
+    var chars=["🌸","⭐","✨","🌟","💛"];
+    for(var i=0;i<18;i++){
+      var s=document.createElement("div");
+      s.className="confetti"; s.textContent=chars[Math.floor(Math.random()*chars.length)];
+      s.style.left=(Math.random()*100)+"vw";
+      s.style.animationDuration=(1.2+Math.random()*1.2)+"s";
+      s.style.animationDelay=(Math.random()*0.4)+"s";
+      document.body.appendChild(s);
+      setTimeout(function(x){ return function(){ x.remove(); }; }(s),2800);
+    }
+  }
+
+  // ---------- boot ----------
+  game=loadGame();
+  if(game && game.n===9){ game.mode="num"; }
+  renderAll();
+  if(game) startTimer();
+})();
+</script>
+</body>
+</html>
