@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>阳光翻翻乐 · 学习翻牌游戏</title>
+<style>
+:root{
+  --bg-top:#BFE3FF; --bg-bot:#EAF7E6;
+  --card-back1:#5B8DEF; --card-back2:#7FB2F5;
+  --sun:#F7A928; --sun-deep:#E08E0B;
+  --ink:#2B3A55; --text:#4A5878; --muted:#8B96AF;
+  --white:#FFFFFF; --border:#E3EAF5;
+  --ok:#3CB878; --bad:#E86A6A;
+  --r-lg:20px; --r-md:14px; --r-sm:10px;
+  --shadow:0 4px 14px rgba(43,58,85,.10);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  color:var(--text);
+  background:linear-gradient(180deg,var(--bg-top) 0%,var(--bg-bot) 100%);
+  user-select:none;-webkit-user-select:none;
+  touch-action:manipulation;
+}
+/* ---------- 通用 ---------- */
+.screen{display:none;height:100dvh;flex-direction:column;padding:calc(env(safe-area-inset-top) + 10px) 14px calc(env(safe-area-inset-bottom) + 10px);}
+.screen.active{display:flex;}
+.topbar{display:flex;align-items:center;gap:10px;flex:0 0 auto;margin-bottom:10px;}
+.topbar h1{font-size:17px;color:var(--ink);font-weight:700;flex:1;text-align:center;}
+.sun-pill{
+  display:flex;align-items:center;gap:5px;background:var(--white);
+  border:2px solid #FFD98A;border-radius:999px;padding:4px 12px;
+  font-weight:800;color:var(--sun-deep);font-size:15px;box-shadow:var(--shadow);
+}
+.back-btn{
+  width:38px;height:38px;border:none;border-radius:12px;background:var(--white);
+  box-shadow:var(--shadow);font-size:18px;color:var(--ink);cursor:pointer;flex:0 0 auto;
+}
+.back-btn:active{transform:scale(.94);}
+.btn{
+  border:none;border-radius:16px;cursor:pointer;font-weight:800;
+  background:linear-gradient(180deg,#FFC94D,var(--sun));color:#7A4B00;
+  box-shadow:0 4px 0 var(--sun-deep), var(--shadow);
+  padding:14px 20px;font-size:17px;width:100%;
+  transition:transform .08s;
+}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--sun-deep);}
+.btn.blue{background:linear-gradient(180deg,#7FB2F5,#5B8DEF);color:#fff;box-shadow:0 4px 0 #3D6FD0,var(--shadow);}
+.btn.blue:active{box-shadow:0 1px 0 #3D6FD0;}
+.btn.ghost{background:var(--white);color:var(--text);box-shadow:var(--shadow);}
+/* ---------- 注册/登录 ---------- */
+#screen-auth{justify-content:center;align-items:center;}
+.auth-box{width:100%;max-width:360px;text-align:center;}
+.logo-sun{font-size:64px;line-height:1;filter:drop-shadow(0 6px 10px rgba(247,169,40,.45));}
+.auth-box h1{font-size:26px;color:var(--ink);margin:10px 0 4px;font-weight:900;letter-spacing:2px;}
+.auth-box .sub{color:var(--muted);font-size:13px;margin-bottom:18px;}
+.auth-input{
+  width:100%;padding:13px 16px;border:2px solid var(--border);border-radius:14px;
+  font-size:16px;outline:none;text-align:center;color:var(--ink);background:#FBFDFF;
+}
+.auth-input:focus{border-color:#7FB2F5;}
+#userList{margin-top:14px;display:flex;flex-direction:column;gap:8px;max-height:32dvh;overflow:auto;}
+.user-row{
+  display:flex;align-items:center;gap:10px;background:var(--white);border:1px solid var(--border);
+  border-radius:14px;padding:10px 14px;cursor:pointer;box-shadow:var(--shadow);text-align:left;
+}
+.user-row:active{transform:scale(.98);}
+.user-row .avatar{font-size:24px;}
+.user-row .uname{flex:1;font-weight:700;color:var(--ink);}
+.user-row .uname small{display:block;font-weight:400;font-size:10px;color:var(--muted);}
+.user-row .usun{font-size:13px;font-weight:800;color:var(--sun-deep);}
+.user-row .del{border:none;background:#FDECEC;color:var(--bad);border-radius:8px;padding:4px 8px;font-size:12px;cursor:pointer;}
+/* ---------- 主页 ---------- */
+.home-hello{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.home-avatar{
+  width:52px;height:52px;border-radius:50%;background:linear-gradient(180deg,#FFE9B8,#FFD06E);
+  display:flex;align-items:center;justify-content:center;font-size:28px;flex:0 0 auto;
+  border:3px solid #fff;box-shadow:var(--shadow);
+}
+.home-hello .hi{font-size:18px;font-weight:900;color:var(--ink);}
+.home-hello .tip{font-size:12px;color:var(--muted);}
+.menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:0 0 auto;}
+.menu-card{
+  background:var(--white);border-radius:var(--r-lg);box-shadow:var(--shadow);border:1px solid var(--border);
+  padding:18px 10px;text-align:center;cursor:pointer;transition:transform .08s;
+}
+.menu-card:active{transform:scale(.96);}
+.menu-card .mi{font-size:40px;line-height:1;}
+.menu-card .mt{font-weight:900;color:var(--ink);font-size:16px;margin-top:8px;}
+.menu-card .ms{font-size:11px;color:var(--muted);margin-top:3px;}
+.menu-card.big{grid-column:1 / -1;display:flex;align-items:center;gap:14px;padding:16px 18px;text-align:left;
+  background:linear-gradient(135deg,#FFF3D6,#FFE2A6);}
+.menu-card.big .mi{font-size:44px;}
+.home-quote{margin-top:auto;text-align:center;font-size:12px;color:var(--muted);padding-top:12px;}
+/* ---------- 选牌面 ---------- */
+.mode-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding-bottom:8px;}
+.mode-item{
+  background:var(--white);border-radius:var(--r-lg);
+  padding:16px;box-shadow:var(--shadow);border:1px solid var(--border);cursor:pointer;
+}
+.mode-head{display:flex;align-items:center;gap:14px;}
+.mode-item .mi{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;flex:0 0 auto;}
+.mode-item .mt{font-weight:900;color:var(--ink);font-size:17px;}
+.mode-item .ms{font-size:12px;color:var(--muted);margin-top:2px;}
+.mode-item .arrow{margin-left:auto;color:#C4CEE0;font-size:20px;transition:transform .2s;}
+.mode-item.open .arrow{transform:rotate(90deg);}
+.level-row{display:none;gap:8px;margin-top:12px;}
+.mode-item.open .level-row{display:flex;}
+.lv-btn{
+  flex:1;border:none;border-radius:12px;padding:10px 0 8px;font-size:13px;font-weight:800;cursor:pointer;
+  background:#F1F5FB;color:var(--text);box-shadow:var(--shadow);
+}
+.lv-btn:active{transform:scale(.95);}
+.lv-btn small{display:block;font-size:9px;font-weight:400;margin-top:3px;line-height:1.4;}
+.lv-btn.ez{background:#EAF9F0;color:#1E7A4E;}
+.lv-btn.ez small{color:#4E9E77;}
+.lv-btn.mid{background:#FFF6DE;color:#9A6B00;}
+.lv-btn.mid small{color:#B8912E;}
+.lv-btn.hard{background:#FDECEC;color:#B04A4A;}
+.lv-btn.hard small{color:#C77B7B;}
+/* ---------- 游戏 ---------- */
+#screen-game{padding-top:calc(env(safe-area-inset-top) + 8px);}
+.game-head{display:flex;align-items:center;gap:10px;flex:0 0 auto;margin-bottom:8px;}
+.timer-wrap{flex:1;display:flex;flex-direction:column;gap:4px;}
+.timer-num{font-size:14px;font-weight:900;color:var(--ink);text-align:center;}
+.timer-bar{height:10px;border-radius:99px;background:#E7EEF9;overflow:hidden;}
+.timer-fill{height:100%;width:100%;border-radius:99px;background:linear-gradient(90deg,#FFD06E,var(--sun));transition:width 1s linear;}
+.timer-fill.hurry{background:linear-gradient(90deg,#FF9A9A,#E86A6A);}
+.game-stats{display:flex;justify-content:center;gap:10px;font-size:12px;font-weight:800;color:var(--text);flex:0 0 auto;margin-bottom:8px;white-space:nowrap;}
+.game-stats b{color:var(--sun-deep);}
+#board{
+  flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;perspective:1000px;min-height:0;
+}
+.fcard{position:relative;cursor:pointer;}
+.fcard .inner{
+  position:absolute;inset:0;transform-style:preserve-3d;transition:transform .35s;
+  border-radius:14px;
+}
+.fcard.flip .inner{transform:rotateY(180deg);}
+.face{
+  position:absolute;inset:0;border-radius:14px;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;padding:2px;
+}
+.face.back{
+  background:linear-gradient(160deg,var(--card-back2),var(--card-back1));
+  border:2px solid #fff;box-shadow:var(--shadow);
+  font-size:clamp(18px,5vw,28px);
+}
+.face.front{
+  transform:rotateY(180deg);
+  background:var(--white);border:2px solid var(--border);
+  box-shadow:var(--shadow);
+}
+.face.front .val{font-weight:900;color:var(--ink);line-height:1.15;text-align:center;}
+.face.front .emo{font-size:clamp(14px,4vw,20px);line-height:1;margin-top:3px;}
+.fcard.done .face.front{background:#EAF9F0;border-color:#BFE8D2;animation:pop .35s;}
+.fcard.done{cursor:default;}
+.fcard.wrong .face.front{border-color:var(--bad);animation:shake .35s;}
+@keyframes pop{0%{transform:scale(1);}50%{transform:scale(1.12);}100%{transform:scale(1);}}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-4px);}75%{transform:translateX(4px);}}
+/* ---------- 结果弹窗 ---------- */
+.overlay{
+  position:fixed;inset:0;background:rgba(30,45,70,.45);display:none;
+  align-items:center;justify-content:center;z-index:50;padding:24px;
+}
+.overlay.show{display:flex;}
+.modal{
+  background:var(--white);border-radius:24px;padding:26px 22px;width:100%;max-width:320px;
+  text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.25);
+  animation:rise .3s;
+}
+@keyframes rise{from{transform:translateY(24px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.modal .big-emo{font-size:56px;line-height:1;}
+.modal h2{color:var(--ink);font-size:20px;margin:10px 0 6px;font-weight:900;}
+.modal .earn{font-size:15px;font-weight:800;color:var(--sun-deep);margin-bottom:4px;}
+.modal .detail{font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.7;}
+/* ---------- 超市 ---------- */
+.shop-list{flex:1;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;align-content:start;padding-bottom:8px;}
+.shop-item{background:var(--white);border-radius:var(--r-md);border:1px solid var(--border);box-shadow:var(--shadow);
+  padding:9px 6px 8px;text-align:center;display:flex;flex-direction:column;gap:2px;position:relative;}
+.shop-item .si{font-size:30px;line-height:1;}
+.shop-item .sn{font-weight:800;color:var(--ink);font-size:11px;line-height:1.3;}
+.shop-item .sp{font-size:11px;font-weight:900;color:var(--sun-deep);}
+.shop-item .own-badge{
+  position:absolute;top:5px;right:5px;background:#EAF9F0;color:#1E7A4E;
+  font-size:10px;font-weight:900;border-radius:99px;padding:1px 6px;
+}
+.shop-item .buy{
+  margin-top:3px;border:none;border-radius:9px;padding:6px 0;font-size:12px;font-weight:800;cursor:pointer;
+  background:linear-gradient(180deg,#FFC94D,var(--sun));color:#7A4B00;box-shadow:0 2px 0 var(--sun-deep);
+}
+.shop-item .buy:active{transform:translateY(2px);box-shadow:none;}
+.shop-item .buy.poor{background:#FDECEC;color:var(--bad);box-shadow:none;}
+.shop-note{font-size:11px;color:var(--muted);text-align:center;flex:0 0 auto;padding-top:6px;}
+/* ---------- 房间 ---------- */
+.room-scene{
+  flex:1;border-radius:var(--r-lg);overflow-y:auto;padding:14px;
+  background:
+    linear-gradient(180deg,#DDEEFF 0%,#DDEEFF 30%,#F6E7CE 30%,#EFDDBC 100%);
+  border:1px solid var(--border);box-shadow:var(--shadow);
+}
+.room-title{font-size:13px;font-weight:900;color:#7A6337;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.shelf{
+  background:linear-gradient(180deg,#C99B63,#B0834E);border-radius:8px;
+  padding:10px 10px 14px;margin-bottom:18px;position:relative;
+  box-shadow:0 6px 10px rgba(90,60,20,.25);
+}
+.shelf::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:8px;
+  background:#8F6236;border-radius:0 0 8px 8px;
+}
+.shelf-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.slot{
+  aspect-ratio:1/1;border-radius:10px;background:rgba(255,255,255,.55);
+  display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;
+  border:2px dashed rgba(255,255,255,.7);position:relative;z-index:1;
+}
+.slot.filled{border:2px solid #fff;background:#FFF7E8;box-shadow:0 3px 6px rgba(90,60,20,.2);}
+.slot.filled:active{transform:scale(.94);}
+.slot .cnt{
+  position:absolute;top:-4px;right:-4px;background:var(--sun);color:#fff;
+  font-size:10px;font-weight:900;border-radius:99px;padding:1px 5px;border:2px solid #fff;
+}
+/* ---------- Toast ---------- */
+#toast{
+  position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 60px);transform:translateX(-50%) translateY(20px);
+  background:rgba(43,58,85,.92);color:#fff;padding:10px 18px;border-radius:99px;font-size:14px;font-weight:700;
+  opacity:0;pointer-events:none;transition:all .25s;z-index:99;max-width:80vw;text-align:center;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<!-- ======== 注册 / 选择用户 ======== -->
+<div class="screen active" id="screen-auth">
+  <div class="auth-box">
+    <div class="logo-sun">🌞</div>
+    <h1>阳光翻翻乐</h1>
+    <div class="sub">翻牌配对 · 学知识 · 攒小太阳 · 换礼物</div>
+    <input class="auth-input" id="nameInput" maxlength="8" placeholder="给自己起个名字吧（最多8个字）">
+    <div style="height:10px"></div>
+    <button class="btn" id="regBtn">🌟 注册新朋友</button>
+    <div id="userList"></div>
+  </div>
+</div>
+
+<!-- ======== 主页 ======== -->
+<div class="screen" id="screen-home">
+  <div class="topbar">
+    <div style="width:38px"></div>
+    <h1>阳光翻翻乐</h1>
+    <div class="sun-pill">🌞 <span id="homeSun">0</span></div>
+  </div>
+  <div class="home-hello">
+    <div class="home-avatar" id="homeAvatar">🐰</div>
+    <div>
+      <div class="hi" id="helloName">小朋友，你好！</div>
+      <div class="tip" id="helloTip">今天也来挑战一下注意力吧！</div>
+    </div>
+  </div>
+  <div class="menu-grid">
+    <div class="menu-card big" id="btnPlay">
+      <div class="mi">🃏</div>
+      <div>
+        <div class="mt">开始翻牌挑战</div>
+        <div class="ms">限时 1 分钟 · 翻出一对赚小太阳</div>
+      </div>
+    </div>
+    <div class="menu-card" id="btnShop">
+      <div class="mi">🛒</div>
+      <div class="mt">小超市</div>
+      <div class="ms">30 件宝贝随便挑</div>
+    </div>
+    <div class="menu-card" id="btnRoom">
+      <div class="mi">🏠</div>
+      <div class="mt">我的房间</div>
+      <div class="ms">展示买到的宝贝</div>
+    </div>
+  </div>
+  <div class="home-quote">专注每一秒，阳光满口袋 ☀️</div>
+</div>
+
+<!-- ======== 选择牌面 ======== -->
+<div class="screen" id="screen-mode">
+  <div class="topbar">
+    <button class="back-btn" data-go="screen-home">←</button>
+    <h1>选择牌面和难度</h1>
+    <div class="sun-pill">🌞 <span id="modeSun">0</span></div>
+  </div>
+  <div class="mode-list" id="modeList"></div>
+  <div class="home-quote">每局随机抽牌，局局不一样 · 越难每对小太阳越多！</div>
+</div>
+
+<!-- ======== 游戏 ======== -->
+<div class="screen" id="screen-game">
+  <div class="game-head">
+    <button class="back-btn" id="gameQuit">←</button>
+    <div class="timer-wrap">
+      <div class="timer-num" id="timerNum">60 秒</div>
+      <div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div>
+    </div>
+    <div class="sun-pill">🌞 <span id="gameSun">0</span></div>
+  </div>
+  <div class="game-stats">
+    <span id="statLevel"></span> · 已配对 <b id="pairDone">0</b> / <b id="pairTotal">8</b> 对 · 连击 <b id="comboN">0</b>
+  </div>
+  <div id="board"></div>
+</div>
+
+<!-- ======== 超市 ======== -->
+<div class="screen" id="screen-shop">
+  <div class="topbar">
+    <button class="back-btn" data-go="screen-home">←</button>
+    <h1>阳光小超市</h1>
+    <div class="sun-pill">🌞 <span id="shopSun">0</span></div>
+  </div>
+  <div class="shop-list" id="shopList"></div>
+  <div class="shop-note">商品可以重复购买，买到的宝贝都摆进「我的房间」～</div>
+</div>
+
+<!-- ======== 房间 ======== -->
+<div class="screen" id="screen-room">
+  <div class="topbar">
+    <button class="back-btn" data-go="screen-home">←</button>
+    <h1>我的房间</h1>
+    <div class="sun-pill">🌞 <span id="roomSun">0</span></div>
+  </div>
+  <div class="room-scene" id="roomScene"></div>
+</div>
+
+<!-- ======== 结果弹窗 ======== -->
+<div class="overlay" id="resultOverlay">
+  <div class="modal">
+    <div class="big-emo" id="resEmo">🎉</div>
+    <h2 id="resTitle">时间到！</h2>
+    <div class="earn" id="resEarn">获得 0 个小太阳</div>
+    <div class="detail" id="resDetail"></div>
+    <button class="btn blue" id="resAgain" style="margin-bottom:8px">🔁 再来一局</button>
+    <button class="btn ghost" id="resHome">回家逛超市去 →</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+"use strict";
+/* ================= 数据 ================= */
+const LS_USERS = "sunnyFlipUsers";
+const LS_CUR   = "sunnyFlipCur";
+
+/* 难度定义：对数 / 每对奖励太阳 / 棋盘行数 */
+const LEVELS = {
+  easy: { key:"easy", name:"简单", pairs:8,  per:1, cls:"ez",   rows:4 },
+  mid:  { key:"mid",  name:"中等", pairs:10, per:2, cls:"mid",  rows:5 },
+  hard: { key:"hard", name:"困难", pairs:12, per:3, cls:"hard", rows:6 }
+};
+
+/* 一年级水平词库：每档 16 个以上，每局随机抽，局局不一样 */
+const MODES = [
+  { id:"num", name:"数字乐园", desc:"认数字 · 简单加减法", icon:"🔢", color:"#EAF3FF",
+    banks:{
+      easy:["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16"],
+      mid:["17","18","19","20","21","24","25","28","30","32","35","36","40","45","50","2+3","3+4","1+9"],
+      hard:["6+7","8+9","7+7","9+9","6+8","7+5","12-4","15-7","13-6","11-3","16-8","14-5","17-9","12-9","15-6","18-9"]
+    }},
+  { id:"hanzi", name:"汉字城堡", desc:"认汉字 · 一年级生字", icon:"🈶", color:"#FDEFE0",
+    banks:{
+      easy:["天","水","火","山","木","月","日","石","田","云","花","鸟","人","口","大","小","上","下","中","土"],
+      mid:["春","夏","秋","冬","东","南","西","北","风","雨","雪","电","江","河","飞","走","来","去","开","关","早","晚"],
+      hard:["晴","睛","请","清","情","蜻","坐","座","在","再","进","近","圆","园","想","念","啦","呀","吗","呢","谁","绿"]
+    }},
+  { id:"word", name:"词语花园", desc:"读词语 · 成语启蒙", icon:"🌸", color:"#FDE9F1",
+    banks:{
+      easy:["太阳","月亮","星星","花朵","白云","小河","大山","草地","书包","铅笔","苹果","西瓜","牛奶","面包","妈妈","爸爸"],
+      easy_emo:["☀️","🌙","⭐","🌸","☁️","🏞️","⛰️","🌿","🎒","✏️","🍎","🍉","🥛","🍞","👩","👨"],
+      mid:["春天","夏天","秋天","冬天","早晨","晚上","学校","老师","同学","朋友","彩虹","蝴蝶","蜜蜂","熊猫","森林","地球"],
+      mid_emo:["🌱","🌞","🍂","❄️","🌅","🌃","🏫","👩‍🏫","🧒","🤝","🌈","🦋","🐝","🐼","🌳","🌍"],
+      hard:["春暖花开","鸟语花香","一心一意","七上八下","井底之蛙","守株待兔","画蛇添足","亡羊补牢","掩耳盗铃","狐假虎威","五颜六色","四面八方","大手大脚","自言自语","山清水秀","百花齐放"]
+    }},
+  { id:"eng", name:"英语星球", desc:"读单词 · 认住它的样子", icon:"🔤", color:"#E9F9EC",
+    banks:{
+      easy:["cat","dog","sun","hat","bed","pig","box","big","red","run","pen","cup","bus","egg","fan","map"],
+      easy_emo:["🐱","🐶","☀️","🎩","🛏️","🐷","📦","🐻","🟥","🏃","🖊️","🥤","🚌","🥚","🪭","🗺️"],
+      mid:["apple","bird","fish","milk","cake","book","desk","door","tree","star","moon","duck","frog","lion","ship","rain"],
+      mid_emo:["🍎","🐦","🐟","🥛","🎂","📖","🪑","🚪","🌳","⭐","🌙","🦆","🐸","🦁","🚢","🌧️"],
+      hard:["animal","banana","candle","dragon","family","garden","monkey","orange","rabbit","summer","turtle","winter","flower","guitar","pencil","rocket"]
+    }}
+];
+
+const SHOP = [
+  { id:"sticker", emo:"🌟", name:"闪光贴纸", price:5 },
+  { id:"pencil",  emo:"✏️", name:"彩虹铅笔", price:8 },
+  { id:"ruler",   emo:"📏", name:"卡通直尺", price:10 },
+  { id:"duck",    emo:"🦆", name:"小黄鸭", price:12 },
+  { id:"notebook",emo:"📒", name:"漂亮笔记本", price:15 },
+  { id:"paint",   emo:"🎨", name:"画画颜料盒", price:18 },
+  { id:"dino",    emo:"🦕", name:"恐龙模型", price:22 },
+  { id:"penbox",  emo:"📦", name:"卡通铅笔盒", price:26 },
+  { id:"crayon",  emo:"🖍️", name:"水彩笔套装", price:30 },
+  { id:"yoyo",    emo:"🪀", name:"悠悠球", price:34 },
+  { id:"kite",    emo:"🪁", name:"小风筝", price:38 },
+  { id:"puzzle",  emo:"🧩", name:"100片拼图", price:42 },
+  { id:"ball",    emo:"⚽", name:"小足球", price:46 },
+  { id:"chess",   emo:"🎲", name:"彩色飞行棋", price:50 },
+  { id:"bear",    emo:"🧸", name:"小熊玩偶", price:55 },
+  { id:"rabbit",  emo:"🐰", name:"兔兔玩偶", price:60 },
+  { id:"book",    emo:"📚", name:"睡前故事书", price:66 },
+  { id:"train",   emo:"🚂", name:"小火车玩具", price:72 },
+  { id:"rccar",   emo:"🚗", name:"遥控赛车", price:80 },
+  { id:"piano",   emo:"🎹", name:"迷你小钢琴", price:88 },
+  { id:"robot",   emo:"🤖", name:"拼装机器人", price:96 },
+  { id:"scope",   emo:"🔭", name:"儿童望远镜", price:105 },
+  { id:"deer",    emo:"🦌", name:"小鹿摆件", price:115 },
+  { id:"pingpong",emo:"🏓", name:"乒乓球拍套装", price:125 },
+  { id:"heli",    emo:"🚁", name:"遥控直升机", price:138 },
+  { id:"skate",   emo:"🛹", name:"滑板", price:150 },
+  { id:"rocket",  emo:"🚀", name:"航天火箭模型", price:170 },
+  { id:"castle",  emo:"🏰", name:"积木城堡", price:190 },
+  { id:"camera",  emo:"📷", name:"儿童相机", price:210 },
+  { id:"trophy",  emo:"🏆", name:"荣誉大奖杯", price:300 }
+];
+
+const AVATARS = ["🐰","🐱","🐼","🦊","🐯","🐨","🦁","🐵"];
+
+/* 内置演示玩家（首次打开自动注册，已带小太阳和部分宝贝） */
+const BUILTIN_USERS = [
+  { name:"乐乐", avatar:"🦁", suns:46, owned:{sticker:2, pencil:1, duck:1} },
+  { name:"朵朵", avatar:"🐱", suns:28, owned:{penbox:1, crayon:1} },
+  { name:"天天", avatar:"🐼", suns:12, owned:{} }
+];
+
+/* ================= 工具 ================= */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function normOwned(o){
+  if(Array.isArray(o)){ const m={}; o.forEach(id=>m[id]=(m[id]||0)+1); return m; }
+  return o || {};
+}
+function loadUsers(){
+  try{
+    const u = JSON.parse(localStorage.getItem(LS_USERS)) || {};
+    Object.values(u).forEach(x=>{ x.owned = normOwned(x.owned); });
+    return u;
+  }catch(e){ return {}; }
+}
+function saveUsers(u){ localStorage.setItem(LS_USERS, JSON.stringify(u)); }
+function seedBuiltins(){
+  const u = loadUsers();
+  let changed = false;
+  BUILTIN_USERS.forEach(b=>{
+    if(!u[b.name]){
+      u[b.name] = { avatar:b.avatar, suns:b.suns, owned:normOwned(b.owned), best:0, games:0, builtin:true };
+      changed = true;
+    }
+  });
+  if(changed) saveUsers(u);
+}
+function curName(){ return localStorage.getItem(LS_CUR) || ""; }
+function curUser(){ const u = loadUsers(); return u[curName()] || null; }
+function updateUser(fn){
+  const u = loadUsers(); const n = curName();
+  if(!u[n]) return;
+  fn(u[n]); saveUsers(u); refreshSuns();
+}
+let toastTimer = null;
+function toast(msg){
+  const t = $("#toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastTimer); toastTimer = setTimeout(()=>t.classList.remove("show"), 1800);
+}
+/* 音效（WebAudio，无外部资源） */
+let AC = null;
+function beep(freq, dur, type, vol){
+  try{
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    const o = AC.createOscillator(), g = AC.createGain();
+    o.type = type || "sine"; o.frequency.value = freq;
+    g.gain.setValueAtTime(vol || 0.12, AC.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, AC.currentTime + dur);
+    o.connect(g); g.connect(AC.destination);
+    o.start(); o.stop(AC.currentTime + dur);
+  }catch(e){}
+}
+const sndFlip  = ()=> beep(520, .08, "triangle");
+const sndMatch = ()=>{ beep(660,.1,"sine"); setTimeout(()=>beep(880,.14,"sine"),90); };
+const sndWrong = ()=> beep(200,.18,"square",.06);
+const sndWin   = ()=>{ [523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,.18,"sine"),i*130)); };
+
+/* ================= 屏幕切换 ================= */
+function go(id){
+  $$(".screen").forEach(s=>s.classList.remove("active"));
+  $("#"+id).classList.add("active");
+  if(id === "screen-shop") renderShop();
+  if(id === "screen-room") renderRoom();
+  if(id === "screen-mode") renderModes();
+}
+$$("[data-go]").forEach(b=>b.addEventListener("click", ()=>go(b.dataset.go)));
+
+function refreshSuns(){
+  const u = curUser(); const n = u ? u.suns : 0;
+  ["homeSun","modeSun","gameSun","shopSun","roomSun"].forEach(id=>{
+    const el = document.getElementById(id); if(el) el.textContent = n;
+  });
+}
+
+/* ================= 注册 ================= */
+function renderUserList(){
+  const users = loadUsers();
+  const box = $("#userList"); box.innerHTML = "";
+  Object.keys(users).forEach(name=>{
+    const isB = users[name].builtin;
+    const row = document.createElement("div"); row.className = "user-row";
+    row.innerHTML = '<div class="avatar">'+users[name].avatar+'</div>'+
+      '<div class="uname">'+name+(isB?'<small>演示玩家 · 点一下就能玩</small>':'')+'</div>'+
+      '<div class="usun">🌞 '+users[name].suns+'</div>'+
+      (isB ? '' : '<button class="del">删除</button>');
+    row.addEventListener("click", e=>{
+      if(e.target.classList.contains("del")){
+        e.stopPropagation();
+        if(confirm("确定删除「"+name+"」的全部存档吗？")){
+          delete users[name]; saveUsers(users); renderUserList();
+        }
+        return;
+      }
+      localStorage.setItem(LS_CUR, name);
+      enterHome();
+    });
+    box.appendChild(row);
+  });
+}
+$("#regBtn").addEventListener("click", ()=>{
+  const name = $("#nameInput").value.trim();
+  if(!name){ toast("先给自己起个名字吧～"); return; }
+  const users = loadUsers();
+  if(users[name]){ toast("这个名字已经有人用啦，换个试试"); return; }
+  users[name] = {
+    avatar: AVATARS[Math.floor(Math.random()*AVATARS.length)],
+    suns: 3, owned: {}, best: 0, games: 0
+  };
+  saveUsers(users);
+  localStorage.setItem(LS_CUR, name);
+  $("#nameInput").value = "";
+  toast("欢迎你，"+name+"！🎁 新朋友送 3 个小太阳");
+  enterHome();
+});
+function enterHome(){
+  const u = curUser(); if(!u){ go("screen-auth"); return; }
+  $("#homeAvatar").textContent = u.avatar;
+  $("#helloName").textContent = u.avatar + " " + curName() + "，你好！";
+  const best = u.best || 0;
+  $("#helloTip").textContent = best > 0
+    ? "最高纪录一次配对 " + best + " 对，继续加油！"
+    : "今天也来挑战一下注意力吧！";
+  refreshSuns();
+  go("screen-home");
+}
+
+/* ================= 选牌面 + 难度 ================= */
+function renderModes(){
+  const box = $("#modeList"); box.innerHTML = "";
+  MODES.forEach(m=>{
+    const el = document.createElement("div");
+    el.className = "mode-item";
+    const lvBtns = ["easy","mid","hard"].map(k=>{
+      const L = LEVELS[k];
+      const emoBank = m.banks[k+"_emo"];
+      const hasEmo = !!(emoBank && emoBank.some(x=>x));
+      const extra = hasEmo ? "带图" : "无图纯文字";
+      return '<button class="lv-btn '+L.cls+'" data-lv="'+k+'">'+L.name+
+        '<small>'+L.pairs+' 对 · 每对 +'+L.per+' 太阳<br>'+extra+'</small></button>';
+    }).join("");
+    el.innerHTML = '<div class="mode-head">'+
+        '<div class="mi" style="background:'+m.color+'">'+m.icon+'</div>'+
+        '<div><div class="mt">'+m.name+'</div><div class="ms">'+m.desc+'</div></div>'+
+        '<div class="arrow">›</div>'+
+      '</div><div class="level-row">'+lvBtns+'</div>';
+    el.querySelector(".mode-head").addEventListener("click", ()=>{
+      $$(".mode-item.open").forEach(x=>{ if(x!==el) x.classList.remove("open"); });
+      el.classList.toggle("open");
+    });
+    el.querySelectorAll(".lv-btn").forEach(btn=>{
+      btn.addEventListener("click", e=>{
+        e.stopPropagation();
+        startGame(m, LEVELS[btn.dataset.lv]);
+      });
+    });
+    box.appendChild(el);
+  });
+  refreshSuns();
+}
+
+/* ================= 游戏核心 ================= */
+const GAME_SECONDS = 60;
+let state = null; // {mode, level, first, lock, done, combo, suns, timer, left, total}
+
+function pickPairs(mode, level){
+  const n = level.pairs;
+  const bank = mode.banks[level.key];
+  const emoBank = mode.banks[level.key + "_emo"] || null;
+  const idx = shuffle(Array.from({length: bank.length}, (_,i)=>i)).slice(0, n);
+  return idx.map(i=>({ val: bank[i], emo: (emoBank && emoBank[i]) ? emoBank[i] : "" }));
+}
+function startGame(mode, level){
+  const picks = pickPairs(mode, level);
+  const deck = shuffle(picks.concat(picks.map(p=>({val:p.val, emo:p.emo, copy:true}))));
+  state = { mode, level, first:null, lock:false, done:0, combo:0, suns:0,
+            left:GAME_SECONDS, timer:null, total:level.pairs };
+  const board = $("#board"); board.innerHTML = "";
+  board.style.gridTemplateRows = "repeat("+level.rows+",1fr)";
+  deck.forEach(c=>{
+    const el = document.createElement("div");
+    el.className = "fcard";
+    el.dataset.val = c.val;
+    el.innerHTML =
+      '<div class="inner">'+
+        '<div class="face back">⭐</div>'+
+        '<div class="face front"><div class="val">'+c.val+'</div>'+(c.emo?'<div class="emo">'+c.emo+'</div>':'')+'</div>'+
+      '</div>';
+    el.addEventListener("click", ()=>onCard(el));
+    board.appendChild(el);
+  });
+  $("#statLevel").textContent = mode.icon + " " + mode.name + " · " + level.name;
+  $("#pairDone").textContent = "0";
+  $("#pairTotal").textContent = level.pairs;
+  $("#comboN").textContent = "0";
+  $("#timerNum").textContent = GAME_SECONDS + " 秒";
+  const tf = $("#timerFill"); tf.style.width = "100%"; tf.classList.remove("hurry");
+  go("screen-game");
+  refreshSuns();
+  state.timer = setInterval(tick, 1000);
+}
+function tick(){
+  state.left--;
+  $("#timerNum").textContent = state.left + " 秒";
+  const tf = $("#timerFill");
+  tf.style.width = (state.left / GAME_SECONDS * 100) + "%";
+  if(state.left <= 10) tf.classList.add("hurry");
+  if(state.left <= 5 && state.left > 0) beep(880,.08,"square",.08);
+  if(state.left <= 0) endGame(false);
+}
+function onCard(el){
+  if(!state || state.lock) return;
+  if(el.classList.contains("flip") || el.classList.contains("done")) return;
+  el.classList.add("flip"); sndFlip();
+  if(!state.first){ state.first = el; return; }
+  const a = state.first, b = el;
+  state.first = null;
+  if(a.dataset.val === b.dataset.val){
+    a.classList.add("done"); b.classList.add("done");
+    state.done++; state.combo++;
+    state.suns += state.level.per;
+    $("#pairDone").textContent = state.done;
+    $("#comboN").textContent = state.combo;
+    sndMatch(); refreshSuns();
+    if(state.done === state.total) endGame(true);
+  }else{
+    state.combo = 0;
+    $("#comboN").textContent = "0";
+    state.lock = true;
+    a.classList.add("wrong"); b.classList.add("wrong");
+    sndWrong();
+    setTimeout(()=>{
+      a.classList.remove("flip","wrong"); b.classList.remove("flip","wrong");
+      state.lock = false;
+    }, 650);
+  }
+}
+function endGame(win){
+  clearInterval(state.timer);
+  const pairs = state.done;
+  const earn = state.suns;
+  let bonus = 0;
+  if(win){ bonus = 5 + Math.floor(state.left / 10); sndWin(); }
+  const total = earn + bonus;
+  updateUser(u=>{
+    u.suns += total;
+    u.games += 1;
+    if(pairs > (u.best||0)) u.best = pairs;
+  });
+  $("#resEmo").textContent = win ? "🏆" : (pairs >= state.total-2 ? "🌈" : "💪");
+  $("#resTitle").textContent = win ? "全部配对，太棒啦！" : "时间到！";
+  $("#resEarn").textContent = "获得 " + total + " 个小太阳 🌞";
+  let d = state.mode.icon + " " + state.mode.name + " · " + state.level.name +
+          "<br>翻出 " + pairs + " / " + state.total + " 对（每对 +" + state.level.per + "）";
+  if(win){
+    d += "<br>全配对奖励 +5，速度奖励 +" + Math.floor(state.left/10) +
+         "（还剩 " + state.left + " 秒）";
+  }
+  d += "<br>现在一共有 " + (curUser() ? curUser().suns : 0) + " 个小太阳";
+  $("#resDetail").innerHTML = d;
+  setTimeout(()=>$("#resultOverlay").classList.add("show"), win ? 500 : 200);
+}
+$("#gameQuit").addEventListener("click", ()=>{
+  if(state && state.timer) clearInterval(state.timer);
+  state = null;
+  go("screen-mode");
+});
+$("#resAgain").addEventListener("click", ()=>{
+  $("#resultOverlay").classList.remove("show");
+  if(state) startGame(state.mode, state.level);
+});
+$("#resHome").addEventListener("click", ()=>{
+  $("#resultOverlay").classList.remove("show");
+  state = null;
+  enterHome();
+});
+
+/* ================= 超市（可重复购买） ================= */
+function renderShop(){
+  const u = curUser(); if(!u) return;
+  const box = $("#shopList"); box.innerHTML = "";
+  SHOP.forEach(it=>{
+    const cnt = u.owned[it.id] || 0;
+    const el = document.createElement("div");
+    el.className = "shop-item";
+    el.innerHTML = (cnt>0 ? '<div class="own-badge">已有×'+cnt+'</div>' : '')+
+      '<div class="si">'+it.emo+'</div>'+
+      '<div class="sn">'+it.name+'</div>'+
+      '<div class="sp">🌞 '+it.price+'</div>';
+    const btn = document.createElement("button");
+    if(u.suns < it.price){
+      btn.className = "buy poor"; btn.textContent = "还差 "+(it.price-u.suns);
+    }else{
+      btn.className = "buy"; btn.textContent = "买一个";
+      btn.addEventListener("click", ()=>{
+        updateUser(x=>{ x.suns -= it.price; x.owned[it.id] = (x.owned[it.id]||0)+1; });
+        toast("🎉 「"+it.name+"」已放进你的房间！");
+        beep(700,.1,"sine"); setTimeout(()=>beep(950,.15,"sine"),100);
+        renderShop();
+      });
+    }
+    el.appendChild(btn);
+    box.appendChild(el);
+  });
+  refreshSuns();
+}
+
+/* ================= 房间 ================= */
+function renderRoom(){
+  const u = curUser(); if(!u) return;
+  const scene = $("#roomScene"); scene.innerHTML = "";
+  const entries = [];
+  SHOP.forEach(it=>{
+    const cnt = u.owned[it.id] || 0;
+    for(let i=0;i<cnt;i++) entries.push(it);
+  });
+  const title = document.createElement("div");
+  title.className = "room-title";
+  title.innerHTML = "🖼️ " + u.avatar + " " + curName() + " 的小房间 · 共 " + entries.length + " 件宝贝";
+  scene.appendChild(title);
+  if(entries.length === 0){
+    const empty = document.createElement("div");
+    empty.style.cssText = "text-align:center;padding:50px 20px;color:#A08B5F;font-weight:700;line-height:2;";
+    empty.innerHTML = "架子上还空空的～<br>去小超市用小太阳换点宝贝回来吧！<br>🛒✨";
+    scene.appendChild(empty);
+    return;
+  }
+  const perShelf = 8;
+  const shelves = Math.ceil(entries.length / perShelf);
+  for(let s=0; s<shelves; s++){
+    const shelf = document.createElement("div");
+    shelf.className = "shelf";
+    const grid = document.createElement("div");
+    grid.className = "shelf-grid";
+    const items = entries.slice(s*perShelf, (s+1)*perShelf);
+    for(let i=0; i<perShelf; i++){
+      const slot = document.createElement("div");
+      slot.className = "slot";
+      if(items[i]){
+        slot.classList.add("filled");
+        slot.textContent = items[i].emo;
+        const dup = items.filter(x=>x.id===items[i].id).length;
+        if(dup > 1){
+          const c = document.createElement("div");
+          c.className = "cnt"; c.textContent = "×"+dup;
+          slot.appendChild(c);
+        }
+        slot.addEventListener("click", ()=>toast(items[i].emo + " " + items[i].name + "（🌞 " + items[i].price + "）"));
+      }
+      grid.appendChild(slot);
+    }
+    shelf.appendChild(grid);
+    scene.appendChild(shelf);
+  }
+}
+
+/* ================= 启动 ================= */
+$("#btnPlay").addEventListener("click", ()=>go("screen-mode"));
+$("#btnShop").addEventListener("click", ()=>go("screen-shop"));
+$("#btnRoom").addEventListener("click", ()=>go("screen-room"));
+seedBuiltins();
+if(curName() && curUser()) enterHome(); else renderUserList();
+</script>
+</body>
+</html>
